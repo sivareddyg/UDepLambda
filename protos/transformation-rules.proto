@@ -1,0 +1,41 @@
+option java_package = "deplambda.protos";
+option java_outer_classname = "TransformationRulesProto";
+
+message RuleGroups {
+	message RuleGroup {
+		optional string name = 1;
+		optional int32 priority = 2;
+		
+		message Rule {
+			optional string name = 1;
+			optional int32 priority = 2;
+			optional string tregex = 3;
+			message Transformation {
+				enum Action {
+   		 			ADD_CHILD = 1;
+		    		CHANGE_LABEL = 2;
+    	 			ASSIGN_LAMBDA = 3;
+	  			}
+	  			
+				optional string target = 1;
+				optional Action action = 2;
+				optional string label = 3;
+				optional string child = 4;
+				optional string lambda = 5;
+			}
+			
+			repeated Transformation transformation = 4;
+		}
+		
+		repeated Rule rule = 3; 
+	}
+	
+	repeated RuleGroup rulegroup = 1;
+	
+	message Relation {
+		optional string name = 1;
+		optional int32 priority = 2;
+	}
+	
+	repeated Relation relation = 2;
+}

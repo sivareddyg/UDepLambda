@@ -1,0 +1,1049 @@
+relation {
+  # blue pen and black pencil
+  # blue should compose with pen before the conjunction
+  name: "l-amod"
+  priority: 2
+}
+relation {
+  # similar to l-amod
+  name: "l-nn"
+  priority: 2
+}
+relation {
+  # similar to l-amod
+  name: "l-num"
+  priority: 2
+}
+relation {
+  # similar to l-amod
+  name: "l-number"
+  priority: 2
+}
+relation {
+  # similar to l-amod
+  name: "l-title"
+  priority: 2
+}
+relation {
+  name: "l-conj-amod"
+  priority: 3
+}
+relation {
+  name: "l-conj-nn"
+  priority: 3
+}
+relation {
+  name: "l-conj-advmod"
+  priority: 3
+}
+relation {
+  name: "l-conj-np"
+  priority: 3
+}
+relation {
+  # before and after the campaign
+  # "before" should compose with "after" before it composes with campaign (pobj).
+  name: "l-conj-pp-np"
+  priority: 3
+}
+relation {
+  name: "l-conj-pp-vp"
+  priority: 3
+}
+relation {
+  # makes and distributes electronic products.
+  # "makes" should compose with "distributes" before it composes with "products".
+  name: "l-conj-v"
+  priority: 3
+}
+relation {
+  name: "l-dobj"
+  priority: 10
+}
+relation {
+  name: "l-pobj"
+  priority: 10
+}
+relation {
+  name: "l-ccomp"
+  priority: 15
+}
+relation {
+  name: "l-xcomp"
+  priority: 15
+}
+relation {
+  # before winter and after summer.
+  # "before" should compose with "winter" (pobj) before it composes with "after".
+  name: "l-conj-pp-np-pobj"
+  priority: 15
+}
+relation {
+  name: "l-conj-pp-vp-pobj"
+  priority: 15
+}
+relation {
+  name: "l-aux"
+  priority: 20
+}
+relation {
+  name: "l-attr"
+  priority: 30
+}
+relation {
+  name: "l-prep"
+  priority: 30
+}
+relation {
+  name: "l-det"
+  priority: 30
+}
+relation {
+  name: "l-pass-by"
+  priority: 30
+}
+relation {
+  name: "l-auxpass"
+  priority: 35
+}
+relation {
+  name: "l-iobj"
+  priority: 35
+}
+relation {
+  name: "l-appos"
+  priority: 35
+}
+relation {
+  name: "l-mark"
+  priority: 36
+}
+relation {
+  # I steadily walked and quickly ate noodles.
+  # steadily should compose with walked before the conjunction.
+  name: "l-advmod"
+  priority: 36
+}
+relation {
+  name: "l-tmod"
+  priority: 36
+}
+relation {
+  # Jobs is the founder of Apple and president of Pixar.
+  # "founder" should first compose with "of".
+  name: "l-conj-np-prep"
+  priority: 38
+}
+relation {
+  # likes apples but loves oranges.
+  # "likes" should compose with "apples" first before it composes with "loves"
+  name: "l-conj-vp"
+  priority: 38
+}
+relation {
+  name: "l-cc"
+  priority: 40
+}
+relation {
+  name: "l-p"
+  priority: 42
+}
+relation {
+  name: "l-neg"
+  priority: 42
+}
+relation {
+  name: "l-nsubj"
+  priority: 45
+}
+relation {
+  name: "l-nsubjpass"
+  priority: 45
+}
+relation {
+  name: "l-BIND"
+  priority: 50
+}
+relation {
+  name: "l-wh-dobj"
+  priority: 60
+}
+relation {
+  name: "l-np-pobj"
+  priority: 60
+}
+relation {
+  name: "l-wh-pobj"
+  priority: 60
+}
+relation {
+  name: "l-wh-nsubj"
+  priority: 60
+}
+relation {
+  name: "l-rcmod"
+  priority: 70
+}
+relation {
+  name: "l-conj-s"
+  priority: 80
+}
+
+rulegroup {
+  name: "dependency labels"
+  priority: 1
+  rule {
+    name: "main"
+    priority: 1
+    tregex: "/l-(nsubj|subjpass|dobj|pobj|attr|xcomp|ccomp)/=dep"
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G : (F G))"
+    }
+  }
+  rule {
+    name: "possesive"
+    priority: 1
+    tregex: "/l-poss/=dep [< /w-.*/=child $ /w-.*/=head]"
+    transformation {
+      # Hilton's hotel -> (hotel.'s.arg_1 e x) (hotel.'s.arg_2 e y) (hotel x) (Hilton y)
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 X : (EXISTS Y : (F1 X) (F2 Y) (p:EVENT.ENTITY:$head$'s.arg_1 X X) (p:EVENT.ENTITY:$head$'s.arg_2 X Y)))"
+    }
+    transformation {
+      # Hilton's hotel -> (hotel x) (Hilton x)
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 X : (F1 X) (F2 X))"
+    }
+  }
+  rule {
+    name: "rcmod"
+    priority: 1
+    tregex: "l-rcmod=dep"
+    # IBM bought "DataMirror", which had "purchased" ConstellarHub.
+    # "Apple", which Jobs founded, "developed" iPhone.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G Z : (EXISTS E : (F Z) ((G (LAMBDA X : (p:EQUAL Z X))) E)))"
+    }
+  }
+  rule {
+    name: "partmod"
+    priority: 1
+    tregex: "l-partmod=dep"
+    # Google is a "company" "based" in MTV.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G Z : (EXISTS E : (F Z) ((G (LAMBDA X : (p:EQUAL Z X))) E)))"
+    }
+  }
+  rule {
+    name: "infmod"
+    priority: 1
+    tregex: "l-infmod=dep"
+    # Titanic, to be released on DVD.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G Z : (EXISTS E : (F Z) ((G (LAMBDA X : (p:EQUAL Z X))) E)))"
+    }
+  }
+  rule {
+    name: "pobj extraction in questions"
+    priority: 1
+    tregex: "l-np-pobj=dep"
+    # What "year" was Nixon "married" in ?
+    # Which "school" did Obama "go" to ?
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E : (EXISTS Z : (G Z) ((F (LAMBDA X : (p:EQUAL Z X))) E)))"
+    }
+  }
+  rule {
+    name: "appos"
+    priority: 1
+    tregex: "l-appos=dep"
+    # Google is a "company" "based" in MTV.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G X : (F X) (G X))"
+    }
+  }
+  rule {
+    name: "advcl"
+    priority: 1
+    tregex: "l-advcl=dep"
+    # She "left" while he "slept".
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E : (F E) (G E))"
+    }
+  }
+  rule {
+    name: "tmod modifying verb"
+    priority: 1
+    tregex: "l-tmod=dep > (/l-.*/ < (/t-V.*/ $ /w-.*/=verb))"
+    # She "watched" the Super Bowl last "night".
+    # "Then" she "watched" the Super Bowl.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G H E : (EXISTS X : (F H E) (G X) (p:EVENT.ENTITY:$verb$.tmod E X)))"
+    }
+  }
+  rule {
+    name: "l-wh-advmod in where/when question"
+    priority: 1
+    tregex: "l-wh-advmod=target < /w-.*/=word > (l-ROOT < /w-.*/=verb)"
+    # "Where/When" did Roosevelt "die"?
+    # Note: oscart added this rule. With Siva's "paraphrase hack" l-advmod questions always end with a preposition. If a preposition is not seen, this rule is applied since the tree transformation rules convert l-advmod to l-wh-advmod. If a preposition is seen without pobj, this is treated as pobj extraction. This rule acts a backoff when a preposition is not seen.
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G Z : (EXISTS E : (p:QUESTION Z) (p:TYPE:$word$ Z) (F E) (p:EVENT.ENTITY:$verb$.$word$ E Z)))"
+    }
+  }
+  rule {
+    name: "nn/amod conjunction"
+    priority: 1
+    tregex: "/l-(conj-nn|conj-amod)/=dep"
+    # I have a "blue" and "red" car.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F X : (F X) (F1 (LAMBDA X1 : (p:EQUAL X1 X)) X) (F2 LAMBDA X2 : (p:EQUAL X2 X) X))"
+    }
+  }
+  rule {
+    name: "advmod conjunction"
+    priority: 1
+    tregex: "l-conj-advmod=dep"
+    # He ate food "calmly" and "steadily".
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 G F E : (EXISTS X : (F X) ((G (LAMBDA X5 : (p:EQUAL X5 X))) E) (((F1 (LAMBDA F3 E1 : (F3 X) (p:EQUAL E1 E))) (LAMBDA X2 : (p:EQUAL X2 X))) E) (((F2 (LAMBDA F3 E1 : (F3 X) (p:EQUAL E1 E))) (LAMBDA X4 : (p:EQUAL X4 X))) E)))"
+    }
+  }
+  rule {
+    name: "NP conjunction"
+    priority: 1
+    tregex: "/l-conj-(np|np-prep)/=dep"
+    # Google owns "Youtube" and "Gmail".
+    # the "founder" of Apple and "president" of Pixar.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 X : (EXISTS X1 X2 : (p:PAIR X X1 X2) (F1 X1) (F2 X2)))"
+    }
+  }
+  rule {
+    name: "PP conjunction with noun as head of first pp, and with no pobj on second pp."
+    priority: 1
+    tregex: "l-conj-pp-np=dep"
+    # sales "before" and "after" the campaign.
+    # (l-prep w-sales (l-cc (l-pobj (l-conj-pp-np w-before w-after) (l-det w-campaign w-the)) w-and))
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F G X : (EXISTS Y : (F Y) (G X) (((F1 (LAMBDA Y1 : (p:EQUAL Y1 Y))) (LAMBDA X1 : (p:EMPTY X1))) X) (((F2 (LAMBDA Y2 : (p:EQUAL Y2 Y))) (LAMBDA X2 : (p:EMPTY X2))) X)))"
+    }
+  }
+  rule {
+    name: "PP conjunction with noun as head of first pp, and with pobj on second pp."
+    priority: 1
+    tregex: "l-conj-pp-np-pobj=dep"
+    # sales "before" the campaign and "after" the festival
+    # (l-cc (l-conj-pp-np-pobj (l-pobj w-before (l-det w-campaign w-the)) (l-pobj w-after (l-det w-festival w-the))) w-and)
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F X : (EXISTS Y : (F X) ((F1 (LAMBDA X1 : (p:EQUAL X1 X))) X) ((F2 (LAMBDA X2 : (p:EQUAL X2 X))) X)))"
+    }
+  }
+  rule {
+    name: "PP conjunction with verb as head of first pp, and with no pobj on second pp."
+    priority: 1
+    tregex: "l-conj-pp-vp=dep"
+    # DiCaprio acted in and "as" Gatsby
+    # (l-nsubj (l-prep w-acted (l-cc (l-pobj (l-conj-pp-vp w-in w-as) w-Gatsby) w-and)) w-DiCaprio)
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      # (LAMBDA F1 F2 F E : (EXISTS X Y : (p:EVENT.ENTITY:w-acted.w-as.arg_2 E X) (F1 X) (F Y) ((F2 (LAMBDA Y1 : (p:EQUAL Y1 Y))) E)))
+      lambda: "(LAMBDA F1 F2 F G H E : (EXISTS X Y : (F Y) ((G (LAMBDA X3 : (p:EQUAL X3 X))) E) (H X) ((((F1 (LAMBDA Y1 : (p:EQUAL Y1 Y))) (LAMBDA F3 E1 : (F3 X) (p:EQUAL E1 E))) (LAMBDA X1: (p:EQUAL X1 X))) E) ((((F2 (LAMBDA Y2 : (p:EQUAL Y2 Y))) (LAMBDA F4 E2 : (F4 X) (p:EQUAL E2 E))) (LAMBDA X2: (p:EQUAL X2 X))) E)))"
+    }
+  }
+  rule {
+    name: "PP conjunction with verb as head of first pp, and with pobj on second pp."
+    priority: 1
+    tregex: "l-conj-pp-vp-pobj=dep"
+    # Audience left during the match or "after" the ceremony.
+    # (l-cc (l-conj-pp-vp-pobj (l-pobj w-during (l-det w-match w-the)) (l-pobj w-after (l-det w-ceremony w-the))) w-or)
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 G H E : (EXISTS X Y : ((G (LAMBDA X3 : (p:EQUAL X3 X))) E) (H X) (((F1 (LAMBDA F3 E1 : (F3 X) (p:EQUAL E1 E))) (LAMBDA X1: (p:EQUAL X1 X))) E) (((F2 (LAMBDA F4 E2 : (F4 X) (p:EQUAL E2 E))) (LAMBDA X2: (p:EQUAL X2 X))) E)))"
+    }
+  }
+  rule {
+    name: "S conjunction"
+    priority: 1
+    tregex: "l-conj-s=dep"
+    # Dell "sells" computers and Apple "makes" mobiles.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 E : (EXISTS E1 E2 : (p:PAIR E E1 E2) (F1 E1) (F2 E2)))"
+    }
+  }
+  rule {
+    name: "V conjunction"
+    priority: 1
+    tregex: "l-conj-v=dep"
+    # Dell "makes" and "distributes" electronic products.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F G E : (EXISTS E1 E2 X Y : (p:PAIR E E1 E2) (F X) (G Y) (((F1 (LAMBDA X1 : (p:EQUAL X1 X))) (LAMBDA Y1 : (p:EQUAL Y1 Y))) E1) (((F2 (LAMBDA X2 : (p:EQUAL X2 X))) (LAMBDA Y2 : (p:EQUAL Y2 Y))) E2)))"
+    }
+  }
+  rule {
+    name: "VP conjunction"
+    priority: 1
+    tregex: "l-conj-vp=dep"
+    # Dell "makes" computers and "distributes" electronic products.
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F E : (EXISTS E1 E2 X : (F X) (p:PAIR E E1 E2) ((F1 (LAMBDA X1 : (p:EQUAL X1 X))) E1) ((F2 (LAMBDA X2 : (p:EQUAL X2 X))) E2)))"
+    }
+  }
+}
+
+rulegroup {
+  name: "verbs"
+  priority: 1
+
+  rule {
+    name: "verb in V conjunction"
+    priority: 1
+    tregex: "/w-.*/=verb [$ /t-V.*/ > l-conj-v]"
+    # Dell makes and "distributes" electronic products.
+    # Transitive verb
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X Y : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (F1 X) (F2 Y)))"
+    }
+  }
+  rule {
+    name: "transitive verb in VP conjunction"
+    priority: 1
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-dobj > l-conj-vp]"
+    # Mary likes apples but "loves" oranges.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X Y : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (F1 X) (F2 Y)))"
+    }
+  }
+  rule {
+    name: "passive verb in VP conjunction"
+    priority: 1
+    tregex: "/w-.*/=verb [$ /t-V.*/ !$ l-dobj $ l-auxpass > l-conj-vp]"
+    # Connie Booth played a girl in Monty Python and was "married" to John Cleese.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_2 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "intransitive verb in VP conjunction"
+    priority: 1
+    tregex: "/w-.*/=verb [$ /t-VB[^N]/ !$ l-dobj !$ l-auxpass > l-conj-vp]"
+    # Mary talked and "slept".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_1 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive intransitive verb in VP conjunction"
+    priority: 1
+    tregex: "/w-.*/=verb [$ /t-VBN/ !$ l-dobj > l-conj-vp]"
+    # John was married and "baptized".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_2 E X) (F1 X)))"
+    }
+  }
+
+  rule {
+    name: "object control"
+    # Assumption: If a known object control verb has an object, and the argument verb does not have a subject, then it is object control with extraction.
+    priority: 1
+    tregex: "/w-(want|ask|tell|force|convince)/=verb [$ /t-V.*/ $ (l-xcomp !< l-nsubj) $ l-dobj]"
+    # Arista "wanted" Youtube to sign Lavinge.
+    # YouTube is the subject of "sign".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F3 F2 F1 E : (EXISTS X Y E1 : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (p:EVENT.EVENT:$verb$.arg_ctrl E E1) (F3 Y) ((F2 (LAMBDA X1 : (p:EQUAL X1 Y))) E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "subject control: argument verb subject extraction"
+    # Assumption: If a control verb has a subject, and the argument verb does not have a subject, then it is subject control with extraction.
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-nsubj $ (l-xcomp !< l-nsubj) ]"
+    # Arista "promised" Youtube to sign Lavinge.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F3 F2 F1 E : (EXISTS X Y E1 : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (p:EVENT.EVENT:$verb$.arg_ctrl E E1) (F3 Y) ((F2 (LAMBDA X1 : (p:EQUAL X1 X))) E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "subject control: argument verb subject extraction (missing object)"
+    # Assumption: If a control verb does not have an object, and the argument verb does not have a subject, then it is subject control with extraction.
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ !$ l-dobj !$ l-nsubjpass $ (l-xcomp !< l-nsubj)]"
+    # Arista "wanted" to sign Lavinge.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X E1 : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.EVENT:$verb$.arg_ctrl E E1) ((F2 (LAMBDA X1 : (p:EQUAL X1 X))) E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive subject control: argument verb subject extraction"
+    # Assumption: If a control verb does not have an object, and the argument verb does not have a subject, then it is subject control with extraction.
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ !$ l-dobj $ l-nsubjpass $ (l-xcomp !< l-nsubj)]"
+    # Arista was "asked" to sign Lavinge.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X E1 : (p:EVENT.ENTITY:$verb$.arg_2 E X) (p:EVENT.EVENT:$verb$.arg_ctrl E E1) ((F2 (LAMBDA X1 : (p:EQUAL X1 X))) E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "subject control: no extraction involved"
+    # Assumption: If a control verb does not have an object, and the argument verb have a subject, then it is subject control with no extraction involved.
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ !$ l-dobj $ (l-xcomp < l-nsubj)]"
+    # Arista "wanted" Youtube to sign Lavinge. (Youtube is the subject of sign)
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X E1 : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.EVENT:$verb$.arg_ctrl E E1) (F2 E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "complement verb with object"
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-ccomp $ l-dobj]"
+    # Jobs "told" Larry that Gates started Microsoft
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F3 F2 F1 E : (EXISTS X E1 : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (p:EVENT.EVENT:$verb$.arg_comp E E1) (F3 Y) (F2 E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "complement verb with no object"
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ !$ l-nsubjpass $ l-ccomp !$ l-dobj]"
+    # Jobs knows that Gates started Microsoft
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X E1 : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.EVENT:$verb$.arg_comp E E1) (F2 E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive complement verb with no object"
+    priority: 2
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-nsubjpass $ l-ccomp !$ l-dobj]"
+    # Jobs was told that Gates started Microsoft
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X E1 : (p:EVENT.ENTITY:$verb$.arg_2 E X) (p:EVENT.EVENT:$verb$.arg_comp E E1) (F2 E1) (F1 X)))"
+    }
+  }
+  rule {
+    name: "transitive verb"
+    priority: 3
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-dobj !$ l-nsubjpass]"
+    # Cameron directed Titanic.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X Y : (p:EVENT.ENTITY:$verb$.arg_1 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (F1 X) (F2 Y)))"
+    }
+  }
+  rule {
+    name: "passive transitive verb"
+    priority: 3
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-dobj $ l-nsubjpass]"
+    # Cameron was given the book by Mary.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 E : (EXISTS X Y : (p:EVENT.ENTITY:$verb$.arg_3 E X) (p:EVENT.ENTITY:$verb$.arg_2 E Y) (F1 X) (F2 Y)))"
+    }
+  }
+  rule {
+    name: "transitive verb (copula)"
+    priority: 3
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-nsubj $ l-attr]"
+    # Cameron "is" a director.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F2 F1 X : (F1 X) (F2 X))"
+    }
+  }
+  rule {
+    name: "intransitive verb"
+    priority: 4
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-nsubj]"
+    # Cameron slept.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_1 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive"
+    priority: 4
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-nsubjpass]"
+    # The movie was "directed".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_2 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive when occuring with partmod"
+    priority: 5
+    tregex: "/w-.*/=verb [$ t-VBN > l-partmod]"
+    # Google is a company "based" in MTV.
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_2 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive as infmod"
+    priority: 6
+    tregex: "/w-.*/=verb [$ /t-V.*/ > l-infmod]"
+    # Google has something to "buy".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_2 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "verb with control verb as its parent, and when none of the above rules apply."
+    priority: 7
+    tregex: "/w-.*/=verb [$ /t-V.*/ !$ l-auxpass > l-xcomp]"
+    # I wanted to "play".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_1 E X) (F1 X)))"
+    }
+  }
+  rule {
+    name: "passive verb with control verb as its parent, and when none of the above rules apply."
+    priority: 7
+    tregex: "/w-.*/=verb [$ /t-V.*/ $ l-auxpass > l-xcomp]"
+    # I wanted to be "married".
+    transformation {
+      target: "verb"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_2 E X) (F1 X)))"
+    }
+  }
+}
+
+rulegroup {
+  name: "nouns, pronouns and adjectives"
+  priority: 1
+  rule {
+    name: "iobj"
+    priority: 1
+    tregex: "/w-.*/=target > (l-iobj $ /w-.*/=verb)"
+    # I gave "him" a pencil.
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E : (EXISTS X Y: (p:EVENT.ENTITY:$verb$.arg_3 E Y) (p:TYPE:$target$ Y) ((F (LAMBDA X1 : (p:EQUAL X1 X))) E) (G X)))"
+    }
+  }
+  rule {
+    name: "nn/amod conjunction"
+    priority: 1
+    tregex: "/w-.*/=target > (/l-(conj-nn|conj-amod)/ > (/l-(nn|amod|title|number)/ $ /w-.*/=noun))"
+    # I have a blue and "black" pen.
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (p:TYPEMOD:$noun$.$target$ X) (F X))"
+    }
+  }
+  rule {
+    name: "numbers"
+    priority: 1
+    tregex: "/w-.*/=target > /l-num/"
+    # Titanic won "10" oscars .
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (p:TYPE:$target$ X) (F X))"
+    }
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (EXISTS Y : (p:TYPE:$target$ Y) (p:COUNT X Y)  (F X)))"
+    }
+  }
+  rule {
+    name: "How-many"
+    priority: 1
+    tregex: "/w-[Hh]ow-many/=target > /l-amod/"
+    # "How-many" oscars did Titanic win ?
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (p:QUESTION X) (p:TYPE:$target$ X) (F X))"
+    }
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (EXISTS Y : (p:QUESTION Y) (p:TYPE:$target$ Y) (p:COUNT X Y)  (F X)))"
+    }
+  }
+  rule {
+    name: "nn/amod/predet"
+    priority: 2
+    tregex: "/w-.*/=target > (/l-(nn|amod|predet|title|number)/ $ /w-.*/=head)"
+    # I have a "black" pen.
+    # He is "quite" a bore.
+    # She was a great woman.
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (p:TYPEMOD:$head$.$target$ X) (F X))"
+    }
+  }
+  rule {
+    name: "any noun or pronoun"
+    priority: 3
+    tregex: "/w-.*/=noun $ /t-(N.*|PRP.*|CD|[$])/"
+    # "I" gave him a "pencil".
+    transformation {
+      target: "noun"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA X : (p:TYPE:$noun$ X))"
+    }
+  }
+  rule {
+    name: "adjective in conjuction with noun"
+    priority: 2
+    tregex: "/w-.*/=adj $ /t-J.*/ $ (l-conj-np < /w-.*/=noun)"
+    # I have a "blue" and a black pen.
+    transformation {
+      target: "adj"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA X : (p:TYPE:$noun$ X) (p:TYPEMOD:$noun$.$adj$ X))"
+    }
+  }
+}
+
+rulegroup {
+  name: "adverbs"
+  priority: 1
+  rule {
+    name: "adverb in l-conj-advmod"
+    priority: 1
+    tregex: "/w-.*/=target > (l-conj-advmod > (l-advmod $ /w-.*/=verb))"
+    # He ate food camly and "steadily".
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E : (p:EVENTMOD:$verb$.$target$ E) (F G E))"
+    }
+  }
+  rule {
+    name: "adverb"
+    priority: 1
+    tregex: "/w-.*/=target !$ /t-W.*/ > (l-advmod $ /w-.*/=verb)"
+    # He ate food "calmly".
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E : (p:EVENTMOD:$verb$.$target$ E) (F G E))"
+    }
+  }
+  rule {
+    name: "wh- adverb in advcl"
+    priority: 1
+    tregex: "/w-.*/=target $ /t-W.*/ > (l-advmod > (l-advcl $ /w-.*/=verb))"
+    # She left "when" he "slept".
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E1 : (EXISTS E : (p:EVENT.EVENT:$verb$.$target$ E1 E) (F G E)))"
+    }
+  }
+  rule {
+    name: "mark in advcl"
+    priority: 1
+    tregex: "/w-.*/=target > (l-mark > (l-advcl $ /w-.*/=verb))"
+    # She left "as/while/because/..." he "slept".
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G E1 : (EXISTS E : (p:EVENT.EVENT:$verb$.$target$ E1 E) (F G E)))"
+    }
+  }
+  rule {
+    name: "adverb in tmod"
+    priority: 1
+    tregex: "/w-.*/=target $ /t-RB.*/ > l-tmod"
+    # Now she left him.
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA X : (p:TYPE:$target$ X))"
+    }
+  }
+}
+
+rulegroup {
+  name: "prepositions"
+  priority: 1
+  rule {
+    name: "argument preposition in l-conj-pp-np.* construction."
+    priority: 1
+    tregex: "/w-.*/=prep > (/l-(conj-pp-np|conj-pp-np-pobj)/ > (l-prep $ /w-.*/=noun))"
+    # sales before and "after" the campaign.
+    transformation {
+      target: "prep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G X : (EXISTS Y : (p:EVENT.ENTITY:$noun$.$prep$.arg_1 X X) (p:EVENT.ENTITY:$noun$.$prep$.arg_2 X Y) (F Y) (G X)))"
+    }
+  }
+  rule {
+    name: "argument preposition in l-conj-pp-vp.* construction."
+    priority: 1
+    tregex: "/w-.*/=prep> (/l-(conj-pp-vp|conj-pp-vp-pobj)/ > (l-prep $ /w-.*/=verb))"
+    # DiCaprio acted in and "as" Gatsby
+    # Audience left during the match or "after" the ceremony.
+    transformation {
+      target: "prep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F E : (EXISTS Y : (p:EVENT.ENTITY:$verb$.$prep$.arg_2 E Y) (F1 Y) (F2 F E)))"
+    }
+  }
+  rule {
+    name: "passive 'by' (lexicalised rule)"
+    priority: 2
+    tregex: "/w-.*/=by > (l-pass-by $ /w-.*/=verb)"
+    # Atari was founded "by" NolanBushnell.
+    transformation {
+      target: "by"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F E : (EXISTS X : (p:EVENT.ENTITY:$verb$.arg_1 E X) (F1 X) (F2 F E)))"
+    }
+  }
+  rule {
+    name: "prepositions with noun as head"
+    priority: 3
+    tregex: "/w-.*/=prep > (l-prep [$ /t-(N.*|PRP.*|CD|[$])/ $ /w-.*/=noun])"
+    # Google "in" NewYork.
+    transformation {
+      target: "prep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G X : (EXISTS Y : (p:EVENT.ENTITY:$noun$.$prep$.arg_1 X X) (p:EVENT.ENTITY:$noun$.$prep$.arg_2 X Y) (F Y) (G X)))"
+    }
+  }
+  rule {
+    name: "prepositions with verb as head"
+    priority: 2
+    tregex: "/w-.*/=prep > (l-prep [$ /t-V.*/ $ /w-.*/=verb])"
+    # Cameron directed Titanic "in" 1997.
+    transformation {
+      target: "prep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F E : (EXISTS Y : (p:EVENT.ENTITY:$verb$.$prep$.arg_2 E Y) (F1 Y) (F2 F E)))"
+    }
+  }
+  rule {
+    name: "prep->prep->verb"
+    priority: 2
+    tregex: "/w-.*/=prep > (l-prep > (l-prep [$ /t-V.*/ $ /w-.*/=verb]))"
+    # James directed from 1987 "to" 1988.
+    transformation {
+      target: "prep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F2 F3 F E : (EXISTS Z : (p:EVENT.ENTITY:$verb$.$prep$.arg_2 E Z) (F1 Z) (F2 F3 F E)))"
+    }
+  }
+}
+
+rulegroup {
+  name: "Questions"
+  priority: 1
+  rule {
+    name: "wh-word subject extraction"
+    priority: 1
+    tregex: "/w-.*/=target [ $ /t-W.*/ > (l-nsubj [!> l-rcmod > l-ROOT])]"
+    # who played Bilbo in LOTR?
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA X : (p:QUESTION X) (p:TYPE:$target$ X))"
+    }
+  }
+  rule {
+    name: "wh-word object extraction"
+    priority: 1
+    tregex: "/w-.*/=target [ $ /t-W.*/ > (l-dobj [!> l-rcmod > l-ROOT])]"
+    # Who did MichaelJFox marry?
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA X : (p:QUESTION X) (p:TYPE:$target$ X))"
+    }
+  }
+  rule {
+    name: "wh-pobj extraction"
+    priority: 1
+    tregex: "/w-.*/=target [$ /t-W.*/ > (l-wh-pobj [!> l-rcmod > l-ROOT])]"
+    # Who was Nixon married to?
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F E : (EXISTS X : (p:QUESTION X) (p:TYPE:$target$ X) (F (LAMBDA X1 : (p:EQUAL X1 X))) E))"
+    }
+  }
+  rule {
+    name: "wh modifier (non pobj extraction)"
+    priority: 1
+    tregex: "/w-.*/=target [$ /t-W.*/ > (l-det !> l-wh-pobj)]"
+    # Which actor won Oscar?
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (F X) (p:QUESTION X) (p:TYPE:$target$ X))"
+    }
+  }
+  rule {
+    name: "wh in copula relation"
+    priority: 1
+    tregex: "/w-.*/=target [$ /t-W.*/ > l-attr]"
+    # Who is the founder of Admob?
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA X : (p:QUESTION X) (p:TYPE:$target$ X))"
+    }
+  }
+}
+
+rulegroup {
+  name: "virtual"
+  priority: 1
+  rule {
+    name: "virtual default"
+    priority: 1
+    tregex: "/v-.*/=target"
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "$target$"
+    }
+  }
+}
+
+rulegroup {
+  name: "unique, negation and modals"
+  priority: 1
+  rule {
+    name: "the"
+    priority: 1
+    tregex: "/w-[Tt]he/=the > l-det"
+    transformation {
+      target: "the"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F X : (F X) (p:UNIQUE X))"
+    }
+  }
+  rule {
+    name: "negation"
+    priority: 1
+    tregex: "/w-.*/=neg > l-neg"
+    # Cameron "did" not direct Titanic.
+    transformation {
+      target: "neg"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F E : (p:NEGATION E) (F1 F E))"
+    }
+  }
+  rule {
+    name : "modal"
+    priority: 1
+    tregex: "/w-.*/=mod $ t-MD > (l-aux [$ /t-V.*/ $ /w-.*/=verb])"
+    # Cameron "will" direct Titanic.
+    transformation {
+      target: "mod"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F1 F E : (EXISTS X : (p:EVENT.ENTITY:$verb$.$mod$ E X) (F X) (F1 (LAMBDA X1 : (p:EQUAL X1 X))) E))"
+    }
+  }
+}
+
+rulegroup {
+  name: "defaults"
+  priority: 10
+  rule {
+    name: "word default"
+    priority: 1
+    tregex: "/w-.*/=word"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F : F)"
+    }
+  }
+  rule {
+    name: "dep default"
+    priority: 1
+    tregex: "/l-.*/=dep"
+    transformation {
+      target: "dep"
+      action: ASSIGN_LAMBDA
+      lambda: "(LAMBDA F G : (G F))"
+    }
+  }
+}
