@@ -60,5 +60,4 @@ public class Sentence {
   public DependencyTree getRootNode() {
     return rootNode;
   }
-
 }

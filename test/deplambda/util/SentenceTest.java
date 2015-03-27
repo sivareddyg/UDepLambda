@@ -41,4 +41,5 @@ public class SentenceTest {
         "(l-ROOT w-developed t-VBD (l-nsubj w-Inc. t-NNP (l-rcmod w-found t-VBD (l-dobj w-which t-WP)) (l-p w-, t-.)) (l-dobj w-shuffle t-NN) (l-p w-. t-.))",
         sent.getRootNode().toString());
   }
+
 }

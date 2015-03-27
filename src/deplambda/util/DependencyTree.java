@@ -94,4 +94,16 @@ public class DependencyTree extends LabeledScoredTreeNode {
     }
     return rootNode;
   }
+
+  public boolean isWord() {
+    return label().value().startsWith(WORD_PREFIX);
+  }
+
+  public boolean isTag() {
+    return label().value().startsWith(TAG_PREFIX);
+  }
+
+  public boolean isDepLabel() {
+    return label().value().startsWith(DEP_PREFIX);
+  }
 }

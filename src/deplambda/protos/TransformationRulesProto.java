@@ -11,29 +11,29 @@ public final class TransformationRulesProto {
   public interface RuleGroupsOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // repeated .RuleGroups.RuleGroup rulegroup = 1;
+    // repeated .RuleGroups.RuleGroup ruleGroup = 1;
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
     java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> 
-        getRulegroupList();
+        getRuleGroupList();
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup getRulegroup(int index);
+    deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup getRuleGroup(int index);
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    int getRulegroupCount();
+    int getRuleGroupCount();
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
     java.util.List<? extends deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder> 
-        getRulegroupOrBuilderList();
+        getRuleGroupOrBuilderList();
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder getRulegroupOrBuilder(
+    deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder getRuleGroupOrBuilder(
         int index);
 
     // repeated .RuleGroups.Relation relation = 2;
@@ -114,10 +114,10 @@ public final class TransformationRulesProto {
             }
             case 10: {
               if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                rulegroup_ = new java.util.ArrayList<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup>();
+                ruleGroup_ = new java.util.ArrayList<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup>();
                 mutable_bitField0_ |= 0x00000001;
               }
-              rulegroup_.add(input.readMessage(deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.PARSER, extensionRegistry));
+              ruleGroup_.add(input.readMessage(deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.PARSER, extensionRegistry));
               break;
             }
             case 18: {
@@ -137,7 +137,7 @@ public final class TransformationRulesProto {
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          rulegroup_ = java.util.Collections.unmodifiableList(rulegroup_);
+          ruleGroup_ = java.util.Collections.unmodifiableList(ruleGroup_);
         }
         if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
           relation_ = java.util.Collections.unmodifiableList(relation_);
@@ -3829,40 +3829,40 @@ public final class TransformationRulesProto {
       // @@protoc_insertion_point(class_scope:RuleGroups.Relation)
     }
 
-    // repeated .RuleGroups.RuleGroup rulegroup = 1;
+    // repeated .RuleGroups.RuleGroup ruleGroup = 1;
     public static final int RULEGROUP_FIELD_NUMBER = 1;
-    private java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> rulegroup_;
+    private java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> ruleGroup_;
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    public java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> getRulegroupList() {
-      return rulegroup_;
+    public java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> getRuleGroupList() {
+      return ruleGroup_;
     }
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
     public java.util.List<? extends deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder> 
-        getRulegroupOrBuilderList() {
-      return rulegroup_;
+        getRuleGroupOrBuilderList() {
+      return ruleGroup_;
     }
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    public int getRulegroupCount() {
-      return rulegroup_.size();
+    public int getRuleGroupCount() {
+      return ruleGroup_.size();
     }
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup getRulegroup(int index) {
-      return rulegroup_.get(index);
+    public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup getRuleGroup(int index) {
+      return ruleGroup_.get(index);
     }
     /**
-     * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+     * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
      */
-    public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder getRulegroupOrBuilder(
+    public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder getRuleGroupOrBuilder(
         int index) {
-      return rulegroup_.get(index);
+      return ruleGroup_.get(index);
     }
 
     // repeated .RuleGroups.Relation relation = 2;
@@ -3902,7 +3902,7 @@ public final class TransformationRulesProto {
     }
 
     private void initFields() {
-      rulegroup_ = java.util.Collections.emptyList();
+      ruleGroup_ = java.util.Collections.emptyList();
       relation_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -3917,8 +3917,8 @@ public final class TransformationRulesProto {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < rulegroup_.size(); i++) {
-        output.writeMessage(1, rulegroup_.get(i));
+      for (int i = 0; i < ruleGroup_.size(); i++) {
+        output.writeMessage(1, ruleGroup_.get(i));
       }
       for (int i = 0; i < relation_.size(); i++) {
         output.writeMessage(2, relation_.get(i));
@@ -3932,9 +3932,9 @@ public final class TransformationRulesProto {
       if (size != -1) return size;
 
       size = 0;
-      for (int i = 0; i < rulegroup_.size(); i++) {
+      for (int i = 0; i < ruleGroup_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, rulegroup_.get(i));
+          .computeMessageSize(1, ruleGroup_.get(i));
       }
       for (int i = 0; i < relation_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -4048,7 +4048,7 @@ public final class TransformationRulesProto {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getRulegroupFieldBuilder();
+          getRuleGroupFieldBuilder();
           getRelationFieldBuilder();
         }
       }
@@ -4058,11 +4058,11 @@ public final class TransformationRulesProto {
 
       public Builder clear() {
         super.clear();
-        if (rulegroupBuilder_ == null) {
-          rulegroup_ = java.util.Collections.emptyList();
+        if (ruleGroupBuilder_ == null) {
+          ruleGroup_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
         } else {
-          rulegroupBuilder_.clear();
+          ruleGroupBuilder_.clear();
         }
         if (relationBuilder_ == null) {
           relation_ = java.util.Collections.emptyList();
@@ -4097,14 +4097,14 @@ public final class TransformationRulesProto {
       public deplambda.protos.TransformationRulesProto.RuleGroups buildPartial() {
         deplambda.protos.TransformationRulesProto.RuleGroups result = new deplambda.protos.TransformationRulesProto.RuleGroups(this);
         int from_bitField0_ = bitField0_;
-        if (rulegroupBuilder_ == null) {
+        if (ruleGroupBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            rulegroup_ = java.util.Collections.unmodifiableList(rulegroup_);
+            ruleGroup_ = java.util.Collections.unmodifiableList(ruleGroup_);
             bitField0_ = (bitField0_ & ~0x00000001);
           }
-          result.rulegroup_ = rulegroup_;
+          result.ruleGroup_ = ruleGroup_;
         } else {
-          result.rulegroup_ = rulegroupBuilder_.build();
+          result.ruleGroup_ = ruleGroupBuilder_.build();
         }
         if (relationBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002)) {
@@ -4130,29 +4130,29 @@ public final class TransformationRulesProto {
 
       public Builder mergeFrom(deplambda.protos.TransformationRulesProto.RuleGroups other) {
         if (other == deplambda.protos.TransformationRulesProto.RuleGroups.getDefaultInstance()) return this;
-        if (rulegroupBuilder_ == null) {
-          if (!other.rulegroup_.isEmpty()) {
-            if (rulegroup_.isEmpty()) {
-              rulegroup_ = other.rulegroup_;
+        if (ruleGroupBuilder_ == null) {
+          if (!other.ruleGroup_.isEmpty()) {
+            if (ruleGroup_.isEmpty()) {
+              ruleGroup_ = other.ruleGroup_;
               bitField0_ = (bitField0_ & ~0x00000001);
             } else {
-              ensureRulegroupIsMutable();
-              rulegroup_.addAll(other.rulegroup_);
+              ensureRuleGroupIsMutable();
+              ruleGroup_.addAll(other.ruleGroup_);
             }
             onChanged();
           }
         } else {
-          if (!other.rulegroup_.isEmpty()) {
-            if (rulegroupBuilder_.isEmpty()) {
-              rulegroupBuilder_.dispose();
-              rulegroupBuilder_ = null;
-              rulegroup_ = other.rulegroup_;
+          if (!other.ruleGroup_.isEmpty()) {
+            if (ruleGroupBuilder_.isEmpty()) {
+              ruleGroupBuilder_.dispose();
+              ruleGroupBuilder_ = null;
+              ruleGroup_ = other.ruleGroup_;
               bitField0_ = (bitField0_ & ~0x00000001);
-              rulegroupBuilder_ = 
+              ruleGroupBuilder_ = 
                 com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getRulegroupFieldBuilder() : null;
+                   getRuleGroupFieldBuilder() : null;
             } else {
-              rulegroupBuilder_.addAllMessages(other.rulegroup_);
+              ruleGroupBuilder_.addAllMessages(other.ruleGroup_);
             }
           }
         }
@@ -4209,244 +4209,244 @@ public final class TransformationRulesProto {
       }
       private int bitField0_;
 
-      // repeated .RuleGroups.RuleGroup rulegroup = 1;
-      private java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> rulegroup_ =
+      // repeated .RuleGroups.RuleGroup ruleGroup = 1;
+      private java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> ruleGroup_ =
         java.util.Collections.emptyList();
-      private void ensureRulegroupIsMutable() {
+      private void ensureRuleGroupIsMutable() {
         if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          rulegroup_ = new java.util.ArrayList<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup>(rulegroup_);
+          ruleGroup_ = new java.util.ArrayList<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup>(ruleGroup_);
           bitField0_ |= 0x00000001;
          }
       }
 
       private com.google.protobuf.RepeatedFieldBuilder<
-          deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder> rulegroupBuilder_;
+          deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder> ruleGroupBuilder_;
 
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> getRulegroupList() {
-        if (rulegroupBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(rulegroup_);
+      public java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> getRuleGroupList() {
+        if (ruleGroupBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(ruleGroup_);
         } else {
-          return rulegroupBuilder_.getMessageList();
+          return ruleGroupBuilder_.getMessageList();
         }
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public int getRulegroupCount() {
-        if (rulegroupBuilder_ == null) {
-          return rulegroup_.size();
+      public int getRuleGroupCount() {
+        if (ruleGroupBuilder_ == null) {
+          return ruleGroup_.size();
         } else {
-          return rulegroupBuilder_.getCount();
+          return ruleGroupBuilder_.getCount();
         }
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup getRulegroup(int index) {
-        if (rulegroupBuilder_ == null) {
-          return rulegroup_.get(index);
+      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup getRuleGroup(int index) {
+        if (ruleGroupBuilder_ == null) {
+          return ruleGroup_.get(index);
         } else {
-          return rulegroupBuilder_.getMessage(index);
+          return ruleGroupBuilder_.getMessage(index);
         }
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder setRulegroup(
+      public Builder setRuleGroup(
           int index, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup value) {
-        if (rulegroupBuilder_ == null) {
+        if (ruleGroupBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureRulegroupIsMutable();
-          rulegroup_.set(index, value);
+          ensureRuleGroupIsMutable();
+          ruleGroup_.set(index, value);
           onChanged();
         } else {
-          rulegroupBuilder_.setMessage(index, value);
+          ruleGroupBuilder_.setMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder setRulegroup(
+      public Builder setRuleGroup(
           int index, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder builderForValue) {
-        if (rulegroupBuilder_ == null) {
-          ensureRulegroupIsMutable();
-          rulegroup_.set(index, builderForValue.build());
+        if (ruleGroupBuilder_ == null) {
+          ensureRuleGroupIsMutable();
+          ruleGroup_.set(index, builderForValue.build());
           onChanged();
         } else {
-          rulegroupBuilder_.setMessage(index, builderForValue.build());
+          ruleGroupBuilder_.setMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder addRulegroup(deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup value) {
-        if (rulegroupBuilder_ == null) {
+      public Builder addRuleGroup(deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup value) {
+        if (ruleGroupBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureRulegroupIsMutable();
-          rulegroup_.add(value);
+          ensureRuleGroupIsMutable();
+          ruleGroup_.add(value);
           onChanged();
         } else {
-          rulegroupBuilder_.addMessage(value);
+          ruleGroupBuilder_.addMessage(value);
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder addRulegroup(
+      public Builder addRuleGroup(
           int index, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup value) {
-        if (rulegroupBuilder_ == null) {
+        if (ruleGroupBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          ensureRulegroupIsMutable();
-          rulegroup_.add(index, value);
+          ensureRuleGroupIsMutable();
+          ruleGroup_.add(index, value);
           onChanged();
         } else {
-          rulegroupBuilder_.addMessage(index, value);
+          ruleGroupBuilder_.addMessage(index, value);
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder addRulegroup(
+      public Builder addRuleGroup(
           deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder builderForValue) {
-        if (rulegroupBuilder_ == null) {
-          ensureRulegroupIsMutable();
-          rulegroup_.add(builderForValue.build());
+        if (ruleGroupBuilder_ == null) {
+          ensureRuleGroupIsMutable();
+          ruleGroup_.add(builderForValue.build());
           onChanged();
         } else {
-          rulegroupBuilder_.addMessage(builderForValue.build());
+          ruleGroupBuilder_.addMessage(builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder addRulegroup(
+      public Builder addRuleGroup(
           int index, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder builderForValue) {
-        if (rulegroupBuilder_ == null) {
-          ensureRulegroupIsMutable();
-          rulegroup_.add(index, builderForValue.build());
+        if (ruleGroupBuilder_ == null) {
+          ensureRuleGroupIsMutable();
+          ruleGroup_.add(index, builderForValue.build());
           onChanged();
         } else {
-          rulegroupBuilder_.addMessage(index, builderForValue.build());
+          ruleGroupBuilder_.addMessage(index, builderForValue.build());
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder addAllRulegroup(
+      public Builder addAllRuleGroup(
           java.lang.Iterable<? extends deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup> values) {
-        if (rulegroupBuilder_ == null) {
-          ensureRulegroupIsMutable();
-          super.addAll(values, rulegroup_);
+        if (ruleGroupBuilder_ == null) {
+          ensureRuleGroupIsMutable();
+          super.addAll(values, ruleGroup_);
           onChanged();
         } else {
-          rulegroupBuilder_.addAllMessages(values);
+          ruleGroupBuilder_.addAllMessages(values);
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder clearRulegroup() {
-        if (rulegroupBuilder_ == null) {
-          rulegroup_ = java.util.Collections.emptyList();
+      public Builder clearRuleGroup() {
+        if (ruleGroupBuilder_ == null) {
+          ruleGroup_ = java.util.Collections.emptyList();
           bitField0_ = (bitField0_ & ~0x00000001);
           onChanged();
         } else {
-          rulegroupBuilder_.clear();
+          ruleGroupBuilder_.clear();
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public Builder removeRulegroup(int index) {
-        if (rulegroupBuilder_ == null) {
-          ensureRulegroupIsMutable();
-          rulegroup_.remove(index);
+      public Builder removeRuleGroup(int index) {
+        if (ruleGroupBuilder_ == null) {
+          ensureRuleGroupIsMutable();
+          ruleGroup_.remove(index);
           onChanged();
         } else {
-          rulegroupBuilder_.remove(index);
+          ruleGroupBuilder_.remove(index);
         }
         return this;
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder getRulegroupBuilder(
+      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder getRuleGroupBuilder(
           int index) {
-        return getRulegroupFieldBuilder().getBuilder(index);
+        return getRuleGroupFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder getRulegroupOrBuilder(
+      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder getRuleGroupOrBuilder(
           int index) {
-        if (rulegroupBuilder_ == null) {
-          return rulegroup_.get(index);  } else {
-          return rulegroupBuilder_.getMessageOrBuilder(index);
+        if (ruleGroupBuilder_ == null) {
+          return ruleGroup_.get(index);  } else {
+          return ruleGroupBuilder_.getMessageOrBuilder(index);
         }
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
       public java.util.List<? extends deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder> 
-           getRulegroupOrBuilderList() {
-        if (rulegroupBuilder_ != null) {
-          return rulegroupBuilder_.getMessageOrBuilderList();
+           getRuleGroupOrBuilderList() {
+        if (ruleGroupBuilder_ != null) {
+          return ruleGroupBuilder_.getMessageOrBuilderList();
         } else {
-          return java.util.Collections.unmodifiableList(rulegroup_);
+          return java.util.Collections.unmodifiableList(ruleGroup_);
         }
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder addRulegroupBuilder() {
-        return getRulegroupFieldBuilder().addBuilder(
+      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder addRuleGroupBuilder() {
+        return getRuleGroupFieldBuilder().addBuilder(
             deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.getDefaultInstance());
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
-      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder addRulegroupBuilder(
+      public deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder addRuleGroupBuilder(
           int index) {
-        return getRulegroupFieldBuilder().addBuilder(
+        return getRuleGroupFieldBuilder().addBuilder(
             index, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.getDefaultInstance());
       }
       /**
-       * <code>repeated .RuleGroups.RuleGroup rulegroup = 1;</code>
+       * <code>repeated .RuleGroups.RuleGroup ruleGroup = 1;</code>
        */
       public java.util.List<deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder> 
-           getRulegroupBuilderList() {
-        return getRulegroupFieldBuilder().getBuilderList();
+           getRuleGroupBuilderList() {
+        return getRuleGroupFieldBuilder().getBuilderList();
       }
       private com.google.protobuf.RepeatedFieldBuilder<
           deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder> 
-          getRulegroupFieldBuilder() {
-        if (rulegroupBuilder_ == null) {
-          rulegroupBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+          getRuleGroupFieldBuilder() {
+        if (ruleGroupBuilder_ == null) {
+          ruleGroupBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
               deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Builder, deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroupOrBuilder>(
-                  rulegroup_,
+                  ruleGroup_,
                   ((bitField0_ & 0x00000001) == 0x00000001),
                   getParentForChildren(),
                   isClean());
-          rulegroup_ = null;
+          ruleGroup_ = null;
         }
-        return rulegroupBuilder_;
+        return ruleGroupBuilder_;
       }
 
       // repeated .RuleGroups.Relation relation = 2;
@@ -4735,7 +4735,7 @@ public final class TransformationRulesProto {
   static {
     java.lang.String[] descriptorData = {
       "\n\032transformation-rules.proto\"\257\004\n\nRuleGro" +
-      "ups\022(\n\trulegroup\030\001 \003(\0132\025.RuleGroups.Rule" +
+      "ups\022(\n\truleGroup\030\001 \003(\0132\025.RuleGroups.Rule" +
       "Group\022&\n\010relation\030\002 \003(\0132\024.RuleGroups.Rel" +
       "ation\032\242\003\n\tRuleGroup\022\014\n\004name\030\001 \001(\t\022\020\n\010pri" +
       "ority\030\002 \001(\005\022(\n\004rule\030\003 \003(\0132\032.RuleGroups.R" +
@@ -4761,7 +4761,7 @@ public final class TransformationRulesProto {
           internal_static_RuleGroups_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_RuleGroups_descriptor,
-              new java.lang.String[] { "Rulegroup", "Relation", });
+              new java.lang.String[] { "RuleGroup", "Relation", });
           internal_static_RuleGroups_RuleGroup_descriptor =
             internal_static_RuleGroups_descriptor.getNestedTypes().get(0);
           internal_static_RuleGroups_RuleGroup_fieldAccessorTable = new
