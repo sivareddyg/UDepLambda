@@ -19,6 +19,7 @@ import edu.stanford.nlp.trees.LabeledScoredTreeNode;
 public class DependencyTree extends LabeledScoredTreeNode {
   private static final long serialVersionUID = 2203868333509512844L;
   public static String WORD_PREFIX = "w-";
+  public static String VIRTUAL_PREFIX = "v-";
   public static String TAG_PREFIX = "t-";
   public static String DEP_PREFIX = "l-";
 
@@ -97,6 +98,14 @@ public class DependencyTree extends LabeledScoredTreeNode {
 
   public boolean isWord() {
     return label().value().startsWith(WORD_PREFIX);
+  }
+
+  public boolean isVirtual() {
+    return label().value().startsWith(VIRTUAL_PREFIX);
+  }
+
+  public boolean isWordOrVirtual() {
+    return isWord() || isVirtual();
   }
 
   public boolean isTag() {

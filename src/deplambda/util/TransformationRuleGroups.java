@@ -40,7 +40,7 @@ public class TransformationRuleGroups {
     RuleGroups ruleGroups = rulesBuilder.build();
 
     ruleGroupList = new ArrayList<>();
-    for (RuleGroup ruleGroup : ruleGroups.getRuleGroupList()) {
+    for (RuleGroup ruleGroup : ruleGroups.getRulegroupList()) {
       TransformationRuleGroup transformationRuleGroup =
           new TransformationRuleGroup(ruleGroup);
       ruleGroupList.add(transformationRuleGroup);

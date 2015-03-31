@@ -30,7 +30,7 @@ message RuleGroups {
 		repeated Rule rule = 3; 
 	}
 	
-	repeated RuleGroup ruleGroup = 1;
+	repeated RuleGroup rulegroup = 1;
 	
 	message Relation {
 		optional string name = 1;

@@ -8,17 +8,17 @@ import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup;
 import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule;
 
 public class TransformationRuleGroup {
-  private List<Rule> ruleList;
-  
+  private List<TransformationRule> ruleList;
+
   // Priority of the RuleGroup.
   private int priority;
 
-  // Name of the rule group.
+  // Name of the RuleGroup.
   private String name;
 
   /**
    * Mutable form of {@link RuleGroup}. The main difference is that the rules in
-   * this group are sorted based on thier priority.
+   * this group are sorted based on their priority.
    * 
    * @param ruleGroup
    */
@@ -30,11 +30,14 @@ public class TransformationRuleGroup {
     if (ruleGroup.hasName())
       name = ruleGroup.getName();
 
-    ruleList = new ArrayList<>(ruleGroup.getRuleList());
+    ruleList = new ArrayList<>();
+    for (Rule rule : ruleGroup.getRuleList()) {
+      ruleList.add(new TransformationRule(rule));
+    }
     ruleList.sort(Comparator.comparing(r -> r.getPriority()));
   }
 
-  public List<Rule> getRuleList() {
+  public List<TransformationRule> getRuleList() {
     return ruleList;
   }
 
