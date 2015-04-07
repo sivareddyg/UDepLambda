@@ -3,3 +3,10 @@ lib/stanford-tregex-2015-01-29.zip
 working
 bin
 random
+lib/LambdaCalculator/
+lib/LambdaCalculatorSE-2.0.0.jar
+lib/sempre/
+lib/spf/
+lib_data/resources-test/
+test-output/
+unittests/

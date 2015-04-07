@@ -1,7 +1,7 @@
 /**
  * 
  */
-package deplambda.parser;
+package uk.ac.ed.ilcc.deplambda.parser;
 
 import static org.junit.Assert.*;
 
@@ -12,11 +12,12 @@ import java.io.FileWriter;
 import org.junit.Before;
 import org.junit.Test;
 
+import uk.ac.ed.ilcc.deplambda.parser.TreeTransformer;
+import uk.ac.ed.ilcc.deplambda.util.Sentence;
+import uk.ac.ed.ilcc.deplambda.util.TransformationRuleGroups;
+
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import deplambda.util.Sentence;
-import deplambda.util.TransformationRuleGroups;
 
 /**
  * @author Siva Reddy
@@ -131,7 +132,7 @@ public class TreeTransformerTest {
 
   /**
    * Test method for
-   * {@link deplambda.parser.TreeTransformer#ApplyRuleGroupsOnTree(TransformationRuleGroups, deplambda.util.DependencyTree)}
+   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#ApplyRuleGroupsOnTree(TransformationRuleGroups, uk.ac.ed.ilcc.deplambda.util.DependencyTree)}
    * .
    */
   @Test
@@ -155,7 +156,7 @@ public class TreeTransformerTest {
 
   /**
    * Test method for
-   * {@link deplambda.parser.TreeTransformer#binarizeTree(deplambda.util.DependencyTree, java.util.Map)}
+   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#binarizeTree(uk.ac.ed.ilcc.deplambda.util.DependencyTree, java.util.Map)}
    * .
    */
   @Test
