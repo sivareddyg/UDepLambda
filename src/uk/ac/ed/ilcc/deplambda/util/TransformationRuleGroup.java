@@ -1,11 +1,11 @@
-package deplambda.util;
+package uk.ac.ed.ilcc.deplambda.util;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup;
-import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule;
+import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup;
+import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule;
 
 public class TransformationRuleGroup {
   private List<TransformationRule> ruleList;

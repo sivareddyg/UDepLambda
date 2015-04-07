@@ -1,4 +1,4 @@
-package deplambda.util;
+package uk.ac.ed.ilcc.deplambda.util;
 
 import java.util.List;
 import java.util.Map;

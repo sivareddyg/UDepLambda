@@ -1,10 +1,10 @@
-package deplambda.util;
+package uk.ac.ed.ilcc.deplambda.util;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule;
-import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
+import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule;
+import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.trees.tregex.TregexPatternCompiler;
 

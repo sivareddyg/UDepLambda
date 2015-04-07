@@ -1,4 +1,4 @@
-option java_package = "deplambda.protos";
+option java_package = "uk.ac.ed.ilcc.deplambda.protos";
 option java_outer_classname = "TransformationRulesProto";
 
 message RuleGroups {
