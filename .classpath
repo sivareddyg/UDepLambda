@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="random"/>
-	<classpathentry kind="src" path="lib/sempre/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/stanford-tregex-3.5.1.jar" sourcepath="lib/stanford-tregex-2015-01-30/stanford-tregex-3.5.1-sources.jar">
 		<attributes>
@@ -13,11 +12,6 @@
 	<classpathentry kind="lib" path="lib/spf-1.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/protobuf-java-2.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/sempre/lib/fig.jar"/>
-	<classpathentry kind="lib" path="lib/sempre/lib/jackson-annotations-2.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/sempre/lib/jackson-core-2.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/sempre/lib/jackson-databind-2.2.0.jar"/>
-	<classpathentry kind="lib" path="lib/sempre/lib/testng-6.8.5.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
