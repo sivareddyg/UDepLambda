@@ -1,5 +1,6 @@
 package uk.ac.ed.ilcc.deplambda.util;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,6 +11,7 @@ import com.google.gson.JsonObject;
 import edu.stanford.nlp.ling.Label;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.trees.LabeledScoredTreeNode;
+import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
 
 /**
  * 
@@ -22,6 +24,12 @@ public class DependencyTree extends LabeledScoredTreeNode {
   public static String VIRTUAL_PREFIX = "v-";
   public static String TAG_PREFIX = "t-";
   public static String DEP_PREFIX = "l-";
+
+  // Lambda function representing the semantics of this node.
+  private List<LogicalExpression> nodeLambda;
+
+  // Lambda function representing the semantics of the tree rooted at this node.
+  private List<LogicalExpression> treeLambda;
 
   public DependencyTree(Label label) {
     super(label);
@@ -114,5 +122,25 @@ public class DependencyTree extends LabeledScoredTreeNode {
 
   public boolean isDepLabel() {
     return label().value().startsWith(DEP_PREFIX);
+  }
+
+  public List<LogicalExpression> getNodeLambda() {
+    return nodeLambda;
+  }
+
+  public void addNodeLambda(LogicalExpression lambda) {
+    if (nodeLambda == null)
+      nodeLambda = new ArrayList<>();
+    nodeLambda.add(lambda);
+  }
+
+  public List<LogicalExpression> getTreeLambda() {
+    return treeLambda;
+  }
+
+  public void addTreeLambda(LogicalExpression lambda) {
+    if (treeLambda == null)
+      treeLambda = new ArrayList<>();
+    treeLambda.add(lambda);
   }
 }

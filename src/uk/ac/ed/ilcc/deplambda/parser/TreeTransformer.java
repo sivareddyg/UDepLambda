@@ -4,6 +4,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import jregex.Matcher;
+import jregex.Pattern;
 import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
 import uk.ac.ed.ilcc.deplambda.util.DependencyTree;
 import uk.ac.ed.ilcc.deplambda.util.TransformationRule;
@@ -16,16 +18,19 @@ import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
+import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
+import edu.uw.cs.lil.tiny.mr.lambda.SimpleLogicalExpressionReader;
 
 /**
  * Class containing methods to transform a tree using
  * {@link TransformationRuleGroups}. Transformation could be either changing the
- * tree, or assinging lambda functions to nodes in the tree.
+ * tree, or assigning lambda functions to nodes in the tree.
  * 
  * @author Siva Reddy
  *
  */
 public class TreeTransformer {
+
 
   /**
    * Applies rulegroups on all nodes in the tree in a pre-order fashion.
@@ -37,37 +42,47 @@ public class TreeTransformer {
    */
   public static boolean ApplyRuleGroupsOnTree(
       TransformationRuleGroups ruleGroups, DependencyTree tree) {
+    return ApplyRuleGroupsOnSubTree(ruleGroups, tree, tree);
+  }
+
+  private static boolean ApplyRuleGroupsOnSubTree(
+      TransformationRuleGroups ruleGroups, DependencyTree tree,
+      DependencyTree subTree) {
     Preconditions.checkNotNull(tree);
 
     // Apply ruleGroups at the current node.
-    boolean ruleGroupFound = ApplyRuleGroupsOnRootNode(ruleGroups, tree);
+    boolean ruleGroupFound = ApplyRuleGroupsOnNode(ruleGroups, tree, subTree);
 
     // Apply ruleGroups at children trees.
-    for (Tree child : tree.children()) {
+    for (Tree child : subTree.children()) {
       ruleGroupFound |=
-          ApplyRuleGroupsOnTree(ruleGroups, (DependencyTree) child);
+          ApplyRuleGroupsOnSubTree(ruleGroups, tree, (DependencyTree) child);
     }
     return ruleGroupFound;
   }
 
   /**
-   * Applies rulegroups on the root node. Rulegroups are applied in priority
+   * Applies rulegroups on the target node. Rulegroups are applied in priority
    * order. If a rulegroup of higher priority applies successfully to a node, no
    * rulegroup of lower priority will be applied again.
    * 
    * @param ruleGroups the ruleGroups that have to be applied.
-   * @param tree the root node on which the rulegroups have to be applied.
+   * @param tree the tree in which the target node is present.
+   * @param targetNode the target node on which the rulegroups have to be
+   *        applied.
    * @return Returns true if at least one rule group is applied.
    */
-  public static boolean ApplyRuleGroupsOnRootNode(
-      TransformationRuleGroups ruleGroups, DependencyTree tree) {
+  public static boolean ApplyRuleGroupsOnNode(
+      TransformationRuleGroups ruleGroups, DependencyTree tree,
+      DependencyTree targetNode) {
     int bestRuleSoFar = 0;
     boolean ruleGroupFound = false;
     for (TransformationRuleGroup ruleGroup : ruleGroups.getRuleGroupList()) {
-      boolean ruleGroupApplied = ApplyRuleGroupOnRootNode(ruleGroup, tree);
       if (ruleGroupFound && ruleGroup.getPriority() > bestRuleSoFar)
         break;
-      else if (ruleGroupApplied) {
+      boolean ruleGroupApplied =
+          ApplyRuleGroupOnNode(ruleGroup, tree, targetNode);
+      if (ruleGroupApplied) {
         bestRuleSoFar = ruleGroup.getPriority();
         ruleGroupFound = true;
       }
@@ -76,21 +91,23 @@ public class TreeTransformer {
   }
 
   /**
-   * Applies rulegroup on the root node.
+   * Applies rulegroup on the specified node.
    * 
    * @param ruleGroup the ruleGroup that have to be applied.
-   * @param tree the root node on which the rules have to be applied.
+   * @param tree the tree in which the target node is present.
+   * @param targetNode the target node on which the rulegroup have to be
+   *        applied.
    * @return Returns true if a rulegroup is successfully applied.
    */
-  public static boolean ApplyRuleGroupOnRootNode(
-      TransformationRuleGroup ruleGroup, DependencyTree tree) {
+  public static boolean ApplyRuleGroupOnNode(TransformationRuleGroup ruleGroup,
+      DependencyTree tree, DependencyTree targetNode) {
     int bestRuleSoFar = 0;
     boolean ruleFound = false;
     for (TransformationRule rule : ruleGroup.getRuleList()) {
-      boolean ruleApplied = ApplyRuleOnRootNode(rule, tree);
       if (ruleFound && rule.getPriority() > bestRuleSoFar)
         break;
-      else if (ruleApplied) {
+      boolean ruleApplied = ApplyRuleOnNode(rule, tree, targetNode);
+      if (ruleApplied) {
         bestRuleSoFar = rule.getPriority();
         ruleFound = true;
       }
@@ -102,17 +119,18 @@ public class TreeTransformer {
    * Applies rule on the root node.
    * 
    * @param rule the rule to be applied.
-   * @param tree root node on which the rule has to be applied.
+   * @param tree the tree in which the target node is present.
+   * @param targetNode the target node on which the rule has to be applied.
    * @return Returns true if a rule group is successfully applied on the root
    *         node.
    */
-  private static boolean ApplyRuleOnRootNode(TransformationRule rule,
-      DependencyTree tree) {
+  private static boolean ApplyRuleOnNode(TransformationRule rule,
+      DependencyTree tree, DependencyTree targetNode) {
     TregexPattern tregex = rule.getTregex();
     TregexMatcher matcher = tregex.matcher(tree);
-    if (matcher.matchesAt(tree)) {
+    if (matcher.matchesAt(targetNode)) {
       for (Transformation transformation : rule.getTransformationList()) {
-        ApplyTransformation(transformation, matcher, tree);
+        ApplyTransformation(transformation, matcher);
       }
       return true;
     }
@@ -123,16 +141,15 @@ public class TreeTransformer {
   /**
    * Applies transformation on the nodes in the tree. The nodes on which
    * transformation has to be applied are retrieved from the
-   * {@link TregexMatcher}.
+   * {@link TregexMatcher} argument.
    *
    * @param transformation the transformation that have to be applied.
    * @param matcher the matcher that contains all the named nodes.
-   * @param tree the tree on which transformation have to be applied.
    */
   private static void ApplyTransformation(Transformation transformation,
-      TregexMatcher matcher, DependencyTree tree) {
+      TregexMatcher matcher) {
     String targetName = transformation.getTarget();
-    Tree targetNode = matcher.getNode(targetName);
+    DependencyTree targetNode = (DependencyTree) matcher.getNode(targetName);
     switch (transformation.getAction()) {
       case ADD_CHILD: {
         String child = transformation.getChild();
@@ -140,11 +157,23 @@ public class TreeTransformer {
         DependencyTree labelTree = new DependencyTree(new Word(label));
         DependencyTree childTree = new DependencyTree(new Word(child));
         labelTree.addChild(childTree);
-        tree.addChild(labelTree);
+        targetNode.addChild(labelTree);
         break;
       }
       case ASSIGN_LAMBDA: {
-        
+        String lambda = transformation.getLambda();
+        Pattern namedNodePattern = new Pattern("\\{(.+?)\\}");
+        Matcher namedNodematcher = namedNodePattern.matcher(lambda);
+        while (namedNodematcher.find()) {
+          String namedNodeString = namedNodematcher.group(1);
+          Tree namedNode = matcher.getNode(namedNodeString);
+          lambda =
+              lambda.replaceAll(String.format("\\{%s\\}", namedNodeString),
+                  namedNode.label().value());
+          namedNodematcher = namedNodePattern.matcher(lambda);
+        }
+        LogicalExpression expr = SimpleLogicalExpressionReader.read(lambda);
+        targetNode.addNodeLambda(expr);
         break;
       }
       case CHANGE_LABEL: {
