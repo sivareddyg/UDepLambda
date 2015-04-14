@@ -23,10 +23,18 @@ public class MutableTypeRepository extends TypeRepository {
   private static String MACRO_TYPE_OPEN = "{";
   private static String MACRO_TYPE_CLOSE = "}";
   private final Map<String, Type> additional_types;
+  public final static  Type NULL_TYPE = new TermType("null");
+  public final static  Type BACKWARD_APPLICATION = new TermType("ba");
+  public final static  Type FORWARD_APPLICATION = new TermType("fa");
+  public final static  Type BIND_OPERATION = new TermType("bind");
 
   public MutableTypeRepository() {
     super();
     additional_types = new ConcurrentHashMap<>();
+    additional_types.put(NULL_TYPE.getName(), NULL_TYPE);
+    additional_types.put(BACKWARD_APPLICATION.getName(), BACKWARD_APPLICATION);
+    additional_types.put(FORWARD_APPLICATION.getName(), FORWARD_APPLICATION);
+    additional_types.put(BIND_OPERATION.getName(), BIND_OPERATION);
   }
 
   /**
@@ -52,6 +60,10 @@ public class MutableTypeRepository extends TypeRepository {
   public MutableTypeRepository(File typesFile) throws IOException {
     super();
     additional_types = new ConcurrentHashMap<>();
+    additional_types.put(NULL_TYPE.getName(), NULL_TYPE);
+    additional_types.put(BACKWARD_APPLICATION.getName(), BACKWARD_APPLICATION);
+    additional_types.put(FORWARD_APPLICATION.getName(), FORWARD_APPLICATION);
+    additional_types.put(BIND_OPERATION.getName(), BIND_OPERATION);
 
     BufferedReader br = new BufferedReader(new FileReader(typesFile));
     try {

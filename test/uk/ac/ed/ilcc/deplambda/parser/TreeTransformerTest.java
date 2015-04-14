@@ -3,7 +3,8 @@
  */
 package uk.ac.ed.ilcc.deplambda.parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,7 +14,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ed.ilcc.deplambda.parser.TreeTransformer;
 import uk.ac.ed.ilcc.deplambda.util.DependencyTree;
 import uk.ac.ed.ilcc.deplambda.util.Sentence;
 import uk.ac.ed.ilcc.deplambda.util.TransformationRuleGroups;
@@ -24,8 +24,8 @@ import com.google.gson.JsonParser;
 import edu.uw.cs.lil.tiny.mr.lambda.FlexibleTypeComparator;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicLanguageServices;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
-import edu.uw.cs.lil.tiny.mr.lambda.SimpleLogicalExpressionReader;
 import edu.uw.cs.lil.tiny.mr.language.type.MutableTypeRepository;
+import edu.uw.cs.utils.composites.Pair;
 
 /**
  * @author Siva Reddy
@@ -35,7 +35,7 @@ public class TreeTransformerTest {
 
   TransformationRuleGroups treeTransformationRules;
   TransformationRuleGroups lambdaAssignmentRules;
-  TransformationRuleGroups rules;
+  TransformationRuleGroups relationRules;
   JsonObject jsonSentence;
   MutableTypeRepository types = new MutableTypeRepository();
 
@@ -62,6 +62,10 @@ public class TreeTransformerTest {
         "relation {\n" + 
         "  name: \"l-rcmod\"\n" +  
         "  priority: 2\n" + 
+        "}\n" +
+        "relation {\n" + 
+        "  name: \"l-wh-dobj\"\n" +  
+        "  priority: 3\n" + 
         "}\n" +
         "relation {\n" + 
         "  name: \"l-nsubj\"\n" +  
@@ -126,13 +130,24 @@ public class TreeTransformerTest {
         "  rule {\n" + 
         "    name: \"main\"\n" + 
         "    priority: 1\n" + 
-        "    tregex: \"/l-(nsubj|subjpass|dobj|pobj|attr|xcomp|ccomp)/=dep\"\n" + 
+        "    tregex: \"/l-(nsubj|subjpass)/=dep\"\n" + 
         "    transformation {\n" + 
         "      target: \"dep\"\n" + 
         "      action: ASSIGN_LAMBDA\n" + 
         "      lambda: \"(lambda $F:vp (lambda $G:np ($F $G)))\"\n" + 
         "    }\n" + 
-        "  }\n" + 
+        "  }\n" +
+        "  priority: 1\n" + 
+        "  rule {\n" + 
+        "    name: \"main\"\n" + 
+        "    priority: 1\n" + 
+        "    tregex: \"/l-dobj/=dep\"\n" + 
+        "    transformation {\n" + 
+        "      target: \"dep\"\n" + 
+        "      action: ASSIGN_LAMBDA\n" + 
+        "      lambda: \"(lambda $F:vt (lambda $G:np ($F $G)))\"\n" + 
+        "    }\n" + 
+        "  }\n" +
         "  rule {\n" + 
         "    name: \"rcmod\"\n" + 
         "    priority: 1\n" + 
@@ -144,7 +159,17 @@ public class TreeTransformerTest {
         "      action: ASSIGN_LAMBDA\n" + 
         "      lambda: \"(lambda $F:np (lambda $G:vp (lambda $Z:z (exists:ex $E:z (and:cj ($F $Z) ($G $F $E))))))\"\n" + 
         "    }\n" + 
-        "  }\n" + 
+        "  }\n" +
+        "  rule {\n" + 
+        "    name: \"rcmod\"\n" + 
+        "    priority: 1\n" + 
+        "    tregex: \"l-BIND=dep\"\n" + 
+        "    transformation {\n" + 
+        "      target: \"dep\"\n" + 
+        "      action: ASSIGN_LAMBDA\n" + 
+        "      lambda: \"empty:bind\"\n" + 
+        "    }\n" + 
+        "  }\n" +
         "}" + 
         "rulegroup {\n" + 
         "  name: \"verbs\"\n" + 
@@ -158,8 +183,8 @@ public class TreeTransformerTest {
         "      target: \"verb\"\n" + 
         "      action: ASSIGN_LAMBDA\n" + 
         "      lambda: \"(lambda $F2:np (lambda $F1:np (lambda $E:z "
-        + "(exists:ex $X:z (exists:ex $Y:z (and:cj (p_EVENT.ENTITY_{verb}.arg_1:pd $E $X) "
-        + "(p_EVENT.ENTITY_{verb}.arg_2:pd $E $Y) ($F1 $X) ($F2 $Y)))))))\"\n" + 
+        + "(exists:ex $X:z (exists:ex $Y:z (and:cj (p_EVENT.ENTITY_{verb}.arg_1:epd $E $X) "
+        + "(p_EVENT.ENTITY_{verb}.arg_2:epd $E $Y) ($F1 $X) ($F2 $Y)))))))\"\n" + 
         "    }\n" + 
         "  }" +
         "}" +
@@ -174,7 +199,7 @@ public class TreeTransformerTest {
         "    transformation {\n" + 
         "      target: \"noun\"\n" + 
         "      action: ASSIGN_LAMBDA\n" + 
-        "      lambda: \"(lambda $X:z (p_TYPE_{noun}:pd $X))\"\n" + 
+        "      lambda: \"(lambda $X:z (p_TYPE_{noun}:tpd $X))\"\n" + 
         "    }\n" + 
         "  }" + 
         "}" + 
@@ -202,7 +227,7 @@ public class TreeTransformerTest {
         "    transformation {\n" + 
         "      target: \"word\"\n" + 
         "      action: ASSIGN_LAMBDA\n" + 
-        "      lambda: \"(lambda $F:vp ($F))\"\n" + 
+        "      lambda: \"empty:null\"\n" + 
         "    }\n" + 
         "  }\n" + 
         "  rule {\n" + 
@@ -212,7 +237,7 @@ public class TreeTransformerTest {
         "    transformation {\n" + 
         "      target: \"dep\"\n" + 
         "      action: ASSIGN_LAMBDA\n" + 
-        "      lambda: \"(lambda $F:vp (lambda $G:<vp,vp> ($G $F)))\"\n" + 
+        "      lambda: \"empty:ba\"\n" + 
         "    }\n" + 
         "  }\n" + 
         "}\n" + 
@@ -239,12 +264,13 @@ public class TreeTransformerTest {
         new TransformationRuleGroups(lambdaAssignmentRuleFile.getAbsolutePath());
     lambdaAssignmentRuleFile.delete();
 
-    File ruleFile = File.createTempFile("test-rules", ".tmp");
-    bw = new BufferedWriter(new FileWriter(ruleFile));
+    File relationRuleFile = File.createTempFile("relation-rules", ".tmp");
+    bw = new BufferedWriter(new FileWriter(relationRuleFile));
     bw.write(relations);
     bw.close();
-    rules = new TransformationRuleGroups(ruleFile.getAbsolutePath());
-    ruleFile.delete();
+    relationRules =
+        new TransformationRuleGroups(relationRuleFile.getAbsolutePath());
+    relationRuleFile.delete();
 
     types.getTypeCreateIfNeeded("(z e)");
     types.getTypeCreateIfNeeded("{s <z,t>}");
@@ -254,7 +280,8 @@ public class TreeTransformerTest {
     types.getTypeCreateIfNeeded("{ppv <vp,vp>}");
     types.getTypeCreateIfNeeded("{ppn <np,np>}");
     types.getTypeCreateIfNeeded("{ex <z,<t,t>>}");
-    types.getTypeCreateIfNeeded("{pd <z*,t>}");
+    types.getTypeCreateIfNeeded("{epd <z*,t>}");
+    types.getTypeCreateIfNeeded("{tpd <z,t>}");
     types.getTypeCreateIfNeeded("{cj <t*,t>}");
 
     LogicLanguageServices.setInstance(new LogicLanguageServices.Builder(types,
@@ -264,7 +291,7 @@ public class TreeTransformerTest {
 
   /**
    * Test method for
-   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#ApplyRuleGroupsOnTree(TransformationRuleGroups, uk.ac.ed.ilcc.deplambda.util.DependencyTree)}
+   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#applyRuleGroupsOnTree(TransformationRuleGroups, uk.ac.ed.ilcc.deplambda.util.DependencyTree)}
    * .
    */
   @Test
@@ -272,7 +299,7 @@ public class TreeTransformerTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    assertTrue(TreeTransformer.ApplyRuleGroupsOnTree(treeTransformationRules,
+    assertTrue(TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode()));
     assertEquals(
         "(l-ROOT w-developed t-VBD (l-nsubj w-Inc. t-NNP (l-rcmod w-found t-VB (l-wh-dobj w-which t-WP) (l-nsubj w-Jobs t-NNP) (l-dobj v-f) (l-BIND v-f)) (l-p w-, t-.)) "
@@ -282,12 +309,12 @@ public class TreeTransformerTest {
     // Binarization of tree based on relation priority.
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            rules.getRelationPriority());
+            relationRules.getRelationPriority());
     assertEquals(
-        "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-Inc. (l-BIND (l-wh-dobj (l-nsubj (l-dobj w-found v-f) w-Jobs) w-which) v-f)) w-,))",
+        "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-Inc. (l-BIND (l-nsubj (l-wh-dobj (l-dobj w-found v-f) w-which) w-Jobs) v-f)) w-,))",
         binarizedTreeString);
 
-    TreeTransformer.ApplyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
         sentence.getRootNode());
 
     // Assigning lambda
@@ -295,15 +322,22 @@ public class TreeTransformerTest {
         ((DependencyTree) sentence.getRootNode().getChild(2).getChild(2)
             .getChild(0));
     assertEquals(1, foundNode.getNodeLambda().size());
-    System.out.println(foundNode.getNodeLambda().get(0));
     assertEquals(
-        "(lambda $0:<z,t> (lambda $1:<z,t> (lambda $2:z (exists:ex $3:z (exists:ex $4:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:pd $2 $3) (p_EVENT.ENTITY_w-found.arg_2:pd $2 $4) ($1 $3) ($0 $4)))))))",
+        "(lambda $0:<z,t> (lambda $1:<z,t> (lambda $2:z (exists:ex $3:z (exists:ex $4:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:epd $2 $3) (p_EVENT.ENTITY_w-found.arg_2:epd $2 $4) ($1 $3) ($0 $4)))))))",
         foundNode.getNodeLambda().get(0).toString());
+
+    // Composing lambda.
+    Pair<String, List<LogicalExpression>> sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(lambda $0:z (exists:ex $1:z (exists:ex $2:z (and:cj (p_EVENT.ENTITY_w-developed.arg_1:epd $0 $1) (p_EVENT.ENTITY_w-developed.arg_2:epd $0 $2) (exists:ex $3:z (and:cj (p_TYPE_w-Inc.:tpd $1) (exists:ex $4:z (exists:ex $5:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:epd $3 $4) (p_EVENT.ENTITY_w-found.arg_2:epd $3 $5) (p_TYPE_w-Jobs:tpd $4) (p_TYPE_w-Inc.:tpd $5)))))) (p_TYPE_w-shuffle:tpd $2)))))",
+        sentenceSemantics.second().get(0).toString());
   }
 
   /**
    * Test method for
-   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#binarizeTree(uk.ac.ed.ilcc.deplambda.util.DependencyTree, java.util.Map)}
+   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#binarizeTreeString(uk.ac.ed.ilcc.deplambda.util.DependencyTree, java.util.Map)}
    * .
    */
   @Test
@@ -311,7 +345,7 @@ public class TreeTransformerTest {
     Sentence sentence = new Sentence(jsonSentence);
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            rules.getRelationPriority());
+            relationRules.getRelationPriority());
     assertEquals(
         "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-Inc. (l-nsubj (l-dobj w-found w-which) w-Jobs)) w-,))",
         binarizedTreeString);
