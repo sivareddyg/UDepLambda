@@ -14,6 +14,8 @@ import edu.uw.cs.lil.tiny.mr.lambda.visitor.Simplify;
  *
  */
 public class SimpleLogicalExpressionReader {
+  public static String CONJUNCTION_PREDICATE = "and:<t*,t>";
+
   public static LogicalExpression read(String string) {
     LogicalExpression exp =
         LogicalExpressionReader.INSTANCE.read(string,

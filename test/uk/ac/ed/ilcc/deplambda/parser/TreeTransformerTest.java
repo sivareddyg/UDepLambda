@@ -24,6 +24,7 @@ import com.google.gson.JsonParser;
 import edu.uw.cs.lil.tiny.mr.lambda.FlexibleTypeComparator;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicLanguageServices;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
+import edu.uw.cs.lil.tiny.mr.lambda.SimpleLogicalExpressionReader;
 import edu.uw.cs.lil.tiny.mr.language.type.MutableTypeRepository;
 import edu.uw.cs.utils.composites.Pair;
 
@@ -329,10 +330,27 @@ public class TreeTransformerTest {
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            relationRules.getRelationPriority(), false);
     assertEquals(
         "(lambda $0:z (exists:ex $1:z (exists:ex $2:z (and:cj (p_EVENT.ENTITY_w-developed.arg_1:epd $0 $1) (p_EVENT.ENTITY_w-developed.arg_2:epd $0 $2) (exists:ex $3:z (and:cj (p_TYPE_w-Inc.:tpd $1) (exists:ex $4:z (exists:ex $5:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:epd $3 $4) (p_EVENT.ENTITY_w-found.arg_2:epd $3 $5) (p_TYPE_w-Jobs:tpd $4) (p_TYPE_w-Inc.:tpd $5)))))) (p_TYPE_w-shuffle:tpd $2)))))",
         sentenceSemantics.second().get(0).toString());
+  }
+
+  /**
+   * Test method for
+   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#heuristicJoin(LogicalExpression, LogicalExpression)}
+   * .
+   */
+  @Test
+  public final void testheuristicJoin() {
+    LogicalExpression exp1 =
+        SimpleLogicalExpressionReader
+            .read("(lambda $f1:vp (exists:ex $e:z ($f1 cameron:np $e)))");
+    LogicalExpression exp2 =
+        SimpleLogicalExpressionReader
+            .read("(lambda $f1:vp (lambda $e:z ($f1 something:np $e)))");
+    System.out.println(TreeTransformer.heuristicJoin(exp1, exp2));
+
   }
 
   /**

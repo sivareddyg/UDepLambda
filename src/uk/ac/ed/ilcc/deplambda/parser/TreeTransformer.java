@@ -1,9 +1,11 @@
 package uk.ac.ed.ilcc.deplambda.parser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,11 +21,16 @@ import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
+import edu.uw.cs.lil.tiny.mr.lambda.Lambda;
+import edu.uw.cs.lil.tiny.mr.lambda.Literal;
+import edu.uw.cs.lil.tiny.mr.lambda.LogicLanguageServices;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicalConstant;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
 import edu.uw.cs.lil.tiny.mr.lambda.SimpleLogicalExpressionReader;
+import edu.uw.cs.lil.tiny.mr.lambda.Variable;
 import edu.uw.cs.lil.tiny.mr.lambda.visitor.ApplyAndSimplify;
 import edu.uw.cs.lil.tiny.mr.language.type.MutableTypeRepository;
+import edu.uw.cs.lil.tiny.mr.language.type.Type;
 import edu.uw.cs.utils.composites.Pair;
 
 /**
@@ -243,11 +250,14 @@ public class TreeTransformer {
    * @param relationPriority a map containing relation names and their priority.
    *        If a label is not present in the map, it is assigned the lowest
    *        priority.
+   * @param heuristicJoinIfFailed if set to true, semantics is composed using
+   *        heuristic join when there are type-mismatches.
    * @return Returns a pair containing the binarized form the tree along with
    *         its lambda expressions.
    */
   public static Pair<String, List<LogicalExpression>> composeSemantics(
-      DependencyTree tree, Map<String, Integer> relationPriority) {
+      DependencyTree tree, Map<String, Integer> relationPriority,
+      boolean heuristicJoinIfFailed) {
     if (tree.isLeaf())
       return Pair.of(tree.label().value(), tree.getNodeLambda());
 
@@ -261,7 +271,8 @@ public class TreeTransformer {
         ((DependencyTree) child).label().value(), Integer.MAX_VALUE)));
 
     Pair<String, List<LogicalExpression>> left =
-        composeSemantics((DependencyTree) children.get(0), relationPriority);
+        composeSemantics((DependencyTree) children.get(0), relationPriority,
+            heuristicJoinIfFailed);
     String leftTreeString = left.first();
     List<LogicalExpression> leftTreeParses = left.second();
     Preconditions.checkNotNull(leftTreeParses);
@@ -270,7 +281,7 @@ public class TreeTransformer {
     for (int i = 1; i < children.size(); i++) {
       DependencyTree child = (DependencyTree) children.get(i);
       Pair<String, List<LogicalExpression>> right =
-          composeSemantics(child, relationPriority);
+          composeSemantics(child, relationPriority, heuristicJoinIfFailed);
       String rightTreeString = right.first();
       List<LogicalExpression> rightTreeParses = right.second();
 
@@ -305,6 +316,7 @@ public class TreeTransformer {
                     MutableTypeRepository.FORWARD_APPLICATION)) {
                   depAndLeftAndRight =
                       ApplyAndSimplify.of(leftTreeParse, rightTreeParse);
+
                 } else if (depParse.getType().equals(
                     MutableTypeRepository.BIND_OPERATION)) {
                   depAndLeftAndRight =
@@ -313,9 +325,18 @@ public class TreeTransformer {
               } else {
                 LogicalExpression depAndLeft =
                     ApplyAndSimplify.of(depParse, leftTreeParse);
-                depAndLeftAndRight =
-                    ApplyAndSimplify.of(depAndLeft, rightTreeParse);
+                if (depAndLeft != null) {
+                  depAndLeftAndRight =
+                      ApplyAndSimplify.of(depAndLeft, rightTreeParse);
+                }
               }
+
+              if (depAndLeftAndRight == null && heuristicJoinIfFailed) {
+                // Type mismatches.
+                depAndLeftAndRight =
+                    heuristicJoin(leftTreeParse, rightTreeParse);
+              }
+
               if (depAndLeftAndRight != null) {
                 parses.add(depAndLeftAndRight);
               }
@@ -335,6 +356,61 @@ public class TreeTransformer {
       leftTreeParses = parses;
     }
     return Pair.of(leftTreeString, leftTreeParses);
+  }
+
+  /**
+   * Combines two logical expressions and returns a new expression of the type
+   * headExpression. ChildExpression is converted to type <code>t</code> by
+   * appending an empty predicate in-front of the expression. The
+   * childExpression is then inserted inside the headExpression at a position
+   * where a subexpression of type <code>t</code> is found in the
+   * headExpression.
+   * 
+   * @param headExpression the expression into which childExpression is to be
+   *        inserted.
+   * @param childExpression the expression that is to be inserted in the
+   *        headExpression.
+   * @return a new expression of type headExpression.
+   */
+  protected static LogicalExpression heuristicJoin(
+      LogicalExpression headExpression, LogicalExpression childExpression) {
+    LogicalExpression headSubExpression = headExpression;
+    Stack<Variable> headLambdaVairables = new Stack<>();
+    while (headSubExpression != null && headSubExpression instanceof Lambda) {
+      headLambdaVairables.push(((Lambda) headSubExpression).getArgument());
+      headSubExpression = ((Lambda) headSubExpression).getBody();
+    }
+
+    Type truthType = LogicLanguageServices.getTypeRepository().getType("t");
+    if (headSubExpression == null
+        || !headSubExpression.getType().equals(truthType)) {
+      return headExpression;
+    }
+
+    // Create a truth expression from childExpression.
+    String childType = childExpression.getType().toString();
+    LogicalConstant emptyPredicate =
+        (LogicalConstant) SimpleLogicalExpressionReader.read(String.format(
+            "empty:<%s,t>", childType));
+    LogicalExpression childTruthExpression =
+        new Literal(emptyPredicate, Arrays.asList(childExpression));
+
+    LogicalConstant conjunctionPredicate =
+        (LogicalConstant) SimpleLogicalExpressionReader
+            .read(SimpleLogicalExpressionReader.CONJUNCTION_PREDICATE);
+    List<LogicalExpression> headAndChildArguments = new ArrayList<>();
+    headAndChildArguments.add(headSubExpression);
+    headAndChildArguments.add(childTruthExpression);
+    Literal headAndChildTruthExpression =
+        new Literal(conjunctionPredicate, headAndChildArguments);
+
+    LogicalExpression returnExpression = headAndChildTruthExpression;
+    while (!headLambdaVairables.isEmpty()) {
+      returnExpression =
+          new Lambda(headLambdaVairables.pop(), returnExpression);
+    }
+
+    return returnExpression;
   }
 
   /**
