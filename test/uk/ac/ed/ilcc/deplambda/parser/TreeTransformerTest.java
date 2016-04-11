@@ -349,8 +349,9 @@ public class TreeTransformerTest {
     LogicalExpression exp2 =
         SimpleLogicalExpressionReader
             .read("(lambda $f1:vp (lambda $e:z ($f1 something:np $e)))");
-    System.out.println(TreeTransformer.heuristicJoin(exp1, exp2));
-
+    assertEquals(
+        "(lambda $0:<np,s> (and:<t*,t> (exists:ex $1:z ($0 cameron:np $1)) (empty:<<<np,s>,<z,t>>,t> (lambda $2:<np,s> (lambda $3:z ($2 something:np $3))))))",
+        TreeTransformer.heuristicJoin(exp1, exp2).toString());
   }
 
   /**
