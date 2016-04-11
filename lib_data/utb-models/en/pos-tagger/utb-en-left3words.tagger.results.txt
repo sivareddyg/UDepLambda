@@ -1,0 +1,10 @@
+Picked up _JAVA_OPTIONS: -Xmx4096m
+Loading default properties from tagger utb-models/en/pos-tagger/utb-en-left3words.tagger
+Reading POS tagger model from utb-models/en/pos-tagger/utb-en-left3words.tagger ... done [0.3 sec].
+Tagged 56684 words at 79836.62 words per second.
+Model utb-models/en/pos-tagger/utb-en-left3words.tagger has xSize=731295, ySize=13, and numFeatures=172789.
+Results on 2416 sentences and 56684 words, of which 1393 were unknown.
+Total sentences right: 1329 (55.008278%); wrong: 1087 (44.991722%).
+Total tags right: 55054 (97.124409%); wrong: 1630 (2.875591%).
+Unknown words right: 1197 (85.929648%); wrong: 196 (14.070352%).
+

@@ -1,0 +1,38 @@
+# z stands for (event, entity) pair. Though you see only "e", you can simply 
+# change this to {z <ev en>}, and define (ev e) and (en e). To make the lambdas
+# readble, we use simple (z e). 
+(z e)
+
+# EMPTY semantics.
+(null e)
+
+# sentence
+{s <z,t>}
+
+# noun phrase
+# Note s and np have same types
+{np <z,t>}
+
+# verb phrase
+{vp <np,s>}
+
+# transitive verb
+{vt <np,vp>}
+
+# pp attached to verb
+{ppv <vp,vp>}
+
+# pp attached to noun
+{ppn <np,np>}
+
+#exists
+{ex <z,<t,t>>}
+
+#event predicate
+{epd <z*,t>}
+
+#type predicate
+{tpd <z,t>}
+
+#conjunction
+{cj <t*,t>}

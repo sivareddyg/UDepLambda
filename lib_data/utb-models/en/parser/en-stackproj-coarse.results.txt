@@ -1,0 +1,15 @@
+Evaluation arguments: -s /tmp/en.conll -g universal_treebanks_v2.0/std/en/en-universal-test.conll --Metric "LAS;UAS;LA"
+====================================================
+Gold:   universal_treebanks_v2.0/std/en/en-universal-test.conll
+Parsed: /tmp/en.conll
+====================================================
+GroupBy-> Token
+
+====================================================
+
+accuracy / Metric:LA   accuracy / Metric:UAS   accuracy / Metric:LAS   Token
+--------------------------------------------------------------------------------
+0.927                  0.868                   0.85                    Row mean
+56684                  56684                   56684                   Row count
+--------------------------------------------------------------------------------
+
