@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="random"/>
+	<classpathentry kind="src" path="data/utb-tools/maltparser-1.8.1/examples/apiexamples/srcex"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/stanford-tregex-3.5.1.jar" sourcepath="lib/stanford-tregex-2015-01-30/stanford-tregex-3.5.1-sources.jar">
 		<attributes>
@@ -12,6 +13,19 @@
 	<classpathentry kind="lib" path="lib/spf-1.5.5.jar"/>
 	<classpathentry kind="lib" path="lib/protobuf-java-2.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/maltparser-1.8.1.jar" sourcepath="data/utb-tools/maltparser-1.8.1/src"/>
+	<classpathentry kind="lib" path="lib/liblinear-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
+	<classpathentry kind="lib" path="lib/whatswrong-0.2.5-SNAPSHOT-standalone.jar" sourcepath="lib/whatswrong/src"/>
+	<classpathentry kind="lib" path="lib/batik-ext-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/batik-svggen-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/batik-xml-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/batik-util-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/batik-awt-util-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/batik-dom-1.8.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0-models-spanish.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0-models.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
