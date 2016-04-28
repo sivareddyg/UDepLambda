@@ -1,4 +1,4 @@
-package uk.ac.ed.ilcc.deplambda.util;
+package deplambda.util;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,12 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups;
-import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.Relation;
-import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup;
-
 import com.google.protobuf.TextFormat;
 
+import deplambda.protos.TransformationRulesProto.RuleGroups;
+import deplambda.protos.TransformationRulesProto.RuleGroups.Relation;
+import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
 import edu.stanford.nlp.trees.tregex.TregexPatternCompiler;
 

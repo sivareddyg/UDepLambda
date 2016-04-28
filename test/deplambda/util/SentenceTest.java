@@ -1,17 +1,17 @@
 /**
  * 
  */
-package uk.ac.ed.ilcc.deplambda.util;
+package deplambda.util;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ed.ilcc.deplambda.util.Sentence;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import deplambda.util.Sentence;
 
 /**
  * @author Siva Reddy
@@ -34,7 +34,7 @@ public class SentenceTest {
 
   /**
    * Test method for
-   * {@link uk.ac.ed.ilcc.deplambda.util.Sentence#Sentence(com.google.gson.JsonObject)}.
+   * {@link deplambda.util.Sentence#Sentence(com.google.gson.JsonObject)}.
    */
   @Test
   public void testSentence() {

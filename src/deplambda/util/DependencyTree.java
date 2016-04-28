@@ -1,4 +1,4 @@
-package uk.ac.ed.ilcc.deplambda.util;
+package deplambda.util;
 
 import java.util.ArrayList;
 import java.util.List;

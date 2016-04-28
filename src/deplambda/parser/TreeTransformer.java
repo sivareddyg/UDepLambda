@@ -1,4 +1,4 @@
-package uk.ac.ed.ilcc.deplambda.parser;
+package deplambda.parser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,14 +9,13 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import uk.ac.ed.ilcc.deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
-import uk.ac.ed.ilcc.deplambda.util.DependencyTree;
-import uk.ac.ed.ilcc.deplambda.util.TransformationRule;
-import uk.ac.ed.ilcc.deplambda.util.TransformationRuleGroup;
-import uk.ac.ed.ilcc.deplambda.util.TransformationRuleGroups;
-
 import com.google.common.base.Preconditions;
 
+import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
+import deplambda.util.DependencyTree;
+import deplambda.util.TransformationRule;
+import deplambda.util.TransformationRuleGroup;
+import deplambda.util.TransformationRuleGroups;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;

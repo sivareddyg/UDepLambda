@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.ed.ilcc.deplambda.parser;
+package deplambda.parser;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -14,13 +14,13 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import uk.ac.ed.ilcc.deplambda.util.DependencyTree;
-import uk.ac.ed.ilcc.deplambda.util.Sentence;
-import uk.ac.ed.ilcc.deplambda.util.TransformationRuleGroups;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import deplambda.parser.TreeTransformer;
+import deplambda.util.DependencyTree;
+import deplambda.util.Sentence;
+import deplambda.util.TransformationRuleGroups;
 import edu.uw.cs.lil.tiny.mr.lambda.FlexibleTypeComparator;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicLanguageServices;
 import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
@@ -292,7 +292,7 @@ public class TreeTransformerTest {
 
   /**
    * Test method for
-   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#applyRuleGroupsOnTree(TransformationRuleGroups, uk.ac.ed.ilcc.deplambda.util.DependencyTree)}
+   * {@link deplambda.parser.TreeTransformer#applyRuleGroupsOnTree(TransformationRuleGroups, deplambda.util.DependencyTree)}
    * .
    */
   @Test
@@ -338,7 +338,7 @@ public class TreeTransformerTest {
 
   /**
    * Test method for
-   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#heuristicJoin(LogicalExpression, LogicalExpression)}
+   * {@link deplambda.parser.TreeTransformer#heuristicJoin(LogicalExpression, LogicalExpression)}
    * .
    */
   @Test
@@ -356,7 +356,7 @@ public class TreeTransformerTest {
 
   /**
    * Test method for
-   * {@link uk.ac.ed.ilcc.deplambda.parser.TreeTransformer#binarizeTreeString(uk.ac.ed.ilcc.deplambda.util.DependencyTree, java.util.Map)}
+   * {@link deplambda.parser.TreeTransformer#binarizeTreeString(deplambda.util.DependencyTree, java.util.Map)}
    * .
    */
   @Test
