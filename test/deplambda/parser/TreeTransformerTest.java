@@ -11,22 +11,22 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import deplambda.parser.TreeTransformer;
 import deplambda.util.DependencyTree;
 import deplambda.util.Sentence;
 import deplambda.util.TransformationRuleGroups;
-import edu.uw.cs.lil.tiny.mr.lambda.FlexibleTypeComparator;
-import edu.uw.cs.lil.tiny.mr.lambda.LogicLanguageServices;
-import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
-import edu.uw.cs.lil.tiny.mr.lambda.SimpleLogicalExpressionReader;
-import edu.uw.cs.lil.tiny.mr.language.type.MutableTypeRepository;
-import edu.uw.cs.utils.composites.Pair;
+import edu.cornell.cs.nlp.spf.mr.lambda.FlexibleTypeComparator;
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicLanguageServices;
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicalExpression;
+import edu.cornell.cs.nlp.spf.mr.lambda.SimpleLogicalExpressionReader;
+import edu.cornell.cs.nlp.spf.mr.language.type.MutableTypeRepository;
+import edu.cornell.cs.nlp.utils.composites.Pair;
 
 /**
  * @author Siva Reddy
@@ -273,7 +273,9 @@ public class TreeTransformerTest {
         new TransformationRuleGroups(relationRuleFile.getAbsolutePath());
     relationRuleFile.delete();
 
-    types.getTypeCreateIfNeeded("(z e)");
+    
+    types.addTermType("z");
+    types.getTypeCreateIfNeeded("{ba z}");
     types.getTypeCreateIfNeeded("{s <z,t>}");
     types.getTypeCreateIfNeeded("{np <z,t>}");
     types.getTypeCreateIfNeeded("{vp <np,s>}");
@@ -290,6 +292,25 @@ public class TreeTransformerTest {
         .setNumeralTypeName("i").build());
   }
 
+  @Test
+  public void testReader() {
+    final LogicalExpression e1 =
+        LogicalExpression
+            .read("(lambda $0:e (boo:<e,<<e,t>,t>> $0 (lambda $0:e (goo:<e,t> $0))))");
+    final LogicalExpression e2 =
+        LogicalExpression
+            .read("(lambda $0:e (boo:<e,<<e,t>,t>> $0 (lambda $1:e (goo:<e,t> $1))))");
+    Assert.assertTrue(e1.equals(e2));
+    
+    final LogicalExpression e3 =
+        LogicalExpression
+            .read("(lambda $f1:<<e,t>,<e,t>> (exists:<e,<t,t>> $e:e ($f1 cameron:<e,t> $e)))");
+
+    LogicalExpression e4 =
+        SimpleLogicalExpressionReader
+            .read("(lambda $f1:vp (exists:ex $e:z ($f1 cameron:np $e)))");
+  }
+  
   /**
    * Test method for
    * {@link deplambda.parser.TreeTransformer#applyRuleGroupsOnTree(TransformationRuleGroups, deplambda.util.DependencyTree)}

@@ -1,7 +1,6 @@
 package deplambda.parser;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -16,21 +15,21 @@ import deplambda.util.DependencyTree;
 import deplambda.util.TransformationRule;
 import deplambda.util.TransformationRuleGroup;
 import deplambda.util.TransformationRuleGroups;
+import edu.cornell.cs.nlp.spf.mr.lambda.Lambda;
+import edu.cornell.cs.nlp.spf.mr.lambda.Literal;
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicLanguageServices;
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicalConstant;
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicalExpression;
+import edu.cornell.cs.nlp.spf.mr.lambda.SimpleLogicalExpressionReader;
+import edu.cornell.cs.nlp.spf.mr.lambda.Variable;
+import edu.cornell.cs.nlp.spf.mr.lambda.visitor.ApplyAndSimplify;
+import edu.cornell.cs.nlp.spf.mr.language.type.MutableTypeRepository;
+import edu.cornell.cs.nlp.spf.mr.language.type.Type;
+import edu.cornell.cs.nlp.utils.composites.Pair;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.trees.tregex.TregexMatcher;
 import edu.stanford.nlp.trees.tregex.TregexPattern;
-import edu.uw.cs.lil.tiny.mr.lambda.Lambda;
-import edu.uw.cs.lil.tiny.mr.lambda.Literal;
-import edu.uw.cs.lil.tiny.mr.lambda.LogicLanguageServices;
-import edu.uw.cs.lil.tiny.mr.lambda.LogicalConstant;
-import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
-import edu.uw.cs.lil.tiny.mr.lambda.SimpleLogicalExpressionReader;
-import edu.uw.cs.lil.tiny.mr.lambda.Variable;
-import edu.uw.cs.lil.tiny.mr.lambda.visitor.ApplyAndSimplify;
-import edu.uw.cs.lil.tiny.mr.language.type.MutableTypeRepository;
-import edu.uw.cs.lil.tiny.mr.language.type.Type;
-import edu.uw.cs.utils.composites.Pair;
 
 /**
  * Class containing methods to transform a tree using
@@ -391,17 +390,18 @@ public class TreeTransformer {
     LogicalConstant emptyPredicate =
         (LogicalConstant) SimpleLogicalExpressionReader.read(String.format(
             "empty:<%s,t>", childType));
+    LogicalExpression[] childArray = {childExpression};
     LogicalExpression childTruthExpression =
-        new Literal(emptyPredicate, Arrays.asList(childExpression));
+        new Literal(emptyPredicate, childArray);
 
     LogicalConstant conjunctionPredicate =
         (LogicalConstant) SimpleLogicalExpressionReader
             .read(SimpleLogicalExpressionReader.CONJUNCTION_PREDICATE);
-    List<LogicalExpression> headAndChildArguments = new ArrayList<>();
-    headAndChildArguments.add(headSubExpression);
-    headAndChildArguments.add(childTruthExpression);
+    LogicalExpression[] headAndChildArguments =
+        {headSubExpression, childTruthExpression};
     Literal headAndChildTruthExpression =
-        new Literal(conjunctionPredicate, headAndChildArguments);
+        new Literal(conjunctionPredicate,
+            (LogicalExpression[]) headAndChildArguments);
 
     LogicalExpression returnExpression = headAndChildTruthExpression;
     while (!headLambdaVairables.isEmpty()) {

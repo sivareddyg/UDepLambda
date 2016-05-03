@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="src" path="random"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/stanford-tregex-3.5.1.jar" sourcepath="lib/stanford-tregex-2015-01-30/stanford-tregex-3.5.1-sources.jar">
 		<attributes>
@@ -56,10 +55,12 @@
 	<classpathentry kind="lib" path="lib/virtjdbc4.jar"/>
 	<classpathentry kind="lib" path="lib/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="lib/xml-apis-1.4.01.jar"/>
-	<classpathentry kind="lib" path="lib/spf-1.5.5.jar"/>
-	<classpathentry kind="lib" path="lib/spf-javautils.jar"/>
 	<classpathentry kind="lib" path="lib/edu.mit.jwi_2.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/jewelcli-0.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/mtj-1.0-snapshot.jar"/>
+	<classpathentry kind="lib" path="/spf-2.0/bin" sourcepath="/spf-2.0"/>
+	<classpathentry kind="lib" path="/home/siva/SemanticParsing/software/spf-2.0/lib/javautils-lib-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/jregex1.2_01-src.jar"/>
+	<classpathentry kind="lib" path="lib/fastutil-6.5.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

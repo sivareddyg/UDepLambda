@@ -8,10 +8,10 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicalExpression;
 import edu.stanford.nlp.ling.Label;
 import edu.stanford.nlp.ling.Word;
 import edu.stanford.nlp.trees.LabeledScoredTreeNode;
-import edu.uw.cs.lil.tiny.mr.lambda.LogicalExpression;
 
 /**
  * 

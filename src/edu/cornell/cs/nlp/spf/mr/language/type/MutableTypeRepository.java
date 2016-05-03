@@ -1,19 +1,17 @@
-package edu.uw.cs.lil.tiny.mr.language.type;
+package edu.cornell.cs.nlp.spf.mr.language.type;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.google.common.base.Preconditions;
 
-import edu.uw.cs.lil.tiny.base.LispReader;
-
 /**
- * A mutable {@link TypeRepository} which allows addition of new types.
+ * A mutable {@link TypeRepository} which allows addition of new types and
+ * define macros.
  * 
  * @author Siva Reddy
  *
@@ -23,10 +21,10 @@ public class MutableTypeRepository extends TypeRepository {
   private static String MACRO_TYPE_OPEN = "{";
   private static String MACRO_TYPE_CLOSE = "}";
   private final Map<String, Type> additional_types;
-  public final static  Type NULL_TYPE = new TermType("null");
-  public final static  Type BACKWARD_APPLICATION = new TermType("ba");
-  public final static  Type FORWARD_APPLICATION = new TermType("fa");
-  public final static  Type BIND_OPERATION = new TermType("bind");
+  public final static Type NULL_TYPE = new TermType("null");
+  public final static Type BACKWARD_APPLICATION = new TermType("ba");
+  public final static Type FORWARD_APPLICATION = new TermType("fa");
+  public final static Type BIND_OPERATION = new TermType("bind");
 
   public MutableTypeRepository() {
     super();
@@ -92,38 +90,30 @@ public class MutableTypeRepository extends TypeRepository {
       return additional_types.get(label);
 
     if (label.startsWith(MACRO_TYPE_OPEN) && label.endsWith(MACRO_TYPE_CLOSE)) {
-      // Define the macro. A macro is identified using {name type}.
+      // Define the macro. A macro is identified using {macro type}.
       String[] splits =
           label.subSequence(1, label.length() - 1).toString().split("\\s", 2);
 
       Preconditions.checkArgument(splits.length == 2, "Wrong format: " + label);
       Type macroType = getTypeCreateIfNeeded(splits[1].trim());
-      addAdditionalType(splits[0], macroType);
+      additional_types.put(splits[0], macroType);
       return macroType;
-    } else if (label.startsWith("(")) {
-      final LispReader lispReader = new LispReader(new StringReader(label));
-
-      // Label (the name of the type)
-      final String current = lispReader.next();
-      // The parent type
-      final String parentTypeString = lispReader.next();
-      final Type parentType = getType(parentTypeString);
-      if (parentType instanceof TermType) {
-        TermType currentType = new TermType(current, (TermType) parentType);
-        additional_types.put(current, currentType);
-        return currentType;
-      } else {
-        throw new IllegalArgumentException(String.format(
-            "Parent (%s) of primitive type (%s) must be a primitive type",
-            parentType, label));
-      }
     }
 
     return super.getTypeCreateIfNeeded(label);
   };
 
-  public void addAdditionalType(String name, Type type) {
-    additional_types.put(name, type);
+  public Type addTermType(String label) {
+    Type newType = new TermType(label);
+    additional_types.put(label, newType);
+    return newType;
+  }
+
+  public Type addTermType(String label, Type parent) {
+    Preconditions.checkArgument(parent instanceof TermType, "Parent should be of basic type"); 
+    Type newType = new TermType(label, (TermType) parent);
+    additional_types.put(label, newType);
+    return newType;
   }
 
   @Override
