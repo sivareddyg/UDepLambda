@@ -63,8 +63,6 @@ public class TreeTransformerUniversalTest {
 
   @Test
   public final void testPunct() {
-    // TODO: Introduce word indexes in the word patterns.
-
     JsonObject jsonSentence =
         jsonParser
             .parse(
@@ -75,13 +73,13 @@ public class TreeTransformerUniversalTest {
     // TreeTransformationRules for modifying the structure of a tree.
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
-    assertEquals("(l-root w-yahoo t-PROPN (l-punct w-! t-PUNCT))", sentence
+    assertEquals("(l-root w-1-yahoo t-PROPN (l-punct w-2-! t-PUNCT))", sentence
         .getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
-    assertEquals("(l-punct w-yahoo w-!)", binarizedTreeString);
+    assertEquals("(l-punct w-1-yahoo w-2-!)", binarizedTreeString);
 
     // Assign lambdas.
     TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
@@ -93,7 +91,7 @@ public class TreeTransformerUniversalTest {
             relationRules.getRelationPriority(), false);
 
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-yahoo:u $0) (p_EVENT_w-yahoo:u $0) (p_EVENT.ENTITY_arg_1:b $0 $0)) (p_EMPTY:u $0)))",
+        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-yahoo:u $0) (p_EVENT_w-1-yahoo:u $0) (p_EVENT.ENTITY_arg_1:b $0 $0)) (p_EMPTY:u $0)))",
         sentenceSemantics.second().get(0).toString());
   }
 

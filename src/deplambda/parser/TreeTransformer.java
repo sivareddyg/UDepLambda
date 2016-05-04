@@ -171,8 +171,6 @@ public class TreeTransformer {
         break;
       }
       case ASSIGN_LAMBDA: {
-        // TODO: Add word index to the predicates. 
-        // TODO: Make sure predicates do not have opening and closing brackets.
         String lambda = transformation.getLambda();
         Pattern namedNodePattern = Pattern.compile("\\{(.+?)\\}");
         Matcher namedNodematcher = namedNodePattern.matcher(lambda);
@@ -181,7 +179,7 @@ public class TreeTransformer {
           Tree namedNode = matcher.getNode(namedNodeString);
           lambda =
               lambda.replaceAll(String.format("\\{%s\\}", namedNodeString),
-                  namedNode.label().value());
+                  replaceSpecialChars(namedNode.label().value()));
           namedNodematcher = namedNodePattern.matcher(lambda);
         }
         LogicalExpression expr = SimpleLogicalExpressionReader.read(lambda);
@@ -196,6 +194,10 @@ public class TreeTransformer {
       default:
         break;
     }
+  }
+
+  private static String replaceSpecialChars(String name) {
+    return name.replaceAll("[\\(\\)\\:]+", "-SPL-");
   }
 
   /**

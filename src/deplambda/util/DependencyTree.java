@@ -60,12 +60,20 @@ public class DependencyTree extends LabeledScoredTreeNode {
       DependencyTree word_node;
       if (word.has(SentenceKeys.LEMMA_KEY)) {
         word_node =
-            new DependencyTree(new Word(WORD_PREFIX
-                + word.get(SentenceKeys.LEMMA_KEY).getAsString()));
+            new DependencyTree(new Word(String.format(
+                "%s%s%s",
+                WORD_PREFIX,
+                word.has(SentenceKeys.INDEX_KEY) ? String.format("%d-", word
+                    .get(SentenceKeys.INDEX_KEY).getAsInt()) : "",
+                word.get(SentenceKeys.LEMMA_KEY).getAsString())));
       } else {
         word_node =
-            new DependencyTree(new Word(WORD_PREFIX
-                + word.get(SentenceKeys.WORD_KEY).getAsString()));
+            new DependencyTree(new Word(String.format(
+                "%s%s%s",
+                WORD_PREFIX,
+                word.has(SentenceKeys.INDEX_KEY) ? String.format("%d-", word
+                    .get(SentenceKeys.INDEX_KEY).getAsInt()) : "",
+                word.get(SentenceKeys.WORD_KEY).getAsString())));
       }
 
       DependencyTree tag_node =
