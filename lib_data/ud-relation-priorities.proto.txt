@@ -1,4 +1,12 @@
 relation {
+  name: "l-nmod"
+  priority: 30
+}
+relation {
+  name: "l-case"
+  priority: 90
+}
+relation {
   name: "l-punct"
   priority: 100
 }

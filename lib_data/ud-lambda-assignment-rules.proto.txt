@@ -1,7 +1,39 @@
+########### dependency relation rules #########
+rulegroup {
+  name: "nmod"
+  priority: 5
+  rule {
+    # "saw" with a "telescope"
+    # cat in a hat
+    name: "nmod with a case marker"
+    priority: 0
+    tregex: "/^l-(nmod)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_{relation}.{casemarker}:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "case"
+  priority: 10
+  rule {
+    name: "case"
+    priority: 10
+    tregex: "/^l-case/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
 rulegroup {
   name: "punctuations"
   priority: 10
   rule {
+    # Yahoo !
     name: "punct"
     priority: 10
     tregex: "/^l-punct$/=relation"
@@ -12,17 +44,32 @@ rulegroup {
     }
   }
 }
+########### lexical rules #########
+rulegroup {
+  name: "verbs"
+  priority: 1
+  rule {
+    name: "verb"
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:VERB)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+}
 rulegroup {
   name: "nouns"
   priority: 1
   rule {
     name: "noun"
     priority: 1
-    tregex: "/^w-.*$/=word $ /^t-(?:PROPN)$/"
+    tregex: "/^w-.*$/=word $ /^t-(?:PROPN|NOUN)$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg_1:b $x $x)))"
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg1:b $x $x)))"
     }
   }
 }
