@@ -19,9 +19,9 @@ public class MutableTypeRepositoryTest {
   @Test
   public final void testGetTypeCreateIfNeededString() {
     types.addTermType("p", types.getType("e"));
-    types.getTypeCreateIfNeeded("{s <p,t>}");
-    types.getTypeCreateIfNeeded("{np <p,t>}");
-    types.getTypeCreateIfNeeded("{vp <np,s>}");
+    types.addMacroType("s", "<p,t>");
+    types.addMacroType("np", "<p,t>");
+    types.addMacroType("vp", "<np,s>");
     types.getTypeCreateIfNeeded("<vp*,np>");
     
     // Not working from spf-2.0. Needs further research.
