@@ -46,7 +46,7 @@ public class TreeTransformerTest {
   @Before
   public void setUp() throws Exception {
     String sentenceString =
-        "{\"entities\": [{\"start\": 0, \"ner\": \"ORGANIZATION\", \"end\": 1, \"entity\": \"m.0k8z\"}, {\"start\": 3, \"ner\": \"PERSON\", \"end\": 4, \"entity\": \"m.06y3r\"}, {\"start\": 8, \"ner\": \"MISC\", \"end\": 9, \"entity\": \"m.04yg_s\"}], \"words\": [{\"word\":\"Apple\",\"head\":2,\"tag\":\"NNP\",\"label\":\"nn\"}, {\"word\":\"Inc.\",\"head\":8,\"tag\":\"NNP\",\"label\":\"nsubj\"}, {\"word\":\"which\",\"head\":6,\"tag\":\"WP\",\"label\":\"dobj\"}, {\"word\":\"Steve\",\"head\":5,\"tag\":\"NNP\",\"label\":\"nn\"}, {\"word\":\"Jobs\",\"head\":6,\"tag\":\"NNP\",\"label\":\"nsubj\"}, {\"word\":\"founded\",\"head\":2,\"tag\":\"VBD\",\"label\":\"rcmod\", \"lemma\":\"found\"}, {\"word\":\",\",\"head\":2,\"tag\":\".\",\"label\":\"p\"}, {\"word\":\"developed\",\"head\":0,\"tag\":\"VBD\",\"label\":\"ROOT\"}, {\"word\":\"iPod\",\"head\":10,\"tag\":\"NNP\",\"label\":\"nn\"}, {\"word\":\"shuffle\",\"head\":8,\"tag\":\"NN\",\"label\":\"dobj\"}, {\"word\":\".\",\"head\":8,\"tag\":\".\",\"label\":\"p\"}]}";
+        "{\"entities\": [{\"start\": 0, \"ner\": \"ORGANIZATION\", \"end\": 1, \"entity\": \"m.0k8z\"}, {\"start\": 3, \"ner\": \"PERSON\", \"end\": 4, \"entity\": \"m.06y3r\"}, {\"start\": 8, \"ner\": \"MISC\", \"end\": 9, \"entity\": \"m.04yg_s\"}], \"words\": [{\"word\":\"Apple\",\"head\":2,\"pos\":\"NNP\",\"dep\":\"nn\"}, {\"word\":\"Inc.\",\"head\":8,\"pos\":\"NNP\",\"dep\":\"nsubj\"}, {\"word\":\"which\",\"head\":6,\"pos\":\"WP\",\"dep\":\"dobj\"}, {\"word\":\"Steve\",\"head\":5,\"pos\":\"NNP\",\"dep\":\"nn\"}, {\"word\":\"Jobs\",\"head\":6,\"pos\":\"NNP\",\"dep\":\"nsubj\"}, {\"word\":\"founded\",\"head\":2,\"pos\":\"VBD\",\"dep\":\"rcmod\", \"lemma\":\"found\"}, {\"word\":\",\",\"head\":2,\"pos\":\".\",\"dep\":\"p\"}, {\"word\":\"developed\",\"head\":0,\"pos\":\"VBD\",\"dep\":\"ROOT\"}, {\"word\":\"iPod\",\"head\":10,\"pos\":\"NNP\",\"dep\":\"nn\"}, {\"word\":\"shuffle\",\"head\":8,\"pos\":\"NN\",\"dep\":\"dobj\"}, {\"word\":\".\",\"head\":8,\"pos\":\".\",\"dep\":\"p\"}]}";
     JsonParser jsonParser = new JsonParser();
     jsonSentence = jsonParser.parse(sentenceString).getAsJsonObject();
 
@@ -273,19 +273,19 @@ public class TreeTransformerTest {
         new TransformationRuleGroups(relationRuleFile.getAbsolutePath());
     relationRuleFile.delete();
 
-    
+
     types.addTermType("z");
-    types.getTypeCreateIfNeeded("{ba z}");
-    types.getTypeCreateIfNeeded("{s <z,t>}");
-    types.getTypeCreateIfNeeded("{np <z,t>}");
-    types.getTypeCreateIfNeeded("{vp <np,s>}");
-    types.getTypeCreateIfNeeded("{vt <np,vp>}");
-    types.getTypeCreateIfNeeded("{ppv <vp,vp>}");
-    types.getTypeCreateIfNeeded("{ppn <np,np>}");
-    types.getTypeCreateIfNeeded("{ex <z,<t,t>>}");
-    types.getTypeCreateIfNeeded("{epd <z*,t>}");
-    types.getTypeCreateIfNeeded("{tpd <z,t>}");
-    types.getTypeCreateIfNeeded("{cj <t*,t>}");
+    types.addMacroType("ba", "z");
+    types.addMacroType("s", "<z,t>");
+    types.addMacroType("np", "<z,t>");
+    types.addMacroType("vp", "<np,s>");
+    types.addMacroType("vt", "<np,vp>");
+    types.addMacroType("ppv", "<vp,vp>");
+    types.addMacroType("ppn", "<np,np>");
+    types.addMacroType("ex", "<z,<t,t>>");
+    types.addMacroType("epd", "<z*,t>");
+    types.addMacroType("tpd", "<z,t>");
+    types.addMacroType("cj", "<t*,t>");
 
     LogicLanguageServices.setInstance(new LogicLanguageServices.Builder(types,
         new FlexibleTypeComparator()).closeOntology(false)
@@ -301,16 +301,18 @@ public class TreeTransformerTest {
         LogicalExpression
             .read("(lambda $0:e (boo:<e,<<e,t>,t>> $0 (lambda $1:e (goo:<e,t> $1))))");
     Assert.assertTrue(e1.equals(e2));
-    
+
     final LogicalExpression e3 =
         LogicalExpression
             .read("(lambda $f1:<<e,t>,<e,t>> (exists:<e,<t,t>> $e:e ($f1 cameron:<e,t> $e)))");
+    System.out.println(e3);
 
     LogicalExpression e4 =
         SimpleLogicalExpressionReader
             .read("(lambda $f1:vp (exists:ex $e:z ($f1 cameron:np $e)))");
+    System.out.println(e4);
   }
-  
+
   /**
    * Test method for
    * {@link deplambda.parser.TreeTransformer#applyRuleGroupsOnTree(TransformationRuleGroups, deplambda.util.DependencyTree)}

@@ -171,6 +171,8 @@ public class TreeTransformer {
         break;
       }
       case ASSIGN_LAMBDA: {
+        // TODO: Add word index to the predicates. 
+        // TODO: Make sure predicates do not have opening and closing brackets.
         String lambda = transformation.getLambda();
         Pattern namedNodePattern = Pattern.compile("\\{(.+?)\\}");
         Matcher namedNodematcher = namedNodePattern.matcher(lambda);

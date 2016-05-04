@@ -1,0 +1,42 @@
+rulegroup {
+  name: "punctuations"
+  priority: 10
+  rule {
+    name: "punct"
+    priority: 10
+    tregex: "/^l-punct$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "nouns"
+  priority: 1
+  rule {
+    name: "noun"
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:PROPN)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg_1:b $x $x)))"
+    }
+  }
+}
+rulegroup {
+  name: "default words"
+  priority: 10
+  rule {
+    name: "default"
+    priority: 10
+    tregex: "/^w-.*/=word"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}

@@ -4,10 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 
 /**
  * A mutable {@link TypeRepository} which allows addition of new types and
@@ -55,21 +60,32 @@ public class MutableTypeRepository extends TypeRepository {
    * @param typesFile
    * @throws IOException
    */
-  public MutableTypeRepository(File typesFile) throws IOException {
-    super();
-    additional_types = new ConcurrentHashMap<>();
-    additional_types.put(NULL_TYPE.getName(), NULL_TYPE);
-    additional_types.put(BACKWARD_APPLICATION.getName(), BACKWARD_APPLICATION);
-    additional_types.put(FORWARD_APPLICATION.getName(), FORWARD_APPLICATION);
-    additional_types.put(BIND_OPERATION.getName(), BIND_OPERATION);
+  public MutableTypeRepository(String typesFile) throws IOException {
+    this();
 
     BufferedReader br = new BufferedReader(new FileReader(typesFile));
     try {
       String line = br.readLine();
       while (line != null) {
-        if (!line.startsWith("#") && !line.trim().equals(""))
-          getTypeCreateIfNeeded(line.trim());
-
+        line = line.trim();
+        if (!line.startsWith("#") && !line.equals("")) {
+          if (line.startsWith(MACRO_TYPE_OPEN)) { // Macro type
+            line = line.replace(MACRO_TYPE_CLOSE, "");
+            line = line.replace(MACRO_TYPE_OPEN, "");
+            String[] parts = line.split(" ");
+            Preconditions.checkArgument(parts.length == 2,
+                "Wrong macro format: " + line);
+            addMacroType(parts[0], parts[1]);
+          } else if (line.startsWith("(")) { // Term type with parent
+            line = line.replaceAll("[\\(\\)]", "");
+            String[] parts = line.split(" ");
+            Preconditions.checkArgument(parts.length == 2,
+                "Wrong term type format: " + line);
+            addTermType(parts[0], getTypeCreateIfNeeded(parts[1]));
+          } else { // Term type
+            addTermType(line.trim());
+          }
+        }
         line = br.readLine();
       }
     } finally {
@@ -89,19 +105,14 @@ public class MutableTypeRepository extends TypeRepository {
     if (additional_types != null && additional_types.containsKey(label))
       return additional_types.get(label);
 
-    if (label.startsWith(MACRO_TYPE_OPEN) && label.endsWith(MACRO_TYPE_CLOSE)) {
-      // Define the macro. A macro is identified using {macro type}.
-      String[] splits =
-          label.subSequence(1, label.length() - 1).toString().split("\\s", 2);
-
-      Preconditions.checkArgument(splits.length == 2, "Wrong format: " + label);
-      Type macroType = getTypeCreateIfNeeded(splits[1].trim());
-      additional_types.put(splits[0], macroType);
-      return macroType;
-    }
-
     return super.getTypeCreateIfNeeded(label);
   };
+
+  public Type addMacroType(String macroName, String macroTypeString) {
+    Type macroType = getTypeCreateIfNeeded(macroTypeString);
+    additional_types.put(macroName, macroType);
+    return macroType;
+  }
 
   public Type addTermType(String label) {
     Type newType = new TermType(label);
@@ -110,7 +121,8 @@ public class MutableTypeRepository extends TypeRepository {
   }
 
   public Type addTermType(String label, Type parent) {
-    Preconditions.checkArgument(parent instanceof TermType, "Parent should be of basic type"); 
+    Preconditions.checkArgument(parent instanceof TermType,
+        "Parent should be of basic type");
     Type newType = new TermType(label, (TermType) parent);
     additional_types.put(label, newType);
     return newType;

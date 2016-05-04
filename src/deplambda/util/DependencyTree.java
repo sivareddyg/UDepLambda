@@ -1,5 +1,7 @@
 package deplambda.util;
 
+import in.sivareddy.util.SentenceKeys;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class DependencyTree extends LabeledScoredTreeNode {
   private static final long serialVersionUID = 2203868333509512844L;
   public static String WORD_PREFIX = "w-";
   public static String VIRTUAL_PREFIX = "v-";
-  public static String TAG_PREFIX = "t-";
+  public static String POS_PREFIX = "t-";
   public static String DEP_PREFIX = "l-";
 
   // Lambda function representing the semantics of this node.
@@ -51,29 +53,28 @@ public class DependencyTree extends LabeledScoredTreeNode {
     // Create all nodes in the dependency tree.
     for (int i = 0; i < words.size(); i++) {
       JsonObject word = words.get(i).getAsJsonObject();
-      Preconditions.checkArgument(word.has("word"));
-      Preconditions.checkArgument(word.has("tag"));
-      Preconditions.checkArgument(word.has("label"));
-
+      Preconditions.checkArgument(word.has(SentenceKeys.WORD_KEY));
+      Preconditions.checkArgument(word.has(SentenceKeys.POS_KEY));
+      Preconditions.checkArgument(word.has(SentenceKeys.DEPENDENCY_KEY));
 
       DependencyTree word_node;
-      if (word.has("lemma")) {
+      if (word.has(SentenceKeys.LEMMA_KEY)) {
         word_node =
             new DependencyTree(new Word(WORD_PREFIX
-                + word.get("lemma").getAsString()));
+                + word.get(SentenceKeys.LEMMA_KEY).getAsString()));
       } else {
         word_node =
             new DependencyTree(new Word(WORD_PREFIX
-                + word.get("word").getAsString()));
+                + word.get(SentenceKeys.WORD_KEY).getAsString()));
       }
 
       DependencyTree tag_node =
-          new DependencyTree(new Word(TAG_PREFIX
-              + word.get("tag").getAsString()));
+          new DependencyTree(new Word(POS_PREFIX
+              + word.get(SentenceKeys.POS_KEY).getAsString()));
 
       DependencyTree dep_node =
           new DependencyTree(new Word(DEP_PREFIX
-              + word.get("label").getAsString()));
+              + word.get(SentenceKeys.DEPENDENCY_KEY).getAsString()));
 
       dep_node.addChild(word_node);
       dep_node.addChild(tag_node);
@@ -117,7 +118,7 @@ public class DependencyTree extends LabeledScoredTreeNode {
   }
 
   public boolean isTag() {
-    return label().value().startsWith(TAG_PREFIX);
+    return label().value().startsWith(POS_PREFIX);
   }
 
   public boolean isDepLabel() {

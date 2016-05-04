@@ -1,0 +1,20 @@
+# Individual type
+a
+
+# variable is a pair
+{v <a,e>}
+
+# word type
+{w <v,t>}
+
+# unary predicate type
+{u <v,t>}
+
+# binary predicate type
+{b <v,<v,t>>}
+
+# dependency relation type
+{r <w,<w,w>>}
+
+# conjunction type
+{c <t*,t>}

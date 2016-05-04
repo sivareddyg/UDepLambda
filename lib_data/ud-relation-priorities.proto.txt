@@ -1,0 +1,4 @@
+relation {
+  name: "l-punct"
+  priority: 100
+}
