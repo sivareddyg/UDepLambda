@@ -202,7 +202,7 @@ public class TreeTransformerUniversalTest {
         "(lambda $0:<a,e> (and:c (exists:ex $1:<a,e> (and:c (p_EVENT_w-1-see:u $0) (and:c (and:c (p_TYPE_w-3-telescope:u $1) (p_EVENT_w-3-telescope:u $1) (p_EVENT.ENTITY_arg1:b $1 $1)) (p_EMPTY:u $1)) (p_EVENT.ENTITY_l-nmod.w-2-with:b $0 $1))) (p_EMPTY:u $0)))",
         sentenceSemantics.second().get(0).toString());
 
-    // TODO nmod with possessive case.
+    // nmod with possessive case.
     jsonSentence =
         jsonParser
             .parse(
@@ -210,6 +210,32 @@ public class TreeTransformerUniversalTest {
             .getAsJsonObject();
     sentence = new Sentence(jsonSentence);
 
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-3-book t-NOUN (l-nmod:poss w-1-darwin t-PROPN (l-case w-2-'s t-PART)))",
+        sentence.getRootNode().toString());
+
+    binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-nmod:poss w-3-book (l-case w-1-darwin w-2-'s))",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (p_TYPE_w-3-book:u $0) (p_EVENT_w-3-book:u $0) (p_EVENT.ENTITY_arg1:b $0 $0)) (and:c (and:c (p_TYPE_w-1-darwin:u $1) (p_EVENT_w-1-darwin:u $1) (p_EVENT.ENTITY_arg1:b $1 $1)) (p_EMPTY:u $1)) (p_EVENT.ENTITY_l-nmod.w-2-'s:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
   }
 
   @Test

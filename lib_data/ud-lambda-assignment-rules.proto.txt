@@ -7,11 +7,11 @@ rulegroup {
     # "saw" with a "telescope"
     # "cat" in a "hat"
     priority: 0
-    tregex: "/^l-(nmod)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
+    tregex: "/^l-(nmod|nmod:poss)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_{relation}.{casemarker}:b $e $x))))))"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod.{casemarker}:b $e $x))))))"
     }
   }
 }

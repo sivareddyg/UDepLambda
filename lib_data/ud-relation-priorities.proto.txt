@@ -1,4 +1,8 @@
 relation {
+  name: "l-nmod:poss"
+  priority: 30
+}
+relation {
   name: "l-nmod"
   priority: 30
 }
