@@ -3,9 +3,9 @@ rulegroup {
   name: "nmod"
   priority: 5
   rule {
-    # "saw" with a "telescope"
-    # cat in a hat
     name: "nmod with a case marker"
+    # "saw" with a "telescope"
+    # "cat" in a "hat"
     priority: 0
     tregex: "/^l-(nmod)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
     transformation {
@@ -20,6 +20,7 @@ rulegroup {
   priority: 10
   rule {
     name: "case"
+    # "in" a "hat"
     priority: 10
     tregex: "/^l-case/=relation"
     transformation {
@@ -33,8 +34,8 @@ rulegroup {
   name: "punctuations"
   priority: 10
   rule {
-    # Yahoo !
     name: "punct"
+    # "Yahoo" "!"
     priority: 10
     tregex: "/^l-punct$/=relation"
     transformation {
@@ -44,12 +45,14 @@ rulegroup {
     }
   }
 }
+
 ########### lexical rules #########
 rulegroup {
   name: "verbs"
   priority: 1
   rule {
     name: "verb"
+    # saw
     priority: 1
     tregex: "/^w-.*$/=word $ /^t-(?:VERB)$/"
     transformation {
@@ -64,6 +67,8 @@ rulegroup {
   priority: 1
   rule {
     name: "noun"
+    # Titanic
+    # movie
     priority: 1
     tregex: "/^w-.*$/=word $ /^t-(?:PROPN|NOUN)$/"
     transformation {
@@ -78,6 +83,8 @@ rulegroup {
   priority: 10
   rule {
     name: "default"
+    # any punctuation
+    # any function word
     priority: 10
     tregex: "/^w-.*/=word"
     transformation {
