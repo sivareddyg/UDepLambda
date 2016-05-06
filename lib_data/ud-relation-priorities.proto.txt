@@ -1,10 +1,26 @@
 relation {
+  name: "l-cop"
+  priority: 20
+}
+relation {
   name: "l-nmod:poss"
+  priority: 30
+}
+relation {
+  name: "l-nmod:npmod"
+  priority: 30
+}
+relation {
+  name: "l-nmod:tmod"
   priority: 30
 }
 relation {
   name: "l-nmod"
   priority: 30
+}
+relation {
+  name: "l-nsubj"
+  priority: 50
 }
 relation {
   name: "l-case"

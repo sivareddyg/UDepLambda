@@ -6,7 +6,7 @@ rulegroup {
     name: "nmod with a case marker"
     # "saw" with a "telescope"
     # "cat" in a "hat"
-    priority: 0
+    priority: 5
     tregex: "/^l-(nmod|nmod:poss)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
     transformation {
       target: "relation"
@@ -14,10 +14,26 @@ rulegroup {
       lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod.{casemarker}:b $e $x))))))"
     }
   }
+  rule {
+    name: "nmod and its variants"
+    # don't confuse this relation with nn in stanford dependencies.
+    # no seprate handling for tmod or npmod.
+    # 65 "years" "old"
+    # 6 "feet" "long"
+    # "$5" a "share"
+    # TODO: handle nmod seperately when the child is a verb, e.g., "eased" a "fraction"
+    priority: 10
+    tregex: "/^l-(?:nmod|nmod.*$)/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod:b $e $x))))))"
+    }
+  }
 }
 rulegroup {
   name: "case"
-  priority: 10
+  priority: 5
   rule {
     name: "case"
     # "in" a "hat"
@@ -26,7 +42,37 @@ rulegroup {
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "cop"
+  priority: 5
+  rule {
+    name: "case"
+    # John "is" "old".
+    priority: 10
+    tregex: "/^l-cop/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "nsubj"
+  priority: 5
+  rule {
+    name: "case"
+    # John shouted.
+    priority: 10
+    tregex: "/^l-nsubj/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg1:b $e $x))))))"
     }
   }
 }
@@ -41,15 +87,41 @@ rulegroup {
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
     }
   }
 }
 
 ########### lexical rules #########
 rulegroup {
-  name: "verbs"
+  name: "non-trivial patterns invoking predicates"
   priority: 1
+  rule {
+    name: "adjectives that have nsubj"
+    # John is happy"
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^l-nsubj$/ $ /^t-ADJ$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "nmods without case marker"
+    # 65 years "old"
+    priority: 2
+    tregex: "/^w-.*$/=word $ (/^l-nmod.*$/ !< /^l-case$/)"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "verbs"
+  priority: 10
   rule {
     name: "verb"
     # saw
@@ -64,13 +136,23 @@ rulegroup {
 }
 rulegroup {
   name: "nouns"
-  priority: 1
+  priority: 10
   rule {
     name: "noun"
-    # Titanic
     # movie
     priority: 1
-    tregex: "/^w-.*$/=word $ /^t-(?:PROPN|NOUN)$/"
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg1:b $x $x)))"
+    }
+  }
+  rule {
+    name: "proper noun"
+    # Titanic
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:PROPN)$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -80,7 +162,7 @@ rulegroup {
 }
 rulegroup {
   name: "default words"
-  priority: 10
+  priority: 20
   rule {
     name: "default"
     # any punctuation
