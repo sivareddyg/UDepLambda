@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="random"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/stanford-tregex-3.5.1.jar" sourcepath="lib/stanford-tregex-2015-01-30/stanford-tregex-3.5.1-sources.jar">
@@ -21,6 +20,7 @@
 	<classpathentry kind="lib" path="lib/batik-util-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/batik-awt-util-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/batik-dom-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/javautils-lib-3.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0-models-spanish.jar"/>
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0-models.jar"/>
@@ -33,7 +33,6 @@
 	<classpathentry kind="lib" path="lib/commons-lang3-3.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/easyccg.jar"/>
 	<classpathentry kind="lib" path="lib/easysrl.jar"/>
-	<classpathentry kind="lib" path="lib/graph-parser.jar"/>
 	<classpathentry kind="lib" path="lib/guava-19.0.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.2.6.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-cache-4.2.6.jar"/>
@@ -60,7 +59,6 @@
 	<classpathentry kind="lib" path="lib/jewelcli-0.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/mtj-1.0-snapshot.jar"/>
 	<classpathentry kind="lib" path="/spf-2.0/bin" sourcepath="/spf-2.0"/>
-	<classpathentry kind="lib" path="/home/siva/SemanticParsing/software/spf-2.0/lib/javautils-lib-3.0.jar"/>
 	<classpathentry kind="lib" path="lib/jregex1.2_01-src.jar"/>
 	<classpathentry kind="lib" path="lib/fastutil-6.5.15.jar"/>
 	<classpathentry kind="output" path="bin"/>
