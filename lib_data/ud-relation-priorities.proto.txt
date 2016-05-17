@@ -3,6 +3,10 @@ relation {
   priority: 20
 }
 relation {
+  name: "l-dobj"
+  priority: 20
+}
+relation {
   name: "l-nmod:poss"
   priority: 30
 }
@@ -17,6 +21,14 @@ relation {
 relation {
   name: "l-nmod"
   priority: 30
+}
+relation {
+  name: "l-det"
+  priority: 40
+}
+relation {
+  name: "l-det-wh"
+  priority: 40
 }
 relation {
   name: "l-nsubj"

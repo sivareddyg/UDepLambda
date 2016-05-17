@@ -1,0 +1,15 @@
+rulegroup {
+  name: "distinguish question words and articles"
+  priority: 1
+  rule {
+    name: ""
+    priority: 1
+    # (l-root w-5-capital t-NOUN (l-nsubj w-2-city t-NOUN (l-det w-1-which t-DET)) (l-cop w-3-be t-VERB) (l-det w-4-the t-DET) (l-nmod w-7-we t-PRON (l-case w-6-of t-ADP)) (l-punct w-8-? t-PUNCT))
+    tregex: "/l-det/=relation (< /w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/)"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-det-wh"
+    }
+  }
+}

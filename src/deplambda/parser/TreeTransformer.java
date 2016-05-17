@@ -8,6 +8,8 @@ import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 import com.google.common.base.Preconditions;
 
 import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
@@ -260,6 +262,13 @@ public class TreeTransformer {
   public static Pair<String, List<LogicalExpression>> composeSemantics(
       DependencyTree tree, Map<String, Integer> relationPriority,
       boolean heuristicJoinIfFailed) {
+    return composeSemantics(tree, relationPriority, null, heuristicJoinIfFailed);
+  }
+  
+  
+  public static Pair<String, List<LogicalExpression>> composeSemantics(
+      DependencyTree tree, Map<String, Integer> relationPriority,
+      Logger logger, boolean heuristicJoinIfFailed) {
     if (tree.isLeaf())
       return Pair.of(tree.label().value(), tree.getNodeLambda());
 
@@ -273,7 +282,7 @@ public class TreeTransformer {
         ((DependencyTree) child).label().value(), Integer.MAX_VALUE)));
 
     Pair<String, List<LogicalExpression>> left =
-        composeSemantics((DependencyTree) children.get(0), relationPriority,
+        composeSemantics((DependencyTree) children.get(0), relationPriority, logger,
             heuristicJoinIfFailed);
     String leftTreeString = left.first();
     List<LogicalExpression> leftTreeParses = left.second();
@@ -283,7 +292,7 @@ public class TreeTransformer {
     for (int i = 1; i < children.size(); i++) {
       DependencyTree child = (DependencyTree) children.get(i);
       Pair<String, List<LogicalExpression>> right =
-          composeSemantics(child, relationPriority, heuristicJoinIfFailed);
+          composeSemantics(child, relationPriority, logger, heuristicJoinIfFailed);
       String rightTreeString = right.first();
       List<LogicalExpression> rightTreeParses = right.second();
 
@@ -293,6 +302,10 @@ public class TreeTransformer {
       leftTreeString =
           String.format("(%s %s %s)", child.label().value(), leftTreeString,
               rightTreeString);
+      
+      if (logger != null) {
+        logger.debug(leftTreeString);
+      }
 
       List<LogicalExpression> parses = new ArrayList<>();
       List<LogicalExpression> depParses = child.getNodeLambda();
@@ -339,7 +352,16 @@ public class TreeTransformer {
                     heuristicJoin(leftTreeParse, rightTreeParse);
               }
 
+              
+              
               if (depAndLeftAndRight != null) {
+                if (logger != null) {
+                  logger.debug(depParse);
+                  logger.debug(leftTreeParse);
+                  logger.debug(rightTreeParse);
+                  logger.debug(depAndLeftAndRight);
+                  logger.debug("\n");
+                }
                 parses.add(depAndLeftAndRight);
               }
             }

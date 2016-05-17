@@ -77,6 +77,48 @@ rulegroup {
   }
 }
 rulegroup {
+  name: "dobj"
+  priority: 5
+  rule {
+    name: "dobj"
+    # "read" the "article".
+    priority: 10
+    tregex: "/^l-dobj/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg2:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "det"
+  priority: 5
+  rule {
+    name: "Questions"
+    # "which" "city"
+    priority: 1
+    tregex: "/^l-det-wh/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x) (p_TARGET:u $x)))))"
+    }
+  }
+  rule {
+    name: "articles"
+    # The city
+    priority: 1
+    tregex: "/^l-det/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+
+rulegroup {
   name: "punctuations"
   priority: 10
   rule {
@@ -145,7 +187,7 @@ rulegroup {
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg1:b $x $x)))"
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x)))"
     }
   }
   rule {
@@ -156,7 +198,22 @@ rulegroup {
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg1:b $x $x)))"
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x)))"
+    }
+  }
+}
+rulegroup {
+  name: "question words"
+  priority: 10 
+  rule {
+    name: "question word"
+    # ["which" city] as opposed to [the car "which"]
+    priority: 1
+    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word > /l-det.*/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPE_{word}:u $x))"
     }
   }
 }
