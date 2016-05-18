@@ -155,6 +155,14 @@ public class PostProcessLogicalForm {
                 getEntityVar(sentence, entityIndex)));
           }
         }
+      } else if (basePredicate.startsWith(PredicateKeys.TARGET_PREFIX)) {
+        // (p_TARGET:u $0:<a,e>)
+        Term entityTerm = (Term) predicate.getArg(0);
+        for (int entityIndex : varToEntities.get(entityTerm)) {
+          cleanedPredicates.add(String.format("%s(%s)",
+              PredicateKeys.QUESTION_PREDICATE,
+              getEntityVar(sentence, entityIndex)));
+        }
       }
     }
     return cleanedPredicates;
