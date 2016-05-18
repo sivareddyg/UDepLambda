@@ -187,7 +187,7 @@ rulegroup {
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x)))"
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
     }
   }
   rule {
@@ -198,7 +198,7 @@ rulegroup {
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x)))"
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
     }
   }
 }

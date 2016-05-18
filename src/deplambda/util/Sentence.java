@@ -78,4 +78,11 @@ public class Sentence {
   public DependencyTree getRootNode() {
     return rootNode;
   }
+
+  public String getLemma(int index) {
+    JsonObject word = getWords().get(index).getAsJsonObject();
+    return word.has(SentenceKeys.LEMMA_KEY) ? word.get(SentenceKeys.LEMMA_KEY)
+        .getAsString().toLowerCase() : word.get(SentenceKeys.WORD_KEY)
+        .getAsString().toLowerCase();
+  }
 }
