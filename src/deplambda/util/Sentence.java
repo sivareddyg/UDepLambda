@@ -10,6 +10,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import deplambda.others.SentenceKeys;
+
 /**
  * @author Siva Reddy
  *
@@ -35,6 +37,11 @@ public class Sentence {
     rootNode = DependencyTree.parse(words, wordIndexToEntity, nodes);
   }
 
+  public JsonObject getEntityAtWordIndex(int index) {
+    return wordIndexToEntity.containsKey(index) ? wordIndexToEntity.get(index)
+        : null;
+  }
+
   /**
    * Constructs a map from word index to entity object.
    * 
@@ -43,18 +50,29 @@ public class Sentence {
    */
   private static void buildWordToEntityMap(JsonObject sentence,
       Map<Integer, JsonObject> wordIndexToEntity) {
-    if (sentence.has("entities")) {
-      JsonArray entities = sentence.get("entities").getAsJsonArray();
+    if (sentence.has(SentenceKeys.ENTITIES)) {
+      JsonArray entities = sentence.get(SentenceKeys.ENTITIES).getAsJsonArray();
       for (JsonElement entityElement : entities) {
         JsonObject entity = entityElement.getAsJsonObject();
-        int start = entity.get("start").getAsInt();
-        int end = entity.get("end").getAsInt();
+        int start = 0;
+        int end = 0;
+        if (entity.has(SentenceKeys.ENTITY_INDEX)) {
+          start = entity.get(SentenceKeys.ENTITY_INDEX).getAsInt();
+          end = entity.get(SentenceKeys.ENTITY_INDEX).getAsInt();
+        } else {
+          start = entity.get(SentenceKeys.START).getAsInt();
+          end = entity.get(SentenceKeys.END).getAsInt();
+        }
         while (start <= end) {
           wordIndexToEntity.put(start, entity);
           start++;
         }
       }
     }
+  }
+
+  public JsonArray getWords() {
+    return words;
   }
 
   public DependencyTree getRootNode() {
