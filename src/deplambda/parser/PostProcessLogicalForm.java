@@ -36,6 +36,10 @@ public class PostProcessLogicalForm {
       "%sw-([0-9]+)-.*", PredicateKeys.EVENT_PREFIX));
   static Pattern TYPE_ID_PATTERN = new Pattern(String.format("%sw-([0-9]+)-.*",
       PredicateKeys.TYPE_PREFIX));
+  static Pattern TYPEMOD_ID_PATTERN = new Pattern(String.format(
+      "%sw-([0-9]+)-.*", PredicateKeys.TYPEMOD_PREFIX));
+  static Pattern EVENTMOD_ID_PATTERN = new Pattern(String.format(
+      "%sw-([0-9]+)-.*", PredicateKeys.EVENTMOD_PREFIX));
 
   /**
    * From a given logical expression, the main predicates are extracted, make
@@ -95,6 +99,9 @@ public class PostProcessLogicalForm {
         cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
         Term eventTerm = (Term) predicate.getArg(0);
         Term entityTerm = (Term) predicate.getArg(1);
+        if (!varToEvents.containsKey(eventTerm)
+            || !varToEntities.containsKey(entityTerm))
+          continue;
         for (int eventIndex : varToEvents.get(eventTerm)) {
           String lexicalizedEvent =
               !lexicalizePredicates || isNamedEntity(sentence, eventIndex) ? ""
@@ -113,6 +120,9 @@ public class PostProcessLogicalForm {
         cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
         Term eventTerm = (Term) predicate.getArg(0);
         Term argTerm = (Term) predicate.getArg(1);
+        if (!varToEvents.containsKey(eventTerm)
+            || !varToEvents.containsKey(argTerm))
+          continue;
         for (int eventIndex : varToEvents.get(eventTerm)) {
           String lexicalizedEvent =
               !lexicalizePredicates || isNamedEntity(sentence, eventIndex) ? ""
@@ -130,6 +140,8 @@ public class PostProcessLogicalForm {
         cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
 
         Term eventTerm = (Term) predicate.getArg(0);
+        if (!varToEvents.containsKey(eventTerm))
+          continue;
         for (int eventIndex : varToEvents.get(eventTerm)) {
           if (!isNamedEntity(sentence, eventIndex)) {
             cleanedPredicates.add(String.format("%s(%d:e)", cleanedPredicate,
@@ -147,6 +159,8 @@ public class PostProcessLogicalForm {
         cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
 
         Term entityTerm = (Term) predicate.getArg(0);
+        if (!varToEntities.containsKey(entityTerm))
+          continue;
         for (int entityIndex : varToEntities.get(entityTerm)) {
           if (!isNamedEntity(sentence, entityIndex)
               || typeIsFromIndex != entityIndex) {
@@ -155,9 +169,49 @@ public class PostProcessLogicalForm {
                 getEntityVar(sentence, entityIndex)));
           }
         }
+      } else if (basePredicate.startsWith(PredicateKeys.TYPEMOD_PREFIX)) {
+        // (p_TYPEMOD_w-8-red:u $0:<a,e>)
+        Matcher matcher = TYPEMOD_ID_PATTERN.matcher(basePredicate);
+        matcher.matches();
+        int typeIsFromIndex = Integer.parseInt(matcher.group(1)) - 1;
+
+        String cleanedPredicate =
+            basePredicate.substring(PredicateKeys.TYPEMOD_PREFIX.length());
+        cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
+
+        Term entityTerm = (Term) predicate.getArg(0);
+        if (!varToEntities.containsKey(entityTerm))
+          continue;
+        for (int entityIndex : varToEntities.get(entityTerm)) {
+          if (!isNamedEntity(sentence, entityIndex)
+              || typeIsFromIndex != entityIndex) {
+            cleanedPredicates.add(String.format("%s(%d:s , %s)",
+                cleanedPredicate, typeIsFromIndex,
+                getEntityVar(sentence, entityIndex)));
+          }
+        }
+      } else if (basePredicate.startsWith(PredicateKeys.EVENTMOD_PREFIX)) {
+        // (p_TYPEMOD_w-8-red:u $0:<a,e>)
+        Matcher matcher = EVENTMOD_ID_PATTERN.matcher(basePredicate);
+        matcher.matches();
+        int typeIsFromIndex = Integer.parseInt(matcher.group(1)) - 1;
+
+        String cleanedPredicate =
+            basePredicate.substring(PredicateKeys.EVENTMOD_PREFIX.length());
+        cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
+
+        Term argTerm = (Term) predicate.getArg(0);
+        if (!varToEntities.containsKey(argTerm))
+          continue;
+        for (int eventIndex : varToEntities.get(argTerm)) {
+          cleanedPredicates.add(String.format("%s(%d:s , %d:e)",
+              cleanedPredicate, typeIsFromIndex, eventIndex));
+        }
       } else if (basePredicate.startsWith(PredicateKeys.TARGET_PREFIX)) {
         // (p_TARGET:u $0:<a,e>)
         Term entityTerm = (Term) predicate.getArg(0);
+        if (!varToEntities.containsKey(entityTerm))
+          continue;
         for (int entityIndex : varToEntities.get(entityTerm)) {
           cleanedPredicates.add(String.format("%s(%s)",
               PredicateKeys.QUESTION_PREDICATE,

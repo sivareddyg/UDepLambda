@@ -7,32 +7,40 @@ relation {
   priority: 20
 }
 relation {
-  name: "l-nmod:poss"
+  name: "l-auxpass"
   priority: 30
+}
+relation {
+  name: "l-aux"
+  priority: 30
+}
+relation {
+  name: "l-nmod:poss"
+  priority: 40
 }
 relation {
   name: "l-nmod:npmod"
-  priority: 30
+  priority: 40
 }
 relation {
   name: "l-nmod:tmod"
-  priority: 30
+  priority: 40
 }
 relation {
   name: "l-nmod"
-  priority: 30
+  priority: 40
+}
+relation {
+  name: "l-advmod"
+  priority: 40
 }
 relation {
   name: "l-det"
-  priority: 40
-}
-relation {
-  name: "l-det-wh"
-  priority: 40
+  priority: 50
 }
 relation {
   name: "l-nsubj"
-  priority: 50
+  priority: 60
 }
 relation {
   name: "l-case"

@@ -10,6 +10,8 @@ public class PredicateKeys {
   public static final String TARGET_PREFIX = "p_TARGET";
   public static final String EVENT_PREFIX = "p_EVENT_";
   public static final String TYPE_PREFIX = "p_TYPE_";
+  public static final String TYPEMOD_PREFIX = "p_TYPEMOD_";
+  public static final String EVENTMOD_PREFIX = "p_EVENTMOD_";
   
   public static final String QUESTION_PREDICATE = "QUESTION";
 

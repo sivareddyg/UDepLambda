@@ -23,7 +23,7 @@ rulegroup {
     # "$5" a "share"
     # TODO: handle nmod seperately when the child is a verb, e.g., "eased" a "fraction"
     priority: 10
-    tregex: "/^l-(?:nmod|nmod.*$)/=relation"
+    tregex: "/^l-(?:nmod|nmod.*)$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -38,7 +38,7 @@ rulegroup {
     name: "case"
     # "in" a "hat"
     priority: 10
-    tregex: "/^l-case/=relation"
+    tregex: "/^l-case$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -53,7 +53,7 @@ rulegroup {
     name: "case"
     # John "is" "old".
     priority: 10
-    tregex: "/^l-cop/=relation"
+    tregex: "/^l-cop$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -68,7 +68,7 @@ rulegroup {
     name: "case"
     # John shouted.
     priority: 10
-    tregex: "/^l-nsubj/=relation"
+    tregex: "/^l-nsubj$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -83,7 +83,7 @@ rulegroup {
     name: "dobj"
     # "read" the "article".
     priority: 10
-    tregex: "/^l-dobj/=relation"
+    tregex: "/^l-dobj$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -95,21 +95,26 @@ rulegroup {
   name: "det"
   priority: 5
   rule {
-    name: "Questions"
-    # "which" "city"
+    name: "articles, question words"
+    # The city
+    # which city
     priority: 1
-    tregex: "/^l-det-wh/=relation"
+    tregex: "/^l-det$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x) (p_TARGET:u $x)))))"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
     }
   }
+}
+rulegroup {
+  name: "auxilary verbs"
+  priority: 10
   rule {
-    name: "articles"
-    # The city
-    priority: 1
-    tregex: "/^l-det/=relation"
+    name: "punct"
+    # "Yahoo" "!"
+    priority: 10
+    tregex: "/^l-aux.*$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -117,7 +122,6 @@ rulegroup {
     }
   }
 }
-
 rulegroup {
   name: "punctuations"
   priority: 10
@@ -130,6 +134,21 @@ rulegroup {
       target: "relation"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "defaults"
+  priority: 100
+  rule {
+    name: "punct"
+    # "Yahoo" "!"
+    priority: 10
+    tregex: "/^l-.*$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $x $y))))))"
     }
   }
 }
@@ -162,7 +181,7 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "verbs"
+  name: "verbs and auxilary verbs"
   priority: 10
   rule {
     name: "verb"
@@ -173,6 +192,17 @@ rulegroup {
       target: "word"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "auxilary verbs"
+    # was
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:AUX)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
     }
   }
 }
@@ -203,33 +233,89 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "question words"
+  name: "articles, question words, advmods"
   priority: 10 
   rule {
-    name: "question word"
-    # ["which" city] as opposed to [the car "which"]
+    name: "question words with parent nouns"
+    # ["which" city] as opposed to [the car "which"] or ["which" is]
     priority: 1
-    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word > /l-det.*/"
+    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word !>> /^l-acl.*$/ > /l-(det|amod)/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (p_TYPE_{word}:u $x))"
+      lambda: "(lambda $x:v (and:c (p_TYPEMOD_{word}:u $x) (p_TARGET:u $x)))"
+    }
+  }
+  rule {
+    name: "question words with no parent noun"
+    # "what" is the capital of US?
+    priority: 5
+    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word !>> /^l-acl.*$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x) (p_TARGET:u $x)))"
+    }
+  }
+  rule {
+    name: "articles"
+    # "the" car
+    priority: 10
+    tregex: "/^w-.*$/=word $ /^t-DET$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+  rule {
+    name: "advmod"
+    # "genetically" modified 
+    # "most" recent game
+    priority: 10
+    tregex: "/^w-.*$/=word $ /^t-ADV$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENTMOD_{word}:u $x)))"
+    }
+  }
+}
+rulegroup {
+  name: "punctuations"
+  priority: 20
+  rule {
+    name: "punctuations"
+    priority: 10
+    tregex: "/^w-.*/=word > l-punct"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
     }
   }
 }
 rulegroup {
   name: "default words"
-  priority: 20
+  priority: 30
   rule {
-    name: "default"
-    # any punctuation
-    # any function word
+    name: "words with children" 
     priority: 10
+    tregex: "/^w-.*/=word $ /l-.*/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
+    }
+  }
+  rule {
+    name: "words"
+    priority: 20
     tregex: "/^w-.*/=word"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
     }
   }
 }

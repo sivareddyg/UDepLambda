@@ -1,18 +1,69 @@
 package deplambda.parser;
 
-import com.google.gson.JsonObject;
+import java.util.List;
+import java.util.Set;
 
+import org.apache.log4j.Logger;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import deplambda.others.SentenceKeys;
+import deplambda.util.Sentence;
+import deplambda.util.TransformationRuleGroups;
+import edu.cornell.cs.nlp.spf.mr.lambda.LogicalExpression;
+import edu.cornell.cs.nlp.utils.composites.Pair;
 import in.sivareddy.util.ProcessStreamInterface;
 
 public class TreeTransformerMain extends ProcessStreamInterface {
 
-  public TreeTransformerMain() {
-    
+  private static Gson gson = new Gson();
+  private static JsonParser jsonParser = new JsonParser();
+
+  private final TransformationRuleGroups treeTransformationRules;
+  private final TransformationRuleGroups lambdaAssignmentRules;
+  private final TransformationRuleGroups relationPriorityRules;
+  private final Logger logger;
+
+  private final boolean lexicalizePredicates;
+
+  public TreeTransformerMain(TransformationRuleGroups treeTransformationRules,
+      TransformationRuleGroups relationPriorityRules,
+      TransformationRuleGroups lambdaAssignmentRules, Logger logger,
+      boolean lexicalizePredicates) {
+    this.treeTransformationRules = treeTransformationRules;
+    this.relationPriorityRules = relationPriorityRules;
+    this.lambdaAssignmentRules = lambdaAssignmentRules;
+    this.logger = logger;
+
+    this.lexicalizePredicates = lexicalizePredicates;
   }
-  
+
   @Override
-  public void processSentence(JsonObject sentence) {
-    
+  public void processSentence(JsonObject sent) {
+    Sentence sentence = new Sentence(sent);
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    Pair<String, List<LogicalExpression>> sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationPriorityRules.getRelationPriority(), logger, false);
+
+    // Post processing lambdas.
+    JsonArray jsonParses = new JsonArray();
+    for (LogicalExpression parse : sentenceSemantics.second()) {
+      Set<String> cleaned =
+          PostProcessLogicalForm.process(sentence, parse, lexicalizePredicates);
+      jsonParses.add(jsonParser.parse(gson.toJson(cleaned)));
+    }
+    sent.add(SentenceKeys.DEPENDENCY_LAMBDA, jsonParses);
   }
-  
 }

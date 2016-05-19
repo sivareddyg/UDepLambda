@@ -13,6 +13,14 @@ run_bow_experiments_%:
 	make extract_gold_graphs_bow_$*
 	make bow_supervised_without_merge_without_expand_$*
 
+# Run dependency experiments
+run_dependency_experiments_%:
+	make extract_gold_graphs_dependency_dev_$*
+	make extract_gold_graphs_dependency_$*
+	make dependency_with_merge_without_expand_$*
+	make test_dependency_with_merge_without_expand_$*
+	make dependency_without_merge_without_expand_$*
+
 # Data Preparation
 
 # Parse WebQuestions
@@ -217,15 +225,15 @@ extract_gold_graphs_bow_dev_%:
         false \
         false \
         > data/gold_graphs/$*_bow_without_merge_without_expand.dev.answers.txt
-	#cat working/$*-webquestions.dev.forest.json \
-    #| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-    #    data/freebase/schema/all_domains_schema.txt localhost \
-    #    bow_question_graph \
-    #    data/gold_graphs/$*_bow_with_merge_without_expand.dev \
-    #    lib_data/dummy.txt \
-    #    true \
-    #    false \
-	#	> data/gold_graphs/$*_bow_with_merge_without_expand.dev.answers.txt
+	cat working/$*-webquestions.dev.forest.json \
+    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+        data/freebase/schema/all_domains_schema.txt localhost \
+        bow_question_graph \
+        data/gold_graphs/$*_bow_with_merge_without_expand.dev \
+        lib_data/dummy.txt \
+        true \
+        false \
+		> data/gold_graphs/$*_bow_with_merge_without_expand.dev.answers.txt
 
 extract_gold_graphs_bow_%:
 	mkdir -p data/gold_graphs/
@@ -239,16 +247,58 @@ extract_gold_graphs_bow_%:
         false \
         false \
         > data/gold_graphs/$*_bow_without_merge_without_expand.full.answers.txt
-	#cat working/$*-webquestions.train.forest.json \
-    #    working/$*-webquestions.dev.forest.json \
-    #| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-    #    data/freebase/schema/all_domains_schema.txt localhost \
-    #    bow_question_graph \
-    #    data/gold_graphs/$*_bow_with_merge_without_expand.full \
-    #    lib_data/dummy.txt \
-    #    true \
-    #    false \
-	#	> data/gold_graphs/$*_bow_with_merge_without_expand.full.answers.txt
+	cat working/$*-webquestions.train.forest.json \
+        working/$*-webquestions.dev.forest.json \
+    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+        data/freebase/schema/all_domains_schema.txt localhost \
+        bow_question_graph \
+        data/gold_graphs/$*_bow_with_merge_without_expand.full \
+        lib_data/dummy.txt \
+        true \
+        false \
+		> data/gold_graphs/$*_bow_with_merge_without_expand.full.answers.txt
+
+extract_gold_graphs_dependency_dev_%:
+	cat working/$*-webquestions.dev.forest.json \
+		| java -cp lib/*:bin in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+        data/freebase/schema/all_domains_schema.txt localhost \
+        dependency_question_graph \
+        data/gold_graphs/$*_dependency_without_merge_without_expand.dev \
+        lib_data/dummy.txt \
+        false \
+        false \
+        > data/gold_graphs/$*_dependency_without_merge_without_expand.dev.answers.txt
+	cat working/$*-webquestions.dev.forest.json \
+		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+        data/freebase/schema/all_domains_schema.txt localhost \
+        dependency_question_graph \
+        data/gold_graphs/$*_dependency_with_merge_without_expand.dev \
+        lib_data/dummy.txt \
+        true \
+        false \
+        > data/gold_graphs/$*_dependency_with_merge_without_expand.dev.answers.txt
+
+extract_gold_graphs_dependency_%:
+	cat working/$*-webquestions.train.forest.json \
+        working/$*-webquestions.dev.forest.json \
+    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+        data/freebase/schema/all_domains_schema.txt localhost \
+        dependency_question_graph \
+        data/gold_graphs/$*_dependency_without_merge_without_expand.full \
+        lib_data/dummy.txt \
+        false \
+        false \
+        > data/gold_graphs/$*_dependency_without_merge_without_expand.full.answers.txt
+	cat working/$*-webquestions.train.forest.json \
+        working/$*-webquestions.dev.forest.json \
+    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+        data/freebase/schema/all_domains_schema.txt localhost \
+        dependency_question_graph \
+        data/gold_graphs/$*_dependency_with_merge_without_expand.full \
+        lib_data/dummy.txt \
+        true \
+        false \
+        > data/gold_graphs/$*_dependency_with_merge_without_expand.full.answers.txt
 
 bow_supervised_without_merge_without_expand_%:
 	rm -rf ../working/$*_bow_supervised_without_merge_without_expand
@@ -316,3 +366,277 @@ bow_supervised_without_merge_without_expand_%:
     -devFile working/$*-webquestions.dev.forest.json \
     -logFile ../working/$*_bow_supervised_without_merge_without_expand/all.log.txt \
     > ../working/$*_bow_supervised_without_merge_without_expand/all.txt
+
+test_bow_supervised_without_merge_without_expand_%:
+	rm -rf ../working/$*_test_bow_supervised_without_merge_without_expand
+	mkdir -p ../working/$*_test_bow_supervised_without_merge_without_expand
+	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+    -pointWiseF1Threshold 0.2 \
+    -semanticParseKey dependency_lambda \
+    -schema data/freebase/schema/all_domains_schema.txt \
+    -relationTypesFile lib_data/dummy.txt \
+    -lexicon lib_data/dummy.txt \
+    -domain "http://rdf.freebase.com" \
+    -typeKey "fb:type.object.type" \
+    -nthreads 20 \
+    -trainingSampleSize 2000 \
+    -iterations 10 \
+    -nBestTrainSyntacticParses 1 \
+    -nBestTestSyntacticParses 1 \
+    -nbestGraphs 100 \
+    -forestSize 10 \
+    -ngramLength 2 \
+    -useSchema true \
+    -useKB true \
+    -addBagOfWordsGraph true \
+    -ngramGrelPartFlag true \
+    -addOnlyBagOfWordsGraph true \
+    -groundFreeVariables false \
+    -groundEntityVariableEdges false \
+    -groundEntityEntityEdges false \
+    -useEmptyTypes false \
+    -ignoreTypes false \
+    -urelGrelFlag false \
+    -urelPartGrelPartFlag false \
+    -utypeGtypeFlag false \
+    -gtypeGrelFlag false \
+    -wordGrelPartFlag false \
+    -wordGrelFlag false \
+    -eventTypeGrelPartFlag false \
+    -argGrelPartFlag false \
+    -argGrelFlag false \
+    -stemMatchingFlag false \
+    -mediatorStemGrelPartMatchingFlag false \
+    -argumentStemMatchingFlag false \
+    -argumentStemGrelPartMatchingFlag false \
+    -graphIsConnectedFlag false \
+    -graphHasEdgeFlag true \
+    -countNodesFlag false \
+    -edgeNodeCountFlag false \
+    -duplicateEdgesFlag true \
+    -grelGrelFlag true \
+    -useLexiconWeightsRel false \
+    -useLexiconWeightsType false \
+    -validQueryFlag true \
+    -useGoldRelations true \
+    -evaluateOnlyTheFirstBest true \
+    -evaluateBeforeTraining false \
+    -entityScoreFlag true \
+    -entityWordOverlapFlag false \
+    -initialEdgeWeight -0.5 \
+    -initialTypeWeight -2.0 \
+    -initialWordWeight -0.05 \
+    -stemFeaturesWeight 0.05 \
+    -endpoint localhost \
+    -supervisedCorpus "working/$*-webquestions.train.forest.json;working/$*-webquestions.dev.forest.json" \
+    -goldParsesFile data/gold_graphs/$*_test_bow_without_merge_without_expand.full.ser \
+    -devFile working/$*-webquestions.dev.forest.json \
+    -testFile working/$*-webquestions.test.forest.json \
+    -logFile ../working/$*_test_bow_supervised_without_merge_without_expand/all.log.txt \
+    > ../working/$*_test_bow_supervised_without_merge_without_expand/all.txt
+
+dependency_without_merge_without_expand_%:
+	rm -rf ../working/$*_dependency_without_merge_without_expand
+	mkdir -p ../working/$*_dependency_without_merge_without_expand
+	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 3 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 2 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes false \
+	-urelGrelFlag true \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag true \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag false \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag true \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-stemMatchingFlag true \
+	-mediatorStemGrelPartMatchingFlag true \
+	-argumentStemMatchingFlag true \
+	-argumentStemGrelPartMatchingFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel true \
+	-useLexiconWeightsType true \
+	-validQueryFlag true \
+	-useGoldRelations true \
+	-evaluateOnlyTheFirstBest true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag true \
+	-allowMerging false \
+	-handleEventEventEdges true \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight -0.05 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -supervisedCorpus "working/$*-webquestions.train.forest.json" \
+	-goldParsesFile data/gold_graphs/$*_dependency_without_merge_without_expand.full.ser \
+	-devFile "working/$*-webquestions.dev.forest.json"  \
+	-logFile ../working/$*_dependency_without_merge_without_expand/all.log.txt \
+	> ../working/$*_dependency_without_merge_without_expand/all.txt
+
+dependency_with_merge_without_expand_%:
+	rm -rf ../working/$*_dependency_with_merge_without_expand
+	mkdir -p ../working/$*_dependency_with_merge_without_expand
+	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 3 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 2 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes false \
+	-urelGrelFlag true \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag true \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag false \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag true \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-stemMatchingFlag true \
+	-mediatorStemGrelPartMatchingFlag true \
+	-argumentStemMatchingFlag true \
+	-argumentStemGrelPartMatchingFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel true \
+	-useLexiconWeightsType true \
+	-validQueryFlag true \
+	-useGoldRelations true \
+	-evaluateOnlyTheFirstBest true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag true \
+	-allowMerging true \
+	-handleEventEventEdges true \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight -0.05 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -supervisedCorpus "working/$*-webquestions.train.forest.json" \
+	-goldParsesFile data/gold_graphs/$*_dependency_with_merge_without_expand.full.ser \
+	-devFile "working/$*-webquestions.dev.forest.json"  \
+	-logFile ../working/$*_dependency_with_merge_without_expand/all.log.txt \
+	> ../working/$*_dependency_with_merge_without_expand/all.txt
+
+test_dependency_with_merge_without_expand_%:
+	rm -rf ../working/$*_test_dependency_with_merge_without_expand
+	mkdir -p ../working/$*_test_dependency_with_merge_without_expand
+	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 3 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 2 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes false \
+	-urelGrelFlag true \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag true \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag false \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag true \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-stemMatchingFlag true \
+	-mediatorStemGrelPartMatchingFlag true \
+	-argumentStemMatchingFlag true \
+	-argumentStemGrelPartMatchingFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel true \
+	-useLexiconWeightsType true \
+	-validQueryFlag true \
+	-useGoldRelations true \
+	-evaluateOnlyTheFirstBest true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag true \
+	-allowMerging true \
+	-handleEventEventEdges true \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight -0.05 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    	-supervisedCorpus "working/$*-webquestions.train.forest.json;working/$*-webquestions.dev.forest.json" \
+	-goldParsesFile data/gold_graphs/$*_dependency_with_merge_without_expand.full.ser \
+	-devFile "working/$*-webquestions.dev.forest.json"  \
+	-testFile "working/$*-webquestions.test.forest.json"  \
+	-logFile ../working/$*_test_dependency_with_merge_without_expand/all.log.txt \
+	> ../working/$*_test_dependency_with_merge_without_expand/all.txt
+
