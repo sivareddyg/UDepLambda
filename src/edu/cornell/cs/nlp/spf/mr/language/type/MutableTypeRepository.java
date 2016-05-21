@@ -30,6 +30,7 @@ public class MutableTypeRepository extends TypeRepository {
   public final static Type BACKWARD_APPLICATION = new TermType("ba");
   public final static Type FORWARD_APPLICATION = new TermType("fa");
   public final static Type BIND_OPERATION = new TermType("bind");
+  public final static Type BIND_OPERATION_OLD = new TermType("bindold");
 
   public MutableTypeRepository() {
     super();
@@ -38,6 +39,7 @@ public class MutableTypeRepository extends TypeRepository {
     additional_types.put(BACKWARD_APPLICATION.getName(), BACKWARD_APPLICATION);
     additional_types.put(FORWARD_APPLICATION.getName(), FORWARD_APPLICATION);
     additional_types.put(BIND_OPERATION.getName(), BIND_OPERATION);
+    additional_types.put(BIND_OPERATION_OLD.getName(), BIND_OPERATION_OLD);
   }
 
   /**

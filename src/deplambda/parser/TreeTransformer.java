@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.base.Preconditions;
 
+import deplambda.others.PredicateKeys;
 import deplambda.protos.TransformationRulesProto.RuleGroups.RuleGroup.Rule.Transformation;
 import deplambda.util.DependencyTree;
 import deplambda.util.TransformationRule;
@@ -25,6 +26,7 @@ import edu.cornell.cs.nlp.spf.mr.lambda.LogicalExpression;
 import edu.cornell.cs.nlp.spf.mr.lambda.SimpleLogicalExpressionReader;
 import edu.cornell.cs.nlp.spf.mr.lambda.Variable;
 import edu.cornell.cs.nlp.spf.mr.lambda.visitor.ApplyAndSimplify;
+import edu.cornell.cs.nlp.spf.mr.language.type.ComplexType;
 import edu.cornell.cs.nlp.spf.mr.language.type.MutableTypeRepository;
 import edu.cornell.cs.nlp.spf.mr.language.type.Type;
 import edu.cornell.cs.nlp.utils.composites.Pair;
@@ -264,8 +266,8 @@ public class TreeTransformer {
       boolean heuristicJoinIfFailed) {
     return composeSemantics(tree, relationPriority, null, heuristicJoinIfFailed);
   }
-  
-  
+
+
   public static Pair<String, List<LogicalExpression>> composeSemantics(
       DependencyTree tree, Map<String, Integer> relationPriority,
       Logger logger, boolean heuristicJoinIfFailed) {
@@ -282,8 +284,8 @@ public class TreeTransformer {
         ((DependencyTree) child).label().value(), Integer.MAX_VALUE)));
 
     Pair<String, List<LogicalExpression>> left =
-        composeSemantics((DependencyTree) children.get(0), relationPriority, logger,
-            heuristicJoinIfFailed);
+        composeSemantics((DependencyTree) children.get(0), relationPriority,
+            logger, heuristicJoinIfFailed);
     String leftTreeString = left.first();
     List<LogicalExpression> leftTreeParses = left.second();
     Preconditions.checkNotNull(leftTreeParses);
@@ -292,7 +294,8 @@ public class TreeTransformer {
     for (int i = 1; i < children.size(); i++) {
       DependencyTree child = (DependencyTree) children.get(i);
       Pair<String, List<LogicalExpression>> right =
-          composeSemantics(child, relationPriority, logger, heuristicJoinIfFailed);
+          composeSemantics(child, relationPriority, logger,
+              heuristicJoinIfFailed);
       String rightTreeString = right.first();
       List<LogicalExpression> rightTreeParses = right.second();
 
@@ -302,7 +305,7 @@ public class TreeTransformer {
       leftTreeString =
           String.format("(%s %s %s)", child.label().value(), leftTreeString,
               rightTreeString);
-      
+
       if (logger != null) {
         logger.debug(leftTreeString);
       }
@@ -336,6 +339,10 @@ public class TreeTransformer {
                     MutableTypeRepository.BIND_OPERATION)) {
                   depAndLeftAndRight =
                       bindOperation(leftTreeParse, rightTreeParse);
+                } else if (depParse.getType().equals(
+                    MutableTypeRepository.BIND_OPERATION_OLD)) {
+                  depAndLeftAndRight =
+                      bindOperationOld(leftTreeParse, rightTreeParse);
                 }
               } else {
                 LogicalExpression depAndLeft =
@@ -352,8 +359,8 @@ public class TreeTransformer {
                     heuristicJoin(leftTreeParse, rightTreeParse);
               }
 
-              
-              
+
+
               if (depAndLeftAndRight != null) {
                 if (logger != null) {
                   logger.debug(depParse);
@@ -438,6 +445,42 @@ public class TreeTransformer {
     return returnExpression;
   }
 
+  private static LogicalExpression bindOperation(
+      LogicalExpression leftTreeParse, LogicalExpression rightTreeParse) {
+    Preconditions.checkNotNull(leftTreeParse);
+    Preconditions.checkNotNull(rightTreeParse);
+    Preconditions.checkArgument(rightTreeParse instanceof LogicalConstant);
+
+    // Dirty implementation. A better way is to work with objects and not the
+    // strings.
+    Type leftType = leftTreeParse.getType();
+    String existsExpression =
+        String.format("(lambda $f:%s (exists:<%s,<%s,%s>> $x:%s ($f $x))",
+            leftType, leftType.getDomain(), leftType.getRange(),
+            leftType.getRange(), leftType.getDomain());
+    leftTreeParse =
+        ApplyAndSimplify
+            .of(SimpleLogicalExpressionReader.read(existsExpression),
+                leftTreeParse);
+
+    String variable = rightTreeParse.toString();
+    String leftParse = leftTreeParse.toString();
+    String variableType = rightTreeParse.getType().getDomain().toString();
+    String returnType = rightTreeParse.getType().getRange().toString();
+    Pattern variablePattern =
+        Pattern.compile(String.format("([\\(\\)\\s])(%s)([\\(\\)\\s])",
+            variable));
+    Matcher matcher = variablePattern.matcher(leftParse);
+
+    String finalString =
+        matcher
+            .replaceAll(String.format("$1%s:<%s,<%s,%s>> \\$x$3",
+                PredicateKeys.EQUAL_PREFIX, variableType, variableType,
+                returnType));
+    finalString = String.format("(lambda $x:%s %s)", variableType, finalString);
+    return SimpleLogicalExpressionReader.read(finalString);
+  }
+
   /**
    * Converts the right argument as a lambda variable and passes it to Bind
    * operation is defined as
@@ -448,7 +491,7 @@ public class TreeTransformer {
    * @param rightTreeParse
    * @return
    */
-  private static LogicalExpression bindOperation(
+  private static LogicalExpression bindOperationOld(
       LogicalExpression leftTreeParse, LogicalExpression rightTreeParse) {
     Preconditions.checkNotNull(leftTreeParse);
     Preconditions.checkNotNull(rightTreeParse);

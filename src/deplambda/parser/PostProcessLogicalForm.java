@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import jregex.Matcher;
 import jregex.Pattern;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 
 import deplambda.others.PredicateKeys;
@@ -41,6 +44,7 @@ public class PostProcessLogicalForm {
   static Pattern EVENTMOD_ID_PATTERN = new Pattern(String.format(
       "%sw-([0-9]+)-.*", PredicateKeys.EVENTMOD_PREFIX));
 
+
   /**
    * From a given logical expression, the main predicates are extracted, make
    * them more readable, link the variables to the sources from which they
@@ -57,15 +61,92 @@ public class PostProcessLogicalForm {
     List<Literal> mainPredicates = new ArrayList<>();
     Map<Term, List<Integer>> varToEvents = new HashMap<>();
     Map<Term, List<Integer>> varToEntities = new HashMap<>();
-    process(mainPredicates, varToEvents, varToEntities, sentence, parse);
+    Map<Term, List<Term>> varToConj = new HashMap<>();
+    List<Pair<Term, Term>> equalPairs = new ArrayList<>();
+    process(mainPredicates, varToEvents, varToEntities, varToConj, equalPairs,
+        sentence, parse);
 
     // TODO(sivareddyg) handle predicates p_CONJ and p_EQUAL in both varToEvents
     // and varToEntities.
     cleanVarToEntities(varToEntities, sentence);
+    cleanVarToEvents(varToEvents, sentence);
+    populateConj(varToConj, varToEntities, varToEvents);
+    populateEquals(equalPairs, varToEntities, varToEvents);
     Set<String> cleanedPredicates =
         createCleanPredicates(mainPredicates, varToEvents, varToEntities,
             sentence, lexicalizePredicates);
     return cleanedPredicates;
+  }
+
+  private static void populateEquals(List<Pair<Term, Term>> equalPairs,
+      Map<Term, List<Integer>> varToEntities,
+      Map<Term, List<Integer>> varToEvents) {
+    Map<Term, Set<Term>> varToAllEquals = new HashMap<>();
+    for (Pair<Term, Term> varPair : equalPairs) {
+      Set<Term> unifiedSet = new HashSet<>();
+      unifiedSet.add(varPair.getLeft());
+      unifiedSet.add(varPair.getRight());
+      unifiedSet.addAll(varToAllEquals.getOrDefault(varPair.getLeft(),
+          new HashSet<>()));
+      unifiedSet.addAll(varToAllEquals.getOrDefault(varPair.getRight(),
+          new HashSet<>()));
+      for (Term var : unifiedSet) {
+        varToAllEquals.put(var, unifiedSet);
+      }
+    }
+    
+    Set<Set<Term>> unifiedSets = Sets.newHashSet(varToAllEquals.values());
+    for (Set<Term> unifiedSet : unifiedSets) {
+      Set<Integer> entityIndices = new HashSet<>();
+      unifiedSet.forEach(x -> entityIndices.addAll(varToEntities.getOrDefault(x,
+          new ArrayList<>())));
+      List<Integer> entityIndicesList = new ArrayList<>(entityIndices);
+      unifiedSet.forEach(x -> varToEntities.put(x, entityIndicesList));
+      
+      Set<Integer> eventIndices = new HashSet<>();
+      unifiedSet.forEach(x -> eventIndices.addAll(varToEvents.getOrDefault(x,
+          new ArrayList<>())));
+      List<Integer> eventIndicesList = new ArrayList<>(eventIndices);
+      unifiedSet.forEach(x -> varToEvents.put(x, eventIndicesList));
+    }
+  }
+
+  /**
+   * Unfolds a conjunction variable to basic variables and populates this info
+   * into entityToVar and entityToEvent.
+   * 
+   * @param varToConj
+   * @param varToEntities
+   * @param varToEvents
+   */
+  private static void populateConj(Map<Term, List<Term>> varToConj,
+      Map<Term, List<Integer>> varToEntities,
+      Map<Term, List<Integer>> varToEvents) {
+    for (Term conjVar : varToConj.keySet()) {
+      List<Term> terminalVars = new ArrayList<>();
+      getTerminalVars(terminalVars, varToConj, conjVar);
+      List<Integer> emptyList = new ArrayList<>();
+
+      List<Integer> terminalEntitySources = new ArrayList<>();
+      terminalVars.forEach(x -> terminalEntitySources.addAll(varToEntities
+          .getOrDefault(x, emptyList)));
+      varToEntities.put(conjVar, terminalEntitySources);
+
+      List<Integer> terminalEventSources = new ArrayList<>();
+      terminalVars.forEach(x -> terminalEventSources.addAll(varToEvents
+          .getOrDefault(x, emptyList)));
+      varToEvents.put(conjVar, terminalEventSources);
+    }
+  }
+
+  private static void getTerminalVars(List<Term> terminalVars,
+      Map<Term, List<Term>> varToConj, Term conjVar) {
+    if (!varToConj.containsKey(conjVar)) {
+      terminalVars.add(conjVar);
+      return;
+    }
+    varToConj.get(conjVar).forEach(
+        x -> getTerminalVars(terminalVars, varToConj, x));
   }
 
   /**
@@ -234,8 +315,8 @@ public class PostProcessLogicalForm {
     if (!isNamedEntity(sentence, entityIndex)) {
       return String.format("%d:x", entityIndex);
     } else {
-      return String
-          .format("%d:%s", entityIndex, sentence.getLemma(entityIndex));
+      return String.format("%d:m.%s", entityIndex,
+          sentence.getLemma(entityIndex));
     }
   }
 
@@ -323,20 +404,22 @@ public class PostProcessLogicalForm {
    */
   private static void process(List<Literal> mainPredicates,
       Map<Term, List<Integer>> varToEvents,
-      Map<Term, List<Integer>> varToEntities, Sentence sentence,
+      Map<Term, List<Integer>> varToEntities, Map<Term, List<Term>> varToConj,
+      List<Pair<Term, Term>> equalPairs, Sentence sentence,
       LogicalExpression parse) {
     if (parse instanceof Lambda) {
-      process(mainPredicates, varToEvents, varToEntities, sentence,
-          ((Lambda) parse).getBody());
+      process(mainPredicates, varToEvents, varToEntities, varToConj,
+          equalPairs, sentence, ((Lambda) parse).getBody());
     } else if (parse instanceof Literal) {
       if (((LogicalConstant) ((Literal) parse).getPredicate()).getBaseName()
           .startsWith("p_")) {
         mainPredicates.add(((Literal) parse));
-        processPredicate(((Literal) parse), varToEvents, varToEntities);
+        processPredicate(((Literal) parse), varToEvents, varToEntities,
+            varToConj, equalPairs);
       } else {
         for (int i = 0; i < ((Literal) parse).numArgs(); i++) {
-          process(mainPredicates, varToEvents, varToEntities, sentence,
-              ((Literal) parse).getArg(i));
+          process(mainPredicates, varToEvents, varToEntities, varToConj,
+              equalPairs, sentence, ((Literal) parse).getArg(i));
         }
       }
     }
@@ -371,7 +454,8 @@ public class PostProcessLogicalForm {
    */
   private static void processPredicate(Literal literal,
       Map<Term, List<Integer>> varToEvents,
-      Map<Term, List<Integer>> varToEntities) {
+      Map<Term, List<Integer>> varToEntities, Map<Term, List<Term>> varToConj,
+      List<Pair<Term, Term>> equalPairs) {
     String predicate = ((LogicalConstant) literal.getPredicate()).getBaseName();
     if (predicate.startsWith(PredicateKeys.EVENT_PREFIX)) {
       // (p_EVENT_w-2-nominate:u $0:<a,e>)
@@ -388,14 +472,25 @@ public class PostProcessLogicalForm {
       Term key = (Term) literal.getArg(0);
       varToEntities.putIfAbsent(key, new ArrayList<>());
       varToEntities.get(key).add(typeId - 1);
+    } else if (predicate.startsWith(PredicateKeys.EQUAL_PREFIX)) {
+      Term arg1 = (Term) literal.getArg(0);
+      Term arg2 = (Term) literal.getArg(1);
+      equalPairs.add(Pair.of(arg1, arg2));
+    } else if (predicate.startsWith(PredicateKeys.CONJ_PREFIX)) {
+      Term conj = (Term) literal.getArg(0);
+      Term arg1 = (Term) literal.getArg(1);
+      Term arg2 = (Term) literal.getArg(2);
+      varToConj.putIfAbsent(conj, new ArrayList<>());
+      varToConj.get(conj).add(arg1);
+      varToConj.get(conj).add(arg2);
     }
   }
 
   /**
    * Maps entity variables to the likely source, e.g., the predicates
-   * (p_EVENT_w-5-judge:u $0:<a,e>) and (p_EVENT_w-3-anderson:u $0:<a,e>)
-   * indicate the 0 could have been originated either from 5 or 3, but since 3
-   * is a named entity, we make it the likely source.
+   * (p_TYPE_w-5-judge:u $0:<a,e>) and (p_TYPE_w-3-anderson:u $0:<a,e>) indicate
+   * the 0 could have been originated either from 5 or 3, but since 3 is a named
+   * entity, we make it the likely source.
    * 
    * @param varToEntities
    * @param sentence
@@ -406,12 +501,18 @@ public class PostProcessLogicalForm {
       List<Integer> entityIds = new ArrayList<>();
       for (int wordId : varToEntities.get(key)) {
         JsonObject entity = sentence.getEntityAtWordIndex(wordId);
+        // It is not clear what to do in cases when a term matches to two
+        // entity sources. Current solution is to just pick the first one.
         if (entity != null) {
           int entityId =
               entity.has(SentenceKeys.ENTITY_INDEX) ? entity.get(
                   SentenceKeys.ENTITY_INDEX).getAsInt() : entity.get(
                   SentenceKeys.START).getAsInt();
           entityIds.add(entityId);
+          break;
+        } else if (isNamedEntity(sentence, wordId)) {
+          entityIds.add(wordId);
+          break;
         }
       }
       if (entityIds.size() == 0)
@@ -420,4 +521,31 @@ public class PostProcessLogicalForm {
     }
   }
 
+  /**
+   * Maps event variables to the likely source, e.g., the predicates
+   * (p_EVENT_w-5-judge:u $0:<a,e>) and (p_EVENT_w-3-anderson:u $0:<a,e>)
+   * indicate the event corresponding to 0 could have been originated either
+   * from 5 or 3, but since 5 is not a named entity, we make it the likely
+   * source.
+   * 
+   * @param varToEntities
+   * @param sentence
+   */
+  private static void cleanVarToEvents(Map<Term, List<Integer>> varToEvents,
+      Sentence sentence) {
+    for (Term key : varToEvents.keySet()) {
+      List<Integer> eventIds = new ArrayList<>();
+      for (int wordId : varToEvents.get(key)) {
+        if (!isNamedEntity(sentence, wordId)) {
+          // It is not clear what to do in cases when a term matches to two
+          // event sources. Current solution is to just pick the first one.
+          eventIds.add(wordId);
+          break;
+        }
+      }
+      if (eventIds.size() == 0)
+        eventIds.add(varToEvents.get(key).get(0));
+      varToEvents.put(key, eventIds);
+    }
+  }
 }

@@ -12,6 +12,8 @@ public class PredicateKeys {
   public static final String TYPE_PREFIX = "p_TYPE_";
   public static final String TYPEMOD_PREFIX = "p_TYPEMOD_";
   public static final String EVENTMOD_PREFIX = "p_EVENTMOD_";
+  public static final String CONJ_PREFIX = "p_CONJ";
+  public static final String EQUAL_PREFIX = "p_EQUAL";
   
   public static final String QUESTION_PREDICATE = "QUESTION";
 

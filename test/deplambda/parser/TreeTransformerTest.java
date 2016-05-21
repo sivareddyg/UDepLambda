@@ -11,6 +11,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.List;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.ConsoleAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +44,16 @@ public class TreeTransformerTest {
   TransformationRuleGroups relationRules;
   JsonObject jsonSentence;
   MutableTypeRepository types = new MutableTypeRepository();
+
+  static Logger logger = Logger.getLogger("TreeTransformerUniversalTest");
+
+  static {
+    PatternLayout layout = new PatternLayout("%r [%t] %-5p: %m%n");
+    logger.setLevel(Level.DEBUG);
+    logger.setAdditivity(false);
+    Appender stdoutAppender = new ConsoleAppender(layout);
+    logger.addAppender(stdoutAppender);
+  }
 
   /**
    * @throws java.lang.Exception
@@ -168,7 +183,7 @@ public class TreeTransformerTest {
         "    transformation {\n" + 
         "      target: \"dep\"\n" + 
         "      action: ASSIGN_LAMBDA\n" + 
-        "      lambda: \"empty:bind\"\n" + 
+        "      lambda: \"empty:bindold\"\n" + 
         "    }\n" + 
         "  }\n" +
         "}" + 
@@ -353,7 +368,7 @@ public class TreeTransformerTest {
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            relationRules.getRelationPriority(), logger, false);
     assertEquals(
         "(lambda $0:z (exists:ex $1:z (exists:ex $2:z (and:cj (p_EVENT.ENTITY_w-developed.arg_1:epd $0 $1) (p_EVENT.ENTITY_w-developed.arg_2:epd $0 $2) (exists:ex $3:z (and:cj (p_TYPE_w-Inc.:tpd $1) (exists:ex $4:z (exists:ex $5:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:epd $3 $4) (p_EVENT.ENTITY_w-found.arg_2:epd $3 $5) (p_TYPE_w-Jobs:tpd $4) (p_TYPE_w-Inc.:tpd $5)))))) (p_TYPE_w-shuffle:tpd $2)))))",
         sentenceSemantics.second().get(0).toString());
