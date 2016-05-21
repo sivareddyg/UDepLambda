@@ -32,8 +32,74 @@ rulegroup {
   }
 }
 rulegroup {
+  name: "acl"
+  priority: 10
+  rule {
+    name: "acl, acl:relcl"
+	# country Darwin belongs to
+	# movie which Cameron directed
+	# the movie which won Oscar
+    priority: 1
+    tregex: "/^l-(?:acl|acl:relcl)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+  rule {
+    name: "other acl-other cases"
+	# Cases which do not involve extractions
+	# the "issues" as he "sees" them
+    priority: 1
+    tregex: "/^l-acl-other$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $y $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "compound, name"
+  priority: 10
+  rule {
+    name: "compound between two proper nouns"
+    # "Barack" "Obama"
+    priority: 1
+    tregex: "/^l-(?:compound|name)$/=relation $ /t-PROPN/ < /t-PROPN/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+  rule {
+    name: "compound from a noun to proper noun"
+    # "Hilton" "hotel"
+    priority: 5
+    tregex: "/^l-compound$/=relation < /t-PROPN/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $x $y))))))"
+    }
+  }
+  rule {
+    name: "compound from noun to noun"
+    # "coffee" "table"
+    priority: 10
+    tregex: "/^l-compound$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
   name: "case"
-  priority: 5
+  priority: 10
   rule {
     name: "case"
     # "in" a "hat"
@@ -47,8 +113,51 @@ rulegroup {
   }
 }
 rulegroup {
+  name: "cc"
+  priority: 10
+  rule {
+    name: "cc"
+    # "Bill" "and" Dave
+    priority: 10
+    tregex: "/^l-cc$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y))))))"
+    }
+  }
+}
+rulegroup {
+  name: "conj"
+  priority: 10
+  rule {
+    name: "conj-np, conj-vp, conj-verb"
+    # "Bill" and "Dave"
+    priority: 10
+    tregex: "/^l-conj-(?:np|vp|verb|sent)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $z:v (exists:ex $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_CONJ:tri $z $x $y)))))))"
+    }
+  }
+  rule {
+    name: "conj-adj"
+    # "quick" and "fast"
+    # TODO: The reply was quick and fast.
+    priority: 10
+    tregex: "/^l-conj-adj$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+
+rulegroup {
   name: "cop"
-  priority: 5
+  priority: 10
   rule {
     name: "case"
     # John "is" "old".
@@ -63,7 +172,7 @@ rulegroup {
 }
 rulegroup {
   name: "nsubj"
-  priority: 5
+  priority: 10
   rule {
     name: "case"
     # John shouted.
@@ -78,7 +187,7 @@ rulegroup {
 }
 rulegroup {
   name: "dobj"
-  priority: 5
+  priority: 10
   rule {
     name: "dobj"
     # "read" the "article".
@@ -92,14 +201,55 @@ rulegroup {
   }
 }
 rulegroup {
+  name: "appos"
+  priority: 10
+  rule {
+    name: "appositives"
+    # "John", my "friend", 
+    priority: 10
+    tregex: "/^l-appos$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
   name: "det"
-  priority: 5
+  priority: 10
   rule {
     name: "articles, question words"
     # The city
     # which city
     priority: 1
     tregex: "/^l-det$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "amod"
+  priority: 10
+  rule {
+    name: "verb acting as adjectival modifier"
+    # I ate a hand "made" "sandwich".
+    priority: 1
+    tregex: "/^l-amod$/=relation < /t-VERB/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $y $x))))))"
+    }
+  }
+  rule {
+    name: "adjectival modifiers attached to verbs"
+    # "red" "car"
+    priority: 10
+    tregex: "/^l-amod$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -134,6 +284,20 @@ rulegroup {
       target: "relation"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "BIND"
+  priority: 10
+  rule {
+    name: "BIND"
+    priority: 10
+    tregex: "/^l-BIND$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "empty:bind"
     }
   }
 }
@@ -207,13 +371,36 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "nouns"
+  name: "nouns and proper nouns"
   priority: 10
   rule {
-    name: "noun"
-    # movie
+    name: "noun with incoming l-compound from commoun nouns"
+    # "cofee" table
+    # should not match "boy" in "boy David"
     priority: 1
-    tregex: "/^w-.*$/=word $ /^t-(?:NOUN)$/"
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN)$/ > (l-compound $ /w-.*/=head !$ /t-PROPN/)"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}.{head}:u $x))"
+    }
+  }
+  rule {
+    name: "noun with incoming l-compound"
+    # "boy" David
+    priority: 5
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN)$/ > l-compound"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "nouns with an outgoing arc"
+    # "movie" in 2010
+    priority: 10
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN|PROPN)$/ $ /l-.*/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -221,19 +408,19 @@ rulegroup {
     }
   }
   rule {
-    name: "proper noun"
-    # Titanic
-    priority: 1
-    tregex: "/^w-.*$/=word $ /^t-(?:PROPN)$/"
+    name: "rest of the nouns"
+    # movie
+    priority: 15
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN|PROPN)$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
+      lambda: "(lambda $x:v (p_TYPE_{word}:u $x))"
     }
   }
 }
 rulegroup {
-  name: "articles, question words, advmods"
+  name: "articles, question words, advmods, pronouns"
   priority: 10 
   rule {
     name: "question words with parent nouns"
@@ -247,10 +434,10 @@ rulegroup {
     }
   }
   rule {
-    name: "question words with no parent noun"
-    # "what" is the capital of US?
+    name: "question words with no parent noun but has outgoing arcs"
+    # "where" in california
     priority: 5
-    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word !>> /^l-acl.*$/"
+    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word !>> /^l-acl.*$/ $ /^l-.*$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -258,9 +445,52 @@ rulegroup {
     }
   }
   rule {
+    name: "question words with no parent noun"
+    # "what" is the capital of US?
+    priority: 10
+    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/=word !>> /^l-acl.*$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_TARGET:u $x)))"
+    }
+  }
+  rule {
+    name: "advmod"
+    # "genetically" modified 
+    # "most" recent game
+    priority: 15
+    tregex: "/^w-.*$/=word $ /^t-ADV$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENTMOD_{word}:u $x)))"
+    }
+  }
+  rule {
+    name: "pronouns with outgoing arcs"
+    priority: 15 
+    tregex: "/w-.*/=word $ /^t-PRON$/ $ /^l-.*$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
+    }
+  }
+  rule {
+    name: "pronouns with no outgoing arcs"
+    priority: 20
+    tregex: "/w-.*/=word $ /^t-PRON$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPE_{word}:u $x))"
+    }
+  }
+  rule {
     name: "articles"
     # "the" car
-    priority: 10
+    priority: 20
     tregex: "/^w-.*$/=word $ /^t-DET$/"
     transformation {
       target: "word"
@@ -268,16 +498,47 @@ rulegroup {
       lambda: "(lambda $x:v (p_EMPTY:u $x))"
     }
   }
+}
+rulegroup {
+  name: "prepositions"
+  priority: 10
   rule {
-    name: "advmod"
-    # "genetically" modified 
-    # "most" recent game
+    name: "prepositions"
     priority: 10
-    tregex: "/^w-.*$/=word $ /^t-ADV$/"
+    tregex: "/^w-.*/=word $ /^t-ADJ$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (p_EVENTMOD_{word}:u $x)))"
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "prepositions"
+  priority: 10
+  rule {
+    name: "prepositions"
+    priority: 10
+    tregex: "/^w-.*/=word $ /^t-ADP$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "conjunction words"
+  # TODO: handle if, when, since, before etc.
+  priority: 10
+  rule {
+    name: "prepositions"
+    priority: 10
+    tregex: "/^w-.*/=word $ /^t-(?:CONJ|SCONJ)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
     }
   }
 }
@@ -316,6 +577,20 @@ rulegroup {
       target: "word"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "virtual"
+  priority: 1
+  rule {
+    name: "virtual default"
+    priority: 1
+    tregex: "/v-.*/=target"
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "{target}:w"
     }
   }
 }

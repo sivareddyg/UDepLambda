@@ -13,6 +13,9 @@ a
 # binary predicate type
 {b <v,<v,t>>}
 
+# trinary predicate type
+{tri <v,<v,<v,t>>>}
+
 # dependency relation type
 {r <w,<w,w>>}
 

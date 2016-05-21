@@ -1,10 +1,62 @@
 relation {
+  name: "l-conj-verb"
+  priority: 10
+}
+relation {
+  name: "l-amod"
+  priority: 10
+}
+relation {
+  name: "l-compound"
+  priority: 10
+}
+relation {
+  name: "l-det"
+  priority: 15
+}
+relation {
+  name: "l-cc"
+  priority: 15
+}
+relation {
+  name: "l-conj-adj"
+  priority: 16
+}
+relation {
+  name: "l-conj-np"
+  priority: 16
+}
+relation {
+  name: "l-appos"
+  priority: 16
+}
+relation {
+  name: "l-acl:relcl"
+  priority: 16
+}
+relation {
+  name: "l-acl"
+  priority: 16
+}
+relation {
+  name: "l-acl-other"
+  priority: 16
+}
+relation {
   name: "l-cop"
   priority: 20
 }
 relation {
   name: "l-dobj"
   priority: 20
+}
+relation {
+  name: "l-dobj-wh"
+  priority: 20
+}
+relation {
+  name: "l-conj-vp"
+  priority: 25
 }
 relation {
   name: "l-auxpass"
@@ -35,18 +87,31 @@ relation {
   priority: 40
 }
 relation {
-  name: "l-det"
-  priority: 50
-}
-relation {
   name: "l-nsubj"
   priority: 60
 }
 relation {
+  name: "l-nsubjpass"
+  priority: 60
+}
+relation {
+  name: "l-nsubj-wh"
+  priority: 60
+}
+relation {
   name: "l-case"
-  priority: 90
+  priority: 70
+}
+relation {
+  name: "l-conj-sent"
+  priority: 80
 }
 relation {
   name: "l-punct"
+  priority: 90
+}
+relation {
+  name: "l-BIND"
   priority: 100
 }
+
