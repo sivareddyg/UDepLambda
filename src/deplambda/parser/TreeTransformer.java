@@ -26,7 +26,6 @@ import edu.cornell.cs.nlp.spf.mr.lambda.LogicalExpression;
 import edu.cornell.cs.nlp.spf.mr.lambda.SimpleLogicalExpressionReader;
 import edu.cornell.cs.nlp.spf.mr.lambda.Variable;
 import edu.cornell.cs.nlp.spf.mr.lambda.visitor.ApplyAndSimplify;
-import edu.cornell.cs.nlp.spf.mr.language.type.ComplexType;
 import edu.cornell.cs.nlp.spf.mr.language.type.MutableTypeRepository;
 import edu.cornell.cs.nlp.spf.mr.language.type.Type;
 import edu.cornell.cs.nlp.utils.composites.Pair;
