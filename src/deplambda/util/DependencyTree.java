@@ -96,7 +96,7 @@ public class DependencyTree extends LabeledScoredTreeNode {
       if (head == -1) {
         // ROOT node.
         Preconditions.checkArgument(rootNode == null,
-            "Multiple root nodes present");
+            "Multiple root nodes present: " + words);
         rootNode = nodes.get(i);
       } else {
         if (wordIndexToEntity.containsKey(i)

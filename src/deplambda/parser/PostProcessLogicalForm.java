@@ -197,7 +197,7 @@ public class PostProcessLogicalForm {
       if (basePredicate.startsWith(PredicateKeys.EVENT_EVENT_PREFIX)) {
         // (p_EVENT.EVENT_arg1:b $0:<a,e> $1:<a,e>)
         String cleanedPredicate =
-            basePredicate.substring(PredicateKeys.EVENT_ENTITY_PREFIX.length());
+            basePredicate.substring(PredicateKeys.EVENT_EVENT_PREFIX.length());
         cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
         Term eventTerm = (Term) predicate.getArg(0);
         Term argTerm = (Term) predicate.getArg(1);
@@ -272,7 +272,7 @@ public class PostProcessLogicalForm {
           }
         }
       } else if (basePredicate.startsWith(PredicateKeys.EVENTMOD_PREFIX)) {
-        // (p_TYPEMOD_w-8-red:u $0:<a,e>)
+        // (p_EVENTMOD_w-8-red:u $0:<a,e>)
         Matcher matcher = EVENTMOD_ID_PATTERN.matcher(basePredicate);
         matcher.matches();
         int typeIsFromIndex = Integer.parseInt(matcher.group(1)) - 1;
@@ -282,9 +282,9 @@ public class PostProcessLogicalForm {
         cleanedPredicate = getCleanedBasePredicate(cleanedPredicate);
 
         Term argTerm = (Term) predicate.getArg(0);
-        if (!varToEntities.containsKey(argTerm))
+        if (!varToEvents.containsKey(argTerm))
           continue;
-        for (int eventIndex : varToEntities.get(argTerm)) {
+        for (int eventIndex : varToEvents.get(argTerm)) {
           cleanedPredicates.add(String.format("%s(%d:s , %d:e)",
               cleanedPredicate, typeIsFromIndex, eventIndex));
         }

@@ -67,6 +67,10 @@ relation {
   priority: 30
 }
 relation {
+  name: "l-xcomp"
+  priority: 30
+}
+relation {
   name: "l-nmod:poss"
   priority: 40
 }
@@ -84,6 +88,14 @@ relation {
 }
 relation {
   name: "l-advmod"
+  priority: 40
+}
+relation {
+  name: "l-advcl"
+  priority: 40
+}
+relation {
+  name: "l-ccomp"
   priority: 40
 }
 relation {

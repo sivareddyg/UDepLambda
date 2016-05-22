@@ -98,6 +98,31 @@ rulegroup {
   }
 }
 rulegroup {
+  name: "advmod"
+  priority: 10
+  rule {
+    name: "advmod attached to question word"
+    # "in" a "hat"
+    priority: 1
+    tregex: "/^l-advmod$/=relation < /w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles)/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $x $y))))))"
+    }
+  }
+  rule {
+    name: "other advmod"
+    priority: 10
+    tregex: "/^l-advmod$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
   name: "case"
   priority: 10
   rule {
@@ -154,7 +179,6 @@ rulegroup {
     }
   }
 }
-
 rulegroup {
   name: "cop"
   priority: 10
@@ -193,6 +217,21 @@ rulegroup {
     # "read" the "article".
     priority: 10
     tregex: "/^l-dobj$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg2:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "nsubjpass"
+  priority: 10
+  rule {
+    name: "case"
+    # John shouted.
+    priority: 10
+    tregex: "/^l-nsubjpass$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -273,6 +312,55 @@ rulegroup {
   }
 }
 rulegroup {
+  name: "xcomp"
+  # TODO: handle extractions
+  priority: 10
+  rule {
+    name: "xcomp"
+    # Sue "asked" George to "respond" to her offfer
+    priority: 10
+    tregex: "/^l-xcomp$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.EVENT_{relation}:b $x $y))))))"
+    }
+  }
+}
+rulegroup {
+  name: "other complements"
+  priority: 10
+  rule {
+    name: "ccomp, advcl"
+    # I am "certain" that he "did" it.
+    # If you "know" who did it , you should "tell" the teacher
+    # TODO: in advcl, include the conditional predicates, e.g., if, when, inorder to, before, after etc.
+    priority: 10
+    tregex: "/^l-(?:ccomp|advcl|parataxis)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.EVENT_{relation}:b $x $y))))))"
+    }
+  }
+}
+rulegroup {
+  name: "mark"
+  priority: 10
+  rule {
+    name: "mark"
+    # Forces engaged in fighting "after" insurgents attacked
+    # He says "that" you like to "swim"
+    priority: 10
+    tregex: "/^l-mark$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
   name: "punctuations"
   priority: 10
   rule {
@@ -318,32 +406,6 @@ rulegroup {
 }
 
 ########### lexical rules #########
-rulegroup {
-  name: "non-trivial patterns invoking predicates"
-  priority: 1
-  rule {
-    name: "adjectives that have nsubj"
-    # John is happy"
-    priority: 1
-    tregex: "/^w-.*$/=word $ /^l-nsubj$/ $ /^t-ADJ$/"
-    transformation {
-      target: "word"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
-    }
-  }
-  rule {
-    name: "nmods without case marker"
-    # 65 years "old"
-    priority: 2
-    tregex: "/^w-.*$/=word $ (/^l-nmod.*$/ !< /^l-case$/)"
-    transformation {
-      target: "word"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
-    }
-  }
-}
 rulegroup {
   name: "verbs and auxilary verbs"
   priority: 10
@@ -500,10 +562,22 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "prepositions"
+  name: "adjectives"
   priority: 10
   rule {
-    name: "prepositions"
+    name: "adjectives that have arguments"
+    # John is "happy"
+    # 65 years "old"
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADJ$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "adjectives"
     priority: 10
     tregex: "/^w-.*/=word $ /^t-ADJ$/"
     transformation {

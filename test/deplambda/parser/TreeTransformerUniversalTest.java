@@ -580,6 +580,48 @@ public class TreeTransformerUniversalTest {
     assertEquals(
         "[QUESTION(0:x), bear.advmod(3:e , 0:x), bear.arg1(3:e , 2:m.cameron), where(0:s , 0:x)]",
         cleanedPredicates.toString());
+
+    jsonSentence =
+        jsonParser
+            .parse(
+                "{\"sentence\":\"I quickly ate bananas.\",\"words\":[{\"word\":\"I\",\"lemma\":\"I\",\"pos\":\"PRON\",\"ner\":\"O\",\"index\":1,\"head\":3,\"dep\":\"nsubj\"},{\"word\":\"quickly\",\"lemma\":\"quickly\",\"pos\":\"ADV\",\"ner\":\"O\",\"index\":2,\"head\":3,\"dep\":\"advmod\"},{\"word\":\"ate\",\"lemma\":\"eat\",\"pos\":\"VERB\",\"ner\":\"O\",\"dep\":\"root\",\"head\":0,\"index\":3},{\"word\":\"bananas\",\"lemma\":\"bananas\",\"pos\":\"PROPN\",\"ner\":\"O\",\"index\":4,\"head\":3,\"dep\":\"dobj\"},{\"word\":\".\",\"lemma\":\".\",\"pos\":\"PUNCT\",\"ner\":\"O\",\"index\":5,\"head\":3,\"dep\":\"punct\",\"sentEnd\":true}]}")
+            .getAsJsonObject();
+    sentence = new Sentence(jsonSentence);
+
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-3-eat t-VERB (l-nsubj w-1-I t-PRON) (l-advmod w-2-quickly t-ADV) (l-dobj w-4-bananas t-PROPN) (l-punct w-5-. t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-advmod (l-dobj w-3-eat w-4-bananas) w-2-quickly) w-1-I) w-5-.)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+
+    assertEquals(1, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-eat:u $0) (p_TYPE_w-4-bananas:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_EVENTMOD_w-2-quickly:u $0)) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[I(0:s , 0:x), eat.arg1(2:e , 0:x), eat.arg2(2:e , 3:m.bananas), quickly(1:s , 2:e)]",
+        cleanedPredicates.toString());
   }
 
   @Test
@@ -1014,14 +1056,14 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-country:u $0) (p_EVENT_w-1-country:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-bear:u $1) (p_EMPTY:u $5) (p_EVENT.ENTITY_arg2:b $1 $5))) (p_EMPTY:u $4) (p_EVENT.ENTITY_l-nmod:b $1 $4))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_l-nmod:b $1 $3))) (p_TYPE_w-3-darwin:u $2) (p_EVENT.ENTITY_l-nsubjpass:b $1 $2))))))",
+        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-country:u $0) (p_EVENT_w-1-country:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-bear:u $1) (p_EMPTY:u $5) (p_EVENT.ENTITY_arg2:b $1 $5))) (p_EMPTY:u $4) (p_EVENT.ENTITY_l-nmod:b $1 $4))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_l-nmod:b $1 $3))) (p_TYPE_w-3-darwin:u $2) (p_EVENT.ENTITY_arg2:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[bear.nmod(4:e , 0:x), bear.nsubjpass(4:e , 2:m.darwin), country(0:s , 0:x), country.arg0(0:e , 0:x)]",
+        "[bear.arg2(4:e , 2:m.darwin), bear.nmod(4:e , 0:x), country(0:s , 0:x), country.arg0(0:e , 0:x)]",
         cleanedPredicates.toString());
 
     // subj extraction
@@ -1143,7 +1185,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-issue:u $0) (p_EVENT_w-2-issue:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-see:u $1) (p_TYPE_w-6-they:u $4) (p_EVENT.ENTITY_arg2:b $1 $4))) (p_TYPE_w-4-he:u $3) (p_EVENT.ENTITY_arg1:b $1 $3))) (p_EMPTY:u $2) (p_EVENT.ENTITY_l-mark:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-issue:u $0) (p_EVENT_w-2-issue:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-see:u $1) (p_TYPE_w-6-they:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-he:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1326,6 +1368,96 @@ public class TreeTransformerUniversalTest {
     Collections.sort(cleanedPredicates);
     assertEquals(
         "[QUESTION(0:x), marry.arg1(2:e , 1:m.jim), marry.arg2(2:e , 0:x), who(0:s , 0:x)]",
+        cleanedPredicates.toString());
+  }
+
+  @Test
+  public final void testXcomp() {
+    JsonObject jsonSentence =
+        jsonParser
+            .parse(
+                "{\"sentence\":\"Sue asked George to respond to her offer.\",\"words\":[{\"word\":\"Sue\",\"lemma\":\"sue\",\"pos\":\"PROPN\",\"ner\":\"O\",\"index\":1,\"head\":2,\"dep\":\"nsubj\"},{\"word\":\"asked\",\"lemma\":\"ask\",\"pos\":\"VERB\",\"ner\":\"O\",\"dep\":\"root\",\"head\":0,\"index\":2},{\"word\":\"George\",\"lemma\":\"george\",\"pos\":\"PROPN\",\"ner\":\"PERSON\",\"index\":3,\"head\":2,\"dep\":\"dobj\"},{\"word\":\"to\",\"lemma\":\"to\",\"pos\":\"PART\",\"ner\":\"O\",\"index\":4,\"head\":5,\"dep\":\"mark\"},{\"word\":\"respond\",\"lemma\":\"respond\",\"pos\":\"VERB\",\"ner\":\"O\",\"index\":5,\"head\":2,\"dep\":\"xcomp\"},{\"word\":\"to\",\"lemma\":\"to\",\"pos\":\"ADP\",\"ner\":\"O\",\"index\":6,\"head\":8,\"dep\":\"case\"},{\"word\":\"her\",\"lemma\":\"she\",\"pos\":\"PRON\",\"ner\":\"O\",\"index\":7,\"head\":8,\"dep\":\"nmod:poss\"},{\"word\":\"offer\",\"lemma\":\"offer\",\"pos\":\"NOUN\",\"ner\":\"O\",\"index\":8,\"head\":5,\"dep\":\"nmod\"},{\"word\":\".\",\"lemma\":\".\",\"pos\":\"PUNCT\",\"ner\":\"O\",\"index\":9,\"head\":2,\"dep\":\"punct\",\"sentEnd\":true}]}")
+            .getAsJsonObject();
+    Sentence sentence = new Sentence(jsonSentence);
+
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-2-ask t-VERB (l-nsubj w-1-sue t-PROPN) (l-dobj w-3-george t-PROPN) (l-xcomp w-5-respond t-VERB (l-mark w-4-to t-PART) (l-nmod w-8-offer t-NOUN (l-case w-6-to t-ADP) (l-nmod:poss w-7-she t-PRON))) (l-punct w-9-. t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    String binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-xcomp (l-dobj w-2-ask w-3-george) (l-mark (l-nmod w-5-respond (l-case (l-nmod:poss w-8-offer w-7-she) w-6-to)) w-4-to)) w-1-sue) w-9-.)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    Pair<String, List<LogicalExpression>> sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+
+    assertEquals(1, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-2-ask:u $0) (p_TYPE_w-3-george:u $3) (p_EVENT.ENTITY_arg2:b $0 $3))) (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-respond:u $2) (exists:ex $5:<a,e> (and:c (and:c (p_TYPE_w-8-offer:u $4) (p_EVENT_w-8-offer:u $4) (p_EVENT.ENTITY_arg0:b $4 $4)) (p_TYPE_w-7-she:u $5) (p_EVENT.ENTITY_l-nmod:b $4 $5))) (p_EVENT.ENTITY_l-nmod.w-6-to:b $2 $4))) (p_EVENT.EVENT_l-xcomp:b $0 $2))) (p_TYPE_w-1-sue:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    List<String> cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[ask.arg1(1:e , 0:m.sue), ask.arg2(1:e , 2:m.george), ask.xcomp(1:e , 4:e), offer(7:s , 7:x), offer.arg0(7:e , 7:x), offer.nmod(7:e , 6:x), respond.nmod.to(4:e , 7:x), she(6:s , 6:x)]",
+        cleanedPredicates.toString());
+  }
+
+  @Test
+  public final void testOtherComplements() {
+    JsonObject jsonSentence =
+        jsonParser
+            .parse(
+                "{\"sentence\":\"I am certain that he did it.\",\"words\":[{\"word\":\"I\",\"lemma\":\"I\",\"pos\":\"PRON\",\"ner\":\"O\",\"index\":1,\"head\":3,\"dep\":\"nsubj\"},{\"word\":\"am\",\"lemma\":\"be\",\"pos\":\"VERB\",\"ner\":\"O\",\"index\":2,\"head\":3,\"dep\":\"cop\"},{\"word\":\"certain\",\"lemma\":\"certain\",\"pos\":\"ADJ\",\"ner\":\"O\",\"dep\":\"root\",\"head\":0,\"index\":3},{\"word\":\"that\",\"lemma\":\"that\",\"pos\":\"SCONJ\",\"ner\":\"O\",\"index\":4,\"head\":6,\"dep\":\"mark\"},{\"word\":\"he\",\"lemma\":\"he\",\"pos\":\"PRON\",\"ner\":\"O\",\"index\":5,\"head\":6,\"dep\":\"nsubj\"},{\"word\":\"did\",\"lemma\":\"do\",\"pos\":\"VERB\",\"ner\":\"O\",\"index\":6,\"head\":3,\"dep\":\"ccomp\"},{\"word\":\"it\",\"lemma\":\"it\",\"pos\":\"PRON\",\"ner\":\"O\",\"index\":7,\"head\":6,\"dep\":\"dobj\"},{\"word\":\".\",\"lemma\":\".\",\"pos\":\"PUNCT\",\"ner\":\"O\",\"index\":8,\"head\":3,\"dep\":\"punct\",\"sentEnd\":true}]}")
+            .getAsJsonObject();
+    Sentence sentence = new Sentence(jsonSentence);
+
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-3-certain t-ADJ (l-nsubj w-1-I t-PRON) (l-cop w-2-be t-VERB) (l-ccomp w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    String binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-ccomp (l-cop w-3-certain w-2-be) (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-1-I) w-8-.)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    Pair<String, List<LogicalExpression>> sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+
+    assertEquals(1, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-certain:u $0) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-6-do:u $2) (p_TYPE_w-7-it:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-5-he:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.EVENT_l-ccomp:b $0 $2))) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    List<String> cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[I(0:s , 0:x), certain.arg1(2:e , 0:x), certain.ccomp(2:e , 5:e), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), it(6:s , 6:x)]",
         cleanedPredicates.toString());
   }
 
