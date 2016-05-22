@@ -94,15 +94,15 @@ public class PostProcessLogicalForm {
         varToAllEquals.put(var, unifiedSet);
       }
     }
-    
+
     Set<Set<Term>> unifiedSets = Sets.newHashSet(varToAllEquals.values());
     for (Set<Term> unifiedSet : unifiedSets) {
       Set<Integer> entityIndices = new HashSet<>();
-      unifiedSet.forEach(x -> entityIndices.addAll(varToEntities.getOrDefault(x,
-          new ArrayList<>())));
+      unifiedSet.forEach(x -> entityIndices.addAll(varToEntities.getOrDefault(
+          x, new ArrayList<>())));
       List<Integer> entityIndicesList = new ArrayList<>(entityIndices);
       unifiedSet.forEach(x -> varToEntities.put(x, entityIndicesList));
-      
+
       Set<Integer> eventIndices = new HashSet<>();
       unifiedSet.forEach(x -> eventIndices.addAll(varToEvents.getOrDefault(x,
           new ArrayList<>())));
@@ -294,9 +294,10 @@ public class PostProcessLogicalForm {
         if (!varToEntities.containsKey(entityTerm))
           continue;
         for (int entityIndex : varToEntities.get(entityTerm)) {
-          cleanedPredicates.add(String.format("%s(%s)",
-              PredicateKeys.QUESTION_PREDICATE,
-              getEntityVar(sentence, entityIndex)));
+          if (!isNamedEntity(sentence, entityIndex))
+            cleanedPredicates.add(String.format("%s(%s)",
+                PredicateKeys.QUESTION_PREDICATE,
+                getEntityVar(sentence, entityIndex)));
         }
       }
     }
