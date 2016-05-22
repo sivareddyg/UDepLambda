@@ -190,6 +190,7 @@ entity_dismabiguated_to_graphparser_forest_%:
 		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
+		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
@@ -199,6 +200,7 @@ entity_dismabiguated_to_graphparser_forest_%:
 		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
+		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
@@ -208,11 +210,41 @@ entity_dismabiguated_to_graphparser_forest_%:
 		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
+		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
 		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
 	> working/$*-webquestions.test.forest.json
+
+deplambda_parse_forest_%:
+	cat working/$*-webquestions.dev.forest.json \
+		| java -cp lib/*:bin deplambda.cli.RunForestTransformer \
+		-definedTypesFile lib_data/ud.types.txt \
+		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
+		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
+		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+		-nthreads 20  \
+		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
+		> working/$*-webquestions.dev.forest.deplamda.json
+	cat working/$*-webquestions.train.forest.json \
+		| java -cp lib/*:bin deplambda.cli.RunForestTransformer \
+		-definedTypesFile lib_data/ud.types.txt \
+		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
+		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
+		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+		-nthreads 20  \
+		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
+		> working/$*-webquestions.train.forest.deplamda.json
+	cat working/$*-webquestions.test.forest.json \
+		| java -cp lib/*:bin deplambda.cli.RunForestTransformer \
+		-definedTypesFile lib_data/ud.types.txt \
+		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
+		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
+		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+		-nthreads 20  \
+		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
+		> working/$*-webquestions.test.forest.deplamda.json
 
 extract_gold_graphs_bow_dev_%:
 	mkdir -p data/gold_graphs/
@@ -299,6 +331,86 @@ extract_gold_graphs_dependency_%:
         true \
         false \
         > data/gold_graphs/$*_dependency_with_merge_without_expand.full.answers.txt
+
+extract_gold_graphs_deplambda_dev_%:
+	cat working/$*-webquestions.dev.forest.deplambda.json \
+		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_with_expand.dev \
+		lib_data/dummy.txt \
+	   	true \
+		true \
+		> data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.answers.txt
+	cat working/$*-webquestions.dev.forest.deplambda.json \
+		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+	   	dependency_lambda \
+		data/gold_graphs/$*_deplambda_without_merge_with_expand.dev \
+		lib_data/dummy.txt \
+	   	false \
+		true \
+		> data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.answers.txt
+	cat working/$*-webquestions.dev.forest.deplambda.json \
+		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_without_expand.dev \
+		lib_data/dummy.txt \
+	   	true \
+		false \
+		> data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.answers.txt
+	cat working/$*-webquestions.dev.forest.deplambda.json \
+		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_without_merge_without_expand.dev \
+		lib_data/dummy.txt \
+	   	false \
+		false \
+		> data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.answers.txt
+
+extract_gold_graphs_deplambda_%:
+	cat working/$*-webquestions.train.forest.deplambda.json \
+        working/$*-webquestions.dev.forest.deplambda.json \
+	| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_with_expand.full \
+		lib_data/dummy.txt \
+	   	true \
+		true \
+		> data/gold_graphs/$*_deplambda_with_merge_with_expand.full.answers.txt
+	cat working/$*-webquestions.train.forest.deplambda.json \
+        working/$*-webquestions.dev.forest.deplambda.json \
+	| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+	   	dependency_lambda \
+		data/gold_graphs/$*_deplambda_without_merge_with_expand.full \
+		lib_data/dummy.txt \
+	   	false \
+		true \
+		> data/gold_graphs/$*_deplambda_without_merge_with_expand.full.answers.txt
+	cat working/$*-webquestions.train.forest.deplambda.json \
+        working/$*-webquestions.dev.forest.deplambda.json \
+	| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_without_expand.full \
+		lib_data/dummy.txt \
+	   	true \
+		false \
+		> data/gold_graphs/$*_deplambda_with_merge_without_expand.full.answers.txt
+	cat working/$*-webquestions.train.forest.deplambda.json \
+        working/$*-webquestions.dev.forest.deplambda.json \
+	| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+	   	dependency_lambda \
+		data/gold_graphs/$*_deplambda_without_merge_without_expand.full \
+		lib_data/dummy.txt \
+	   	false \
+		false \
+		> data/gold_graphs/$*_deplambda_without_merge_without_expand.full.answers.txt
 
 bow_supervised_without_merge_without_expand_%:
 	rm -rf ../working/$*_bow_supervised_without_merge_without_expand
