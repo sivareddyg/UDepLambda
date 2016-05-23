@@ -1383,6 +1383,41 @@ public class TreeTransformerUniversalTest {
     // TreeTransformationRules for modifying the structure of a tree.
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
+
+    // Comment this test case if you are handling xcomp properly.
+    assertEquals(
+        "(l-root w-2-ask t-VERB (l-nsubj w-1-sue t-PROPN) (l-dobj w-3-george t-PROPN) (l-conj-verb w-5-respond t-VERB (l-mark w-4-to t-PART) (l-nmod w-8-offer t-NOUN (l-case w-6-to t-ADP) (l-nmod:poss w-7-she t-PRON))) (l-punct w-9-. t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    String binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-dobj (l-conj-verb w-2-ask (l-mark (l-nmod w-5-respond (l-case (l-nmod:poss w-8-offer w-7-she) w-6-to)) w-4-to)) w-3-george) w-1-sue) w-9-.)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    Pair<String, List<LogicalExpression>> sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+
+    assertEquals(1, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (exists:ex $4:<a,e> (and:c (p_EVENT_w-2-ask:u $3) (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-respond:u $4) (exists:ex $6:<a,e> (and:c (and:c (p_TYPE_w-8-offer:u $5) (p_EVENT_w-8-offer:u $5) (p_EVENT.ENTITY_arg0:b $5 $5)) (p_TYPE_w-7-she:u $6) (p_EVENT.ENTITY_l-nmod:b $5 $6))) (p_EVENT.ENTITY_l-nmod.w-6-to:b $4 $5))) (p_CONJ:tri $0 $3 $4)))) (p_TYPE_w-3-george:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-1-sue:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    List<String> cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[ask.arg1(1:e , 0:m.sue), ask.arg2(1:e , 2:m.george), offer(7:s , 7:x), offer.arg0(7:e , 7:x), offer.nmod(7:e , 6:x), respond.arg1(4:e , 0:m.sue), respond.arg2(4:e , 2:m.george), respond.nmod.to(4:e , 7:x), she(6:s , 6:x)]",
+        cleanedPredicates.toString());
+
+    /*- // uncomment this block if you don't use the hack that xcomp is similar to conj.
     assertEquals(
         "(l-root w-2-ask t-VERB (l-nsubj w-1-sue t-PROPN) (l-dobj w-3-george t-PROPN) (l-xcomp w-5-respond t-VERB (l-mark w-4-to t-PART) (l-nmod w-8-offer t-NOUN (l-case w-6-to t-ADP) (l-nmod:poss w-7-she t-PRON))) (l-punct w-9-. t-PUNCT))",
         sentence.getRootNode().toString());
@@ -1413,7 +1448,7 @@ public class TreeTransformerUniversalTest {
     Collections.sort(cleanedPredicates);
     assertEquals(
         "[ask.arg1(1:e , 0:m.sue), ask.arg2(1:e , 2:m.george), ask.xcomp(1:e , 4:e), offer(7:s , 7:x), offer.arg0(7:e , 7:x), offer.nmod(7:e , 6:x), respond.nmod.to(4:e , 7:x), she(6:s , 6:x)]",
-        cleanedPredicates.toString());
+        cleanedPredicates.toString());*/
   }
 
   @Test
@@ -1425,6 +1460,44 @@ public class TreeTransformerUniversalTest {
             .getAsJsonObject();
     Sentence sentence = new Sentence(jsonSentence);
 
+    // Comment this test case if you are handling ccomp properly.
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-3-certain t-ADJ (l-nsubj w-1-I t-PRON) (l-cop w-2-be t-VERB) (l-conj-verb w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    String binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-cop (l-conj-verb w-3-certain (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-2-be) w-1-I) w-8-.)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    Pair<String, List<LogicalExpression>> sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+
+    assertEquals(1, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-certain:u $2) (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-6-do:u $3) (p_TYPE_w-7-it:u $5) (p_EVENT.ENTITY_arg2:b $3 $5))) (p_TYPE_w-5-he:u $4) (p_EVENT.ENTITY_arg1:b $3 $4))) (p_CONJ:tri $0 $2 $3)))) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    List<String> cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[I(0:s , 0:x), certain.arg1(2:e , 0:x), do.arg1(5:e , 0:x), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), it(6:s , 6:x)]",
+        cleanedPredicates.toString());
+
+
+    /*- // uncomment this block if you don't use the hack that xcomp is similar to conj.
     // TreeTransformationRules for modifying the structure of a tree.
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
@@ -1458,7 +1531,7 @@ public class TreeTransformerUniversalTest {
     Collections.sort(cleanedPredicates);
     assertEquals(
         "[I(0:s , 0:x), certain.arg1(2:e , 0:x), certain.ccomp(2:e , 5:e), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), it(6:s , 6:x)]",
-        cleanedPredicates.toString());
+        cleanedPredicates.toString());*/
   }
 
   @Test
