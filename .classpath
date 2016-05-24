@@ -61,5 +61,6 @@
 	<classpathentry kind="lib" path="/spf-2.0/bin" sourcepath="/spf-2.0"/>
 	<classpathentry kind="lib" path="lib/jregex1.2_01-src.jar"/>
 	<classpathentry kind="lib" path="lib/fastutil-6.5.15.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-3.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
