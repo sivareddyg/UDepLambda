@@ -18,6 +18,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import deplambda.others.SentenceKeys;
+import deplambda.util.DependencyTree;
 import deplambda.util.Sentence;
 import deplambda.util.TransformationRuleGroups;
 import edu.cornell.cs.nlp.spf.mr.lambda.FlexibleTypeComparator;
@@ -38,6 +40,7 @@ public class TreeTransformerUniversalTest {
 
   static {
     try {
+      DependencyTree.LEXICAL_KEY = SentenceKeys.LEMMA_KEY;
       types = new MutableTypeRepository("lib_data/ud.types.txt");
 
       LogicLanguageServices.setInstance(new LogicLanguageServices.Builder(

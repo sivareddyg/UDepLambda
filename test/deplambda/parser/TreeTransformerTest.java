@@ -23,6 +23,7 @@ import org.junit.Test;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import deplambda.others.SentenceKeys;
 import deplambda.util.DependencyTree;
 import deplambda.util.Sentence;
 import deplambda.util.TransformationRuleGroups;
@@ -48,6 +49,7 @@ public class TreeTransformerTest {
   static Logger logger = Logger.getLogger("TreeTransformerUniversalTest");
 
   static {
+    DependencyTree.LEXICAL_KEY = SentenceKeys.LEMMA_KEY;
     PatternLayout layout = new PatternLayout("%r [%t] %-5p: %m%n");
     logger.setLevel(Level.DEBUG);
     logger.setAdditivity(false);

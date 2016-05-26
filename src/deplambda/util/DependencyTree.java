@@ -26,6 +26,7 @@ public class DependencyTree extends LabeledScoredTreeNode {
   public static String VIRTUAL_PREFIX = "v-";
   public static String POS_PREFIX = "t-";
   public static String DEP_PREFIX = "l-";
+  public static String LEXICAL_KEY = SentenceKeys.WORD_KEY;
 
   // Lambda function representing the semantics of this node.
   private List<LogicalExpression> nodeLambda;
@@ -58,14 +59,14 @@ public class DependencyTree extends LabeledScoredTreeNode {
       Preconditions.checkArgument(word.has(SentenceKeys.DEPENDENCY_KEY));
 
       DependencyTree word_node;
-      if (word.has(SentenceKeys.LEMMA_KEY)) {
+      if (word.has(LEXICAL_KEY)) {
         word_node =
             new DependencyTree(new Word(String.format(
                 "%s%s%s",
                 WORD_PREFIX,
                 word.has(SentenceKeys.INDEX_KEY) ? String.format("%d-", word
                     .get(SentenceKeys.INDEX_KEY).getAsInt()) : "",
-                word.get(SentenceKeys.LEMMA_KEY).getAsString())));
+                word.get(LEXICAL_KEY).getAsString().toLowerCase())));
       } else {
         word_node =
             new DependencyTree(new Word(String.format(
@@ -73,7 +74,7 @@ public class DependencyTree extends LabeledScoredTreeNode {
                 WORD_PREFIX,
                 word.has(SentenceKeys.INDEX_KEY) ? String.format("%d-", word
                     .get(SentenceKeys.INDEX_KEY).getAsInt()) : "",
-                word.get(SentenceKeys.WORD_KEY).getAsString())));
+                word.get(SentenceKeys.WORD_KEY).getAsString().toLowerCase())));
       }
 
       DependencyTree tag_node =
