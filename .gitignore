@@ -6,7 +6,6 @@ lib_data/resources-test/
 test-output/
 unittests/
 data
-servlets
 lib/graph-parser
 lib_data/utb-models
 commands*
