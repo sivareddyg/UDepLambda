@@ -56,6 +56,12 @@ public class TreeTransformerMain extends ProcessStreamInterface {
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
             relationPriorityRules.getRelationPriority(), logger, false);
+    sent.addProperty(SentenceKeys.DEPLAMBDA_OBLIQUE_TREE,
+        sentenceSemantics.first());
+    if (sentenceSemantics.second().size() > 0) {
+      sent.addProperty(SentenceKeys.DEPLAMBDA_EXPRESSION,
+          sentenceSemantics.second().get(0).toString());
+    }
 
     // Post processing lambdas.
     JsonArray jsonParses = new JsonArray();

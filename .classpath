@@ -21,10 +21,12 @@
 	<classpathentry kind="lib" path="lib/batik-awt-util-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/batik-dom-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/javautils-lib-3.0.jar"/>
+	<classpathentry kind="lib" path="lib/spf-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/spf-javautils.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0-models-spanish.jar"/>
 	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0-models.jar"/>
-	<classpathentry kind="lib" path="lib/stanford-corenlp-3.6.0.jar"/>
 	<classpathentry kind="lib" path="/graph-parser/bin" sourcepath="/graph-parser/src"/>
 	<classpathentry kind="lib" path="lib/caffeine-1.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.6.jar"/>
@@ -58,9 +60,9 @@
 	<classpathentry kind="lib" path="lib/edu.mit.jwi_2.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/jewelcli-0.7.6.jar"/>
 	<classpathentry kind="lib" path="lib/mtj-1.0-snapshot.jar"/>
-	<classpathentry kind="lib" path="/spf-2.0/bin" sourcepath="/spf-2.0"/>
 	<classpathentry kind="lib" path="lib/jregex1.2_01-src.jar"/>
 	<classpathentry kind="lib" path="lib/fastutil-6.5.15.jar"/>
 	<classpathentry kind="lib" path="lib/lucene-analyzers-3.6.2.jar"/>
+	<classpathentry kind="src" path="/graph-parser"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
