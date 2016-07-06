@@ -5,11 +5,13 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,10 +22,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import deplambda.others.SentenceKeys;
-
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import deplambda.others.SentenceKeys;
 
 /**
  * Servlet implementation class QueryUDP
@@ -58,7 +60,8 @@ public class QueryUDP extends HttpServlet {
   }
 
   /**
-   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+   *      response)
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -67,11 +70,10 @@ public class QueryUDP extends HttpServlet {
     out.println("<html>");
     out.println("<head>");
     out.println("<title>DepLambda Demo</title>");
-    out.println(
-        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
-            + "    <link rel=\"stylesheet\" href=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css\">\n"
-            + "    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n"
-            + "    <script src=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script>");
+    out.println("<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+        + "    <link rel=\"stylesheet\" href=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css\">\n"
+        + "    <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js\"></script>\n"
+        + "    <script src=\"http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script>");
     out.println("</head>");
     out.println("<body style=\"padding-left:10; padding-right:10\">");
     out.println("<font color=#006400 size=6>DepLambda Demo</font>");
@@ -84,7 +86,7 @@ public class QueryUDP extends HttpServlet {
     if (queryText == null || queryText.trim().equals("")) {
       if (languageCode.equals("es")) {
         queryText =
-            "Washington D.C. es la capital de los Estados Unidos de América.";
+            "Pixar, la empresa que Disney adquirió, hizo Ratatouille.";
       } else if (languageCode.equals("de")) {
         queryText = "Pixar, die Firma die Disney kaufte, machte Ratatouille.";
       } else {
@@ -97,8 +99,7 @@ public class QueryUDP extends HttpServlet {
     out.print("<form action=QueryUDP method=POST id=mainForm>");
     out.println("<font size=\"3\">");
     out.println("Please enter the input text to be parsed. <br>");
-    out.println(
-        "<textarea name=query style=\"width: 500px; height: 8em\" rows=31 cols=7>");
+    out.println("<textarea name=query style=\"width: 500px; height: 8em\" rows=31 cols=7>");
     out.print(queryText);
     out.println("</textarea>");
     out.println("<br>");
@@ -128,9 +129,15 @@ public class QueryUDP extends HttpServlet {
     out.println("</font>");
     out.println("</form>");
 
+    String viaurl = request.getParameter("viaurl");
+    queryText =
+        viaurl != null && viaurl.equals("true") ? URLDecoder.decode(queryText,
+            charset) : queryText;
+
     String queryTextJson = String.format("{\"sentence\": \"%s\"}", queryText);
-    String requestQuery =
-        String.format("query=%s", URLEncoder.encode(queryTextJson, charset));
+    queryTextJson = URLEncoder.encode(queryTextJson, charset);
+
+    String requestQuery = String.format("query=%s", queryTextJson);
 
     URLConnection connection =
         new URL(udpEndPoint + "?" + requestQuery).openConnection();
@@ -140,7 +147,7 @@ public class QueryUDP extends HttpServlet {
     JsonObject jsonSentence = jsonParser.parse(result).getAsJsonObject();
 
     if (jsonSentence.has(SentenceKeys.SVG_TREES)) {
-      out.print("<h3><font color=#006400>Dependency Parses:</font></h3>");
+      out.print("<h3><font color=#006400>Dependency Parse:</font></h3>");
       out.println(jsonSentence.get(SentenceKeys.SVG_TREES).getAsString());
       jsonSentence.remove(SentenceKeys.SVG_TREES);
     }
@@ -149,23 +156,23 @@ public class QueryUDP extends HttpServlet {
       out.print("<h3><font color=#006400>Simplified Logical Form:</font></h3>");
       out.println("<font size=\"4\">");
       try {
-        out.println(StringEscapeUtils.escapeHtml4(
-            jsonSentence.get(SentenceKeys.DEPENDENCY_LAMBDA).toString()));
+        out.println(StringEscapeUtils.escapeHtml4(jsonSentence.get(
+            SentenceKeys.DEPENDENCY_LAMBDA).toString()));
       } catch (Exception e) {
-        //pass.
+        // pass.
       }
       out.println("</font>");
-      
+
       out.print("<h3><font color=#006400>Lambda Expression:</font></h3>");
       out.println("<font size=\"3\">");
-      out.println(StringEscapeUtils.escapeHtml4(
-          jsonSentence.get(SentenceKeys.DEPLAMBDA_EXPRESSION).getAsString()));
+      out.println(StringEscapeUtils.escapeHtml4(jsonSentence.get(
+          SentenceKeys.DEPLAMBDA_EXPRESSION).getAsString()));
       out.println("</font>");
 
       out.print("<h3><font color=#006400>Composition Order:</font></h3>");
       out.println("<font size=\"3\">");
-      out.println(StringEscapeUtils.escapeHtml4(
-          jsonSentence.get(SentenceKeys.DEPLAMBDA_OBLIQUE_TREE).getAsString()));
+      out.println(StringEscapeUtils.escapeHtml4(jsonSentence.get(
+          SentenceKeys.DEPLAMBDA_OBLIQUE_TREE).getAsString()));
       out.println("</font>");
     }
 
@@ -179,10 +186,11 @@ public class QueryUDP extends HttpServlet {
   }
 
   /**
-   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+   *      response)
    */
-  protected void doPost(HttpServletRequest request,
-      HttpServletResponse response) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+      throws ServletException, IOException {
     doGet(request, response);
   }
 }

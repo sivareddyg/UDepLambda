@@ -1,7 +1,7 @@
 package deplambda.servlets;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import deplambda.others.NlpPipeline;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import deplambda.others.NlpPipeline;
 
 /**
  * Servlet implementation class UniversalDependencyParser
@@ -63,7 +63,7 @@ public class UniversalDependencyParser extends HttpServlet {
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     response.setContentType("application/json");
-    PrintWriter out = response.getWriter();
+    DataOutputStream responseToClient = new DataOutputStream(response.getOutputStream());
 
     String queryText = request.getParameter("query");
     if (queryText == null) {
@@ -71,6 +71,8 @@ public class UniversalDependencyParser extends HttpServlet {
     }
     JsonObject sentObj = jsonParser.parse(queryText).getAsJsonObject();
     pipeline.processSentence(sentObj);
-    out.print(gson.toJson(sentObj));
+    String jsonString = gson.toJson(sentObj);
+    byte[] utf8JsonString = jsonString.getBytes("UTF8");
+    responseToClient.write(utf8JsonString, 0, utf8JsonString.length);
   }
 }
