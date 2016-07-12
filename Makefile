@@ -98,28 +98,28 @@ entity_annotate_webquestions_%:
 		> working/$*-webquestions.test.json
 
 	# Entity Annotations
-	#cat working/$*-webquestions.dev.json \
-	#	| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
-	#	--useKG false \
-	#	--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
-	#	--langCode $* \
-	#	> working/$*-webquestions.dev.ranked.json
+	cat working/$*-webquestions.dev.json \
+		| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
+		--useKG false \
+		--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
+		--langCode $* \
+		> working/$*-webquestions.dev.ranked.json
 	cat working/$*-webquestions.test.json \
 		| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
 		--useKG false \
 		--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
 		--langCode $* \
 		> working/$*-webquestions.test.ranked.json
-	#cat working/$*-webquestions.train.json \
-	#	| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
-	#	--useKG false \
-	#	--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
-	#	--langCode $* \
-	#	> working/$*-webquestions.train.ranked.json
+	cat working/$*-webquestions.train.json \
+		| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
+		--useKG false \
+		--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
+		--langCode $* \
+		> working/$*-webquestions.train.ranked.json
 	# if successful, take backup. Freebase API may stop working anytime.
 	#echo "Overwriting existing files: "
-	#cp -i working/$*-webquestions.train.ranked.json data/webquestions/$*/webquestions.train.ranked.json
-	#cp -i working/$*-webquestions.dev.ranked.json data/webquestions/$*/webquestions.dev.ranked.json
+	cp -i working/$*-webquestions.train.ranked.json data/webquestions/$*/webquestions.train.ranked.json
+	cp -i working/$*-webquestions.dev.ranked.json data/webquestions/$*/webquestions.dev.ranked.json
 	cp -i working/$*-webquestions.test.ranked.json data/webquestions/$*/webquestions.test.ranked.json
 
 evaluate_entity_annotation_upperbound_%:
@@ -161,6 +161,34 @@ disambiguate_entities_%:
 		-nbestEntities 10 \
 		-schema data/freebase/schema/all_domains_schema.txt \
 		> data/webquestions/$*/webquestions.test.disambiguated.json
+
+data_to_oscar_%:
+	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/$*
+	mkdir -p working/forest_split/$*
+	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
+		| grep "^{" \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
+		> working/forest_split/$*/webquestions.dev.disambiguated.json
+	cat data/webquestions/$*/webquestions.train.disambiguated.json \
+		| grep "^{" \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
+		> working/forest_split/$*/webquestions.train.disambiguated.json
+	cat data/webquestions/$*/webquestions.test.disambiguated.json \
+		| grep "^{" \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
+		> working/forest_split/$*/webquestions.test.disambiguated.json
+	cat working/forest_split/$*/webquestions.dev.disambiguated.json \
+		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
+	    > working/webq_multillingual_graphpaser_entity_annotations/$*/webquestions.dev.disambiguated.json.txt
+	cat working/forest_split/$*/webquestions.train.disambiguated.json \
+		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
+	    > working/webq_multillingual_graphpaser_entity_annotations/$*/webquestions.train.disambiguated.json.txt
+	cat data/webquestions/$*/webquestions.test.disambiguated.json \
+		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
+	    > working/webq_multillingual_graphpaser_entity_annotations/$*/webquestions.test.disambiguated.json.txt
 
 entity_disambiguation_results_%:
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
