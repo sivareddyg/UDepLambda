@@ -124,7 +124,7 @@ entity_annotate_webquestions_%:
 
 evaluate_entity_annotation_upperbound_%:
 	cat data/webquestions/$*/webquestions.dev.ranked.json \
-		| python lib/graph-parser/scripts/entity-annotation/get_entity_patterns.py
+		| python ../graph-parser/scripts/entity-annotation/get_entity_patterns.py
 
 train_entity_annotator_%:
 	mkdir -p data/entity-models
@@ -162,8 +162,37 @@ disambiguate_entities_%:
 		-schema data/freebase/schema/all_domains_schema.txt \
 		> data/webquestions/$*/webquestions.test.disambiguated.json
 
+relaxed_disambiguate_entities_%:
+	cat data/webquestions/$*/webquestions.dev.ranked.json \
+		| java -cp bin:lib/* deplambda.cli.RunEntityDisambiguator \
+		-loadModelFromFile data/entity-models/$*-webquestions.ser \
+		-endpoint localhost \
+		-nthreads 20 \
+		-nbestEntities 10 \
+		-schema data/freebase/schema/all_domains_schema.txt \
+		-entitiesHasRelation false \
+		> data/webquestions/$*/webquestions.dev.multi.disambiguated.json
+	cat data/webquestions/$*/webquestions.train.ranked.json \
+		| java -cp bin:lib/* deplambda.cli.RunEntityDisambiguator \
+		-loadModelFromFile data/entity-models/$*-webquestions.ser \
+		-endpoint localhost \
+		-nthreads 20 \
+		-nbestEntities 10 \
+		-schema data/freebase/schema/all_domains_schema.txt \
+		-entitiesHasRelation false \
+		> data/webquestions/$*/webquestions.train.multi.disambiguated.json
+	cat data/webquestions/$*/webquestions.test.ranked.json \
+		| java -cp bin:lib/* deplambda.cli.RunEntityDisambiguator \
+		-loadModelFromFile data/entity-models/$*-webquestions.ser \
+		-endpoint localhost \
+		-nthreads 20 \
+		-nbestEntities 10 \
+		-schema data/freebase/schema/all_domains_schema.txt \
+		-entitiesHasRelation false \
+		> data/webquestions/$*/webquestions.test.multi.disambiguated.json
+
 data_to_oscar_%:
-	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/$*
+	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*
 	mkdir -p working/forest_split/$*
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
 		| grep "^{" \
@@ -182,17 +211,89 @@ data_to_oscar_%:
 		> working/forest_split/$*/webquestions.test.disambiguated.json
 	cat working/forest_split/$*/webquestions.dev.disambiguated.json \
 		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_entity_annotations/$*/webquestions.dev.disambiguated.json.txt
+	    > working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt
 	cat working/forest_split/$*/webquestions.train.disambiguated.json \
 		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_entity_annotations/$*/webquestions.train.disambiguated.json.txt
-	cat data/webquestions/$*/webquestions.test.disambiguated.json \
+	    > working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt
+	cat working/forest_split/$*/webquestions.test.disambiguated.json \
 		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_entity_annotations/$*/webquestions.test.disambiguated.json.txt
+	    > working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt
+
+	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/conll/$*/
+	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
+		> working/webq_multillingual_graphpaser_entity_annotations/conll/$*/webquestions.dev.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
+		> working/webq_multillingual_graphpaser_entity_annotations/conll/$*/webquestions.test.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
+		> working/webq_multillingual_graphpaser_entity_annotations/conll/$*/webquestions.train.disambiguated.json.txt
+
+	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/sent/$*/
+	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
+		> working/webq_multillingual_graphpaser_entity_annotations/sent/$*/webquestions.dev.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
+		> working/webq_multillingual_graphpaser_entity_annotations/sent/$*/webquestions.test.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
+		> working/webq_multillingual_graphpaser_entity_annotations/sent/$*/webquestions.train.disambiguated.json.txt
+
+relaxed_entities_data_to_oscar_%:
+	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*
+	mkdir -p working/forest_split/$*
+	cat data/webquestions/$*/webquestions.dev.multi.disambiguated.json \
+		| grep "^{" \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
+		> working/forest_split/$*/webquestions.dev.multi.disambiguated.json
+	cat data/webquestions/$*/webquestions.train.multi.disambiguated.json \
+		| grep "^{" \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
+		> working/forest_split/$*/webquestions.train.multi.disambiguated.json
+	cat data/webquestions/$*/webquestions.test.multi.disambiguated.json \
+		| grep "^{" \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
+        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
+		> working/forest_split/$*/webquestions.test.multi.disambiguated.json
+	cat working/forest_split/$*/webquestions.dev.multi.disambiguated.json \
+		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
+	    > working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt
+	cat working/forest_split/$*/webquestions.train.multi.disambiguated.json \
+		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
+	    > working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt
+	cat working/forest_split/$*/webquestions.test.multi.disambiguated.json \
+		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
+	    > working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt
+
+	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/
+	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/webquestions.dev.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/webquestions.test.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/webquestions.train.disambiguated.json.txt
+
+	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/
+	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.dev.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.test.disambiguated.json.txt
+	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
+		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.train.disambiguated.json.txt
 
 entity_disambiguation_results_%:
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
-	    | python lib/graph-parser/scripts/entity-annotation/evaluate_entity_annotation.py 
+	    | python ../graph-parser/scripts/entity-annotation/evaluate_entity_annotation.py 
 
 entity_dismabiguated_to_graphparser_forest_ptb:
 	cat data/webquestions/ptb/webquestions.dev.disambiguated.json \
@@ -258,6 +359,41 @@ entity_dismabiguated_to_graphparser_forest_%:
 		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
 		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
 	> working/$*-webquestions.test.forest.json
+
+multi_entity_dismabiguated_to_graphparser_forest_%:
+	cat data/webquestions/$*/webquestions.dev.multi.disambiguated.json \
+		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		annotators tokenize,ssplit,pos,lemma,depparse \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode $* \
+		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
+		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
+	> working/$*-webquestions.dev.multi_entities.forest.json
+	cat data/webquestions/$*/webquestions.train.multi.disambiguated.json \
+		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		annotators tokenize,ssplit,pos,lemma,depparse \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode $* \
+		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
+		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
+	> working/$*-webquestions.train.multi_entities.forest.json
+	cat data/webquestions/$*/webquestions.test.multi.disambiguated.json \
+		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		annotators tokenize,ssplit,pos,lemma,depparse \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode $* \
+		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
+		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
+	> working/$*-webquestions.test.multi_entities.forest.json
 
 deplambda_parse_forest_%:
 	cat working/$*-webquestions.dev.forest.json \
