@@ -10,6 +10,17 @@ import in.sivareddy.util.ProcessStreamInterface;
 public class ConvertGraphParserSentenceToConll extends ProcessStreamInterface {
   @Override
   public void processSentence(JsonObject sentence) {
+    if (sentence.has(SentenceKeys.FOREST)) {
+      for (JsonElement individualSentence : sentence.get(SentenceKeys.FOREST)
+          .getAsJsonArray()) {
+        processIndividualSentence(individualSentence.getAsJsonObject());
+      }
+    } else {
+      processIndividualSentence(sentence);
+    }
+  }
+
+  public void processIndividualSentence(JsonObject sentence) {
     for (JsonElement wordElm : sentence.get(SentenceKeys.WORDS_KEY)
         .getAsJsonArray()) {
       JsonObject word = wordElm.getAsJsonObject();
