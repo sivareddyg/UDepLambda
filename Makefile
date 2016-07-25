@@ -78,7 +78,7 @@ entity_annotate_webquestions_%:
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
-		| java -cp lib/*:bin in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
+		| java -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.train.json
 	cat data/webquestions/$*/webquestions.dev.json \
 		| java -cp bin:lib/* deplambda.others.NlpPipeline \
@@ -86,7 +86,7 @@ entity_annotate_webquestions_%:
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
-		| java -cp lib/*:bin in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
+		| java -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.dev.json
 	cat data/webquestions/$*/webquestions.test.json \
 		| java -cp bin:lib/* deplambda.others.NlpPipeline \
@@ -94,24 +94,24 @@ entity_annotate_webquestions_%:
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
-		| java -cp lib/*:bin in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
+		| java -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.test.json
 
 	# Entity Annotations
 	cat working/$*-webquestions.dev.json \
-		| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
+		| java -cp bin:lib/* in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
 		--useKG false \
 		--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
 		--langCode $* \
 		> working/$*-webquestions.dev.ranked.json
 	cat working/$*-webquestions.test.json \
-		| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
+		| java -cp bin:lib/* in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
 		--useKG false \
 		--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
 		--langCode $* \
 		> working/$*-webquestions.test.ranked.json
 	cat working/$*-webquestions.train.json \
-		| java -cp lib/*:bin in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
+		| java -cp bin:lib/* in.sivareddy.graphparser.cli.RankMatchedEntitiesCli \
 		--useKG false \
 		--apiKey AIzaSyDj-4Sr5TmDuEA8UVOd_89PqK87GABeoFg \
 		--langCode $* \
@@ -191,113 +191,13 @@ relaxed_disambiguate_entities_%:
 		-entitiesHasRelation false \
 		> data/webquestions/$*/webquestions.test.multi.disambiguated.json
 
-data_to_oscar_%:
-	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*
-	mkdir -p working/forest_split/$*
-	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
-		| grep "^{" \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
-		> working/forest_split/$*/webquestions.dev.disambiguated.json
-	cat data/webquestions/$*/webquestions.train.disambiguated.json \
-		| grep "^{" \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
-		> working/forest_split/$*/webquestions.train.disambiguated.json
-	cat data/webquestions/$*/webquestions.test.disambiguated.json \
-		| grep "^{" \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
-		> working/forest_split/$*/webquestions.test.disambiguated.json
-	cat working/forest_split/$*/webquestions.dev.disambiguated.json \
-		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt
-	cat working/forest_split/$*/webquestions.train.disambiguated.json \
-		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt
-	cat working/forest_split/$*/webquestions.test.disambiguated.json \
-		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt
-
-	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/conll/$*/
-	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
-		> working/webq_multillingual_graphpaser_entity_annotations/conll/$*/webquestions.dev.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
-		> working/webq_multillingual_graphpaser_entity_annotations/conll/$*/webquestions.test.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
-		> working/webq_multillingual_graphpaser_entity_annotations/conll/$*/webquestions.train.disambiguated.json.txt
-
-	mkdir -p working/webq_multillingual_graphpaser_entity_annotations/sent/$*/
-	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
-		> working/webq_multillingual_graphpaser_entity_annotations/sent/$*/webquestions.dev.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
-		> working/webq_multillingual_graphpaser_entity_annotations/sent/$*/webquestions.test.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
-		> working/webq_multillingual_graphpaser_entity_annotations/sent/$*/webquestions.train.disambiguated.json.txt
-
-relaxed_entities_data_to_oscar_%:
-	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*
-	mkdir -p working/forest_split/$*
-	cat data/webquestions/$*/webquestions.dev.multi.disambiguated.json \
-		| grep "^{" \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
-		> working/forest_split/$*/webquestions.dev.multi.disambiguated.json
-	cat data/webquestions/$*/webquestions.train.multi.disambiguated.json \
-		| grep "^{" \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
-		> working/forest_split/$*/webquestions.train.multi.disambiguated.json
-	cat data/webquestions/$*/webquestions.test.multi.disambiguated.json \
-		| grep "^{" \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.SplitForrestToSentences \
-        | java -cp lib/*:bin in.sivareddy.graphparser.util.MergeEntity \
-		> working/forest_split/$*/webquestions.test.multi.disambiguated.json
-	cat working/forest_split/$*/webquestions.dev.multi.disambiguated.json \
-		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt
-	cat working/forest_split/$*/webquestions.train.multi.disambiguated.json \
-		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt
-	cat working/forest_split/$*/webquestions.test.multi.disambiguated.json \
-		| python ../graph-parser/scripts/convert-graph-parser-to-entity-mention-format_with_answers.py \
-	    > working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt
-
-	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/
-	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/webquestions.dev.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/webquestions.test.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/conll/$*/webquestions.train.disambiguated.json.txt
-
-	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/
-	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.dev.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.dev.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.test.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.test.disambiguated.json.txt
-	cat working/webq_multillingual_graphpaser_relaxed_entity_annotations/graphparser/$*/webquestions.train.disambiguated.json.txt \
-		| python scripts/webquestions/print_conll_from_entity_mention_format.py -s \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.train.disambiguated.json.txt
-
 entity_disambiguation_results_%:
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
 	    | python ../graph-parser/scripts/entity-annotation/evaluate_entity_annotation.py 
 
 entity_dismabiguated_to_graphparser_forest_ptb:
 	cat data/webquestions/ptb/webquestions.dev.disambiguated.json \
-        | java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+        | java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
         annotators tokenize,ssplit,pos,lemma,depparse \
         tokenize.whitespace true \
         ssplit.newlineIsSentenceBreak always \
@@ -306,7 +206,7 @@ entity_dismabiguated_to_graphparser_forest_ptb:
         depparse.model lib_data/utb-models/en/neural-parser/en-glove50.lower.nndep.model.txt.gz \
     > working/ptb-webquestions.dev.forest.json
 	cat data/webquestions/ptb/webquestions.train.disambiguated.json \
-        | java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+        | java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
         annotators tokenize,ssplit,pos,lemma,depparse \
         tokenize.whitespace true \
         ssplit.newlineIsSentenceBreak always \
@@ -315,7 +215,7 @@ entity_dismabiguated_to_graphparser_forest_ptb:
         depparse.model lib_data/utb-models/en/neural-parser/en-glove50.lower.nndep.model.txt.gz \
     > working/ptb-webquestions.train.forest.json
 	cat data/webquestions/ptb/webquestions.test.disambiguated.json \
-        | java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+        | java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
         annotators tokenize,ssplit,pos,lemma,depparse \
         tokenize.whitespace true \
         ssplit.newlineIsSentenceBreak always \
@@ -324,80 +224,216 @@ entity_dismabiguated_to_graphparser_forest_ptb:
         depparse.model lib_data/utb-models/en/neural-parser/en-glove50.lower.nndep.model.txt.gz \
     > working/ptb-webquestions.test.forest.json
 
+entity_dismabiguated_to_graphparser_forest_de:
+	cat data/webquestions/de/webquestions.dev.disambiguated.json \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.capitalizeUsingPosTags true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos,lemma,depparse \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode de \
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz \
+		postprocess.correctPosTags true \
+		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
+		> working/de-webquestions.dev.forest.json 
+	cat data/webquestions/de/webquestions.train.disambiguated.json \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.capitalizeUsingPosTags true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos,lemma,depparse \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode de \
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz \
+		postprocess.correctPosTags true \
+		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
+		> working/de-webquestions.train.forest.json 
+	cat data/webquestions/de/webquestions.test.disambiguated.json \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.capitalizeUsingPosTags true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos,lemma,depparse \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode de \
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz \
+		postprocess.correctPosTags true \
+		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
+		> working/de-webquestions.test.forest.json 
 
 entity_dismabiguated_to_graphparser_forest_%:
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
-		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
-		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
-	> working/$*-webquestions.dev.forest.json
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		postprocess.correctPosTags true \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/$*-webquestions.dev.forest.json 
 	cat data/webquestions/$*/webquestions.train.disambiguated.json \
-		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
-		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
-	> working/$*-webquestions.train.forest.json
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		postprocess.correctPosTags true \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/$*-webquestions.train.forest.json 
 	cat data/webquestions/$*/webquestions.test.disambiguated.json \
-		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
-		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
-	> working/$*-webquestions.test.forest.json
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		postprocess.correctPosTags true \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/$*-webquestions.test.forest.json 
 
 multi_entity_dismabiguated_to_graphparser_forest_%:
+	# TODO: Update the arguments based on the above make entry.
 	cat data/webquestions/$*/webquestions.dev.multi.disambiguated.json \
-		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.capitalize true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
-		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 	> working/$*-webquestions.dev.multi_entities.forest.json
 	cat data/webquestions/$*/webquestions.train.multi.disambiguated.json \
-		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.capitalize true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
-		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
-	> working/$*-webquestions.train.multi_entities.forest.json
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/$*-webquestions.train.multi_entities.forest.json
 	cat data/webquestions/$*/webquestions.test.multi.disambiguated.json \
-		| java -cp lib/*:bin deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.capitalize true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.full.tagger \
-		depparse.model lib_data/utb-models/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp lib/*:bin deplambda.others.Stemmer $* 20 \
-	> working/$*-webquestions.test.multi_entities.forest.json
+		posTagKey UD \
+		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
+		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/$*-webquestions.test.multi_entities.forest.json
 
-deplambda_parse_forest_%:
+data_to_oscar_%:
+	mkdir -p working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*
 	cat working/$*-webquestions.dev.forest.json \
-		| java -cp lib/*:bin deplambda.cli.RunForestTransformer \
+		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
+		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.dev.sentences.txt
+	cat working/$*-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
+		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.train.sentences.txt
+	cat working/$*-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
+		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.test.sentences.txt
+
+multi_data_to_oscar_%:
+	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*
+	cat working/$*-webquestions.dev.multi_entities.forest.json \
+		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.dev.sentences.txt
+	cat working/$*-webquestions.train.multi_entities.forest.json \
+		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.train.sentences.txt
+	cat working/$*-webquestions.test.multi_entities.forest.json \
+		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.test.sentences.txt
+
+merge_data_from_oscar_%:
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.dev.sentences.tagged.parsed.conll \
+		working/$*-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.dev.syntaxnet.tagged.parsed.json.txt
+
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.train.sentences.tagged.parsed.conll \
+		working/$*-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.train.syntaxnet.tagged.parsed.json.txt
+
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.test.sentences.tagged.parsed.conll \
+		working/$*-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt
+
+multi_merge_data_from_oscar_%:
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.dev.sentences.tagged.parsed.conll \
+		working/$*-webquestions.dev.multi_entities.forest.json \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.dev.syntaxnet.tagged.parsed.json.txt
+
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.train.sentences.tagged.parsed.conll \
+		working/$*-webquestions.train.multi_entities.forest.json \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.train.syntaxnet.tagged.parsed.json.txt
+
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.test.sentences.tagged.parsed.conll \
+		working/$*-webquestions.test.multi_entities.forest.json \
+		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
+		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt
+
+deplambda_forest_%:
+	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.dev.syntaxnet.tagged.parsed.json.txt \
+		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
 		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
 		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
@@ -405,8 +441,8 @@ deplambda_parse_forest_%:
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> working/$*-webquestions.dev.forest.deplambda.json
-	cat working/$*-webquestions.train.forest.json \
-		 | java -cp lib/*:bin deplambda.cli.RunForestTransformer \
+	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.train.syntaxnet.tagged.parsed.json.txt \
+		 | java -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
 		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
 		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
@@ -414,8 +450,8 @@ deplambda_parse_forest_%:
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> working/$*-webquestions.train.forest.deplambda.json
-	cat working/$*-webquestions.test.forest.json \
-		| java -cp lib/*:bin deplambda.cli.RunForestTransformer \
+	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt \
+		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
 		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
 		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
@@ -424,10 +460,39 @@ deplambda_parse_forest_%:
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> working/$*-webquestions.test.forest.deplambda.json
 
+deplambda_stanford_forest_%:
+	cat working/$*-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
+		-definedTypesFile lib_data/ud.types.txt \
+		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
+		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
+		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+		-nthreads 20  \
+		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
+		> working/$*-webquestions.dev.stanford.forest.deplambda.json
+	cat working/$*-webquestions.train.forest.json \
+		 | java -cp bin:lib/* deplambda.cli.RunForestTransformer \
+		-definedTypesFile lib_data/ud.types.txt \
+		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
+		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
+		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+		-nthreads 20  \
+		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
+		> working/$*-webquestions.train.stanford.forest.deplambda.json
+	cat working/$*-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
+		-definedTypesFile lib_data/ud.types.txt \
+		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
+		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
+		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+		-nthreads 20  \
+		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
+		> working/$*-webquestions.test.stanford.forest.deplambda.json
+
 extract_gold_graphs_bow_dev_%:
 	mkdir -p data/gold_graphs/
-	cat working/$*-webquestions.dev.forest.json \
-    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+    | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
         data/gold_graphs/$*_bow_without_merge_without_expand.dev \
@@ -435,8 +500,8 @@ extract_gold_graphs_bow_dev_%:
         false \
         false \
         > data/gold_graphs/$*_bow_without_merge_without_expand.dev.answers.txt
-	cat working/$*-webquestions.dev.forest.json \
-    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+    | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
         data/gold_graphs/$*_bow_with_merge_without_expand.dev \
@@ -447,9 +512,9 @@ extract_gold_graphs_bow_dev_%:
 
 extract_gold_graphs_bow_%:
 	mkdir -p data/gold_graphs/
-	cat working/$*-webquestions.train.forest.json \
-        working/$*-webquestions.dev.forest.json \
-    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	cat working/$*-webquestions.train.stanford.forest.deplambda.json \
+        working/$*-webquestions.dev.stanford.forest.deplambda.json \
+    | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
         data/gold_graphs/$*_bow_without_merge_without_expand.full \
@@ -459,7 +524,7 @@ extract_gold_graphs_bow_%:
         > data/gold_graphs/$*_bow_without_merge_without_expand.full.answers.txt
 	#cat working/$*-webquestions.train.forest.json \
     #    working/$*-webquestions.dev.forest.json \
-    #| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+    #| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
     #    data/freebase/schema/all_domains_schema.txt localhost \
     #    bow_question_graph \
     #    data/gold_graphs/$*_bow_with_merge_without_expand.full \
@@ -470,7 +535,7 @@ extract_gold_graphs_bow_%:
 
 extract_gold_graphs_dependency_dev_%:
 	cat working/$*-webquestions.dev.forest.json \
-		| java -cp lib/*:bin in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
         data/gold_graphs/$*_dependency_without_merge_without_expand.dev \
@@ -479,7 +544,7 @@ extract_gold_graphs_dependency_dev_%:
         false \
         > data/gold_graphs/$*_dependency_without_merge_without_expand.dev.answers.txt
 	cat working/$*-webquestions.dev.forest.json \
-		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
         data/gold_graphs/$*_dependency_with_merge_without_expand.dev \
@@ -491,7 +556,7 @@ extract_gold_graphs_dependency_dev_%:
 extract_gold_graphs_dependency_%:
 	cat working/$*-webquestions.train.forest.json \
         working/$*-webquestions.dev.forest.json \
-    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+    | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
         data/gold_graphs/$*_dependency_without_merge_without_expand.full \
@@ -501,7 +566,7 @@ extract_gold_graphs_dependency_%:
         > data/gold_graphs/$*_dependency_without_merge_without_expand.full.answers.txt
 	cat working/$*-webquestions.train.forest.json \
         working/$*-webquestions.dev.forest.json \
-    | java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+    | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
         data/gold_graphs/$*_dependency_with_merge_without_expand.full \
@@ -512,7 +577,7 @@ extract_gold_graphs_dependency_%:
 
 extract_gold_graphs_deplambda_dev_%:
 	cat working/$*-webquestions.dev.forest.deplambda.json \
-		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
 		data/gold_graphs/$*_deplambda_with_merge_with_expand.dev \
@@ -521,7 +586,7 @@ extract_gold_graphs_deplambda_dev_%:
 		true \
 		> data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.answers.txt
 	cat working/$*-webquestions.dev.forest.deplambda.json \
-		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 	   	dependency_lambda \
 		data/gold_graphs/$*_deplambda_without_merge_with_expand.dev \
@@ -530,7 +595,7 @@ extract_gold_graphs_deplambda_dev_%:
 		true \
 		> data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.answers.txt
 	cat working/$*-webquestions.dev.forest.deplambda.json \
-		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
 		data/gold_graphs/$*_deplambda_with_merge_without_expand.dev \
@@ -539,7 +604,7 @@ extract_gold_graphs_deplambda_dev_%:
 		false \
 		> data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.answers.txt
 	cat working/$*-webquestions.dev.forest.deplambda.json \
-		| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
 		data/gold_graphs/$*_deplambda_without_merge_without_expand.dev \
@@ -548,10 +613,48 @@ extract_gold_graphs_deplambda_dev_%:
 		false \
 		> data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.answers.txt
 
+extract_gold_graphs_stanford_deplambda_dev_%:
+	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.stanford \
+		lib_data/dummy.txt \
+	   	true \
+		true \
+		> data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.stanford.answers.txt
+	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+	   	dependency_lambda \
+		data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.stanford \
+		lib_data/dummy.txt \
+	   	false \
+		true \
+		> data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.stanford.answers.txt
+	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.stanford \
+		lib_data/dummy.txt \
+	   	true \
+		false \
+		> data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.stanford.answers.txt
+	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.stanford \
+		lib_data/dummy.txt \
+	   	false \
+		false \
+		> data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.stanford.answers.txt
+
 extract_gold_graphs_deplambda_%:
 	cat working/$*-webquestions.train.forest.deplambda.json \
         working/$*-webquestions.dev.forest.deplambda.json \
-	| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
 		data/gold_graphs/$*_deplambda_with_merge_with_expand.full \
@@ -561,7 +664,7 @@ extract_gold_graphs_deplambda_%:
 		> data/gold_graphs/$*_deplambda_with_merge_with_expand.full.answers.txt
 	#cat working/$*-webquestions.train.forest.deplambda.json \
     #    working/$*-webquestions.dev.forest.deplambda.json \
-	#| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    	#	data/freebase/schema/all_domains_schema.txt localhost \
 	#   	dependency_lambda \
 	#	data/gold_graphs/$*_deplambda_without_merge_with_expand.full \
@@ -571,7 +674,7 @@ extract_gold_graphs_deplambda_%:
 	#	> data/gold_graphs/$*_deplambda_without_merge_with_expand.full.answers.txt
 	#cat working/$*-webquestions.train.forest.deplambda.json \
     #    working/$*-webquestions.dev.forest.deplambda.json \
-	#| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    	#	data/freebase/schema/all_domains_schema.txt localhost \
 	#	dependency_lambda \
 	#	data/gold_graphs/$*_deplambda_with_merge_without_expand.full \
@@ -581,7 +684,7 @@ extract_gold_graphs_deplambda_%:
 	#	> data/gold_graphs/$*_deplambda_with_merge_without_expand.full.answers.txt
 	#cat working/$*-webquestions.train.forest.deplambda.json \
     #    working/$*-webquestions.dev.forest.deplambda.json \
-	#| java -cp lib/*:bin/ in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    	#	data/freebase/schema/all_domains_schema.txt localhost \
 	#   	dependency_lambda \
 	#	data/gold_graphs/$*_deplambda_without_merge_without_expand.full \
@@ -590,10 +693,53 @@ extract_gold_graphs_deplambda_%:
 	#	false \
 	#	> data/gold_graphs/$*_deplambda_without_merge_without_expand.full.answers.txt
 
+extract_gold_graphs_stanford_deplambda_%:
+	cat working/$*-webquestions.train.stanford.forest.deplambda.json \
+        working/$*-webquestions.dev.stanford.forest.deplambda.json \
+	| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		dependency_lambda \
+		data/gold_graphs/$*_deplambda_with_merge_with_expand.full.stanford \
+		lib_data/dummy.txt \
+	   	true \
+		true \
+		> data/gold_graphs/$*_deplambda_with_merge_with_expand.full.stanford.answers.txt
+	#cat working/$*-webquestions.train.forest.deplambda.json \
+    #    working/$*-webquestions.dev.forest.deplambda.json \
+	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   	#	data/freebase/schema/all_domains_schema.txt localhost \
+	#   	dependency_lambda \
+	#	data/gold_graphs/$*_deplambda_without_merge_with_expand.full \
+	#	lib_data/dummy.txt \
+	#   	false \
+	#	true \
+	#	> data/gold_graphs/$*_deplambda_without_merge_with_expand.full.answers.txt
+	#cat working/$*-webquestions.train.forest.deplambda.json \
+    #    working/$*-webquestions.dev.forest.deplambda.json \
+	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   	#	data/freebase/schema/all_domains_schema.txt localhost \
+	#	dependency_lambda \
+	#	data/gold_graphs/$*_deplambda_with_merge_without_expand.full \
+	#	lib_data/dummy.txt \
+	#   	true \
+	#	false \
+	#	> data/gold_graphs/$*_deplambda_with_merge_without_expand.full.answers.txt
+	#cat working/$*-webquestions.train.forest.deplambda.json \
+    #    working/$*-webquestions.dev.forest.deplambda.json \
+	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   	#	data/freebase/schema/all_domains_schema.txt localhost \
+	#   	dependency_lambda \
+	#	data/gold_graphs/$*_deplambda_without_merge_without_expand.full \
+	#	lib_data/dummy.txt \
+	#   	false \
+	#	false \
+	#	> data/gold_graphs/$*_deplambda_without_merge_without_expand.full.answers.txt
+
+
 bow_supervised_without_merge_without_expand_%:
 	rm -rf ../working/$*_bow_supervised_without_merge_without_expand
 	mkdir -p ../working/$*_bow_supervised_without_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
     -pointWiseF1Threshold 0.2 \
     -semanticParseKey dependency_lambda \
     -schema data/freebase/schema/all_domains_schema.txt \
@@ -651,16 +797,16 @@ bow_supervised_without_merge_without_expand_%:
     -initialWordWeight -0.05 \
     -stemFeaturesWeight 0.05 \
     -endpoint localhost \
-    -supervisedCorpus "working/$*-webquestions.train.forest.json" \
+    -supervisedCorpus "working/$*-webquestions.train.stanford.forest.deplambda.json" \
     -goldParsesFile data/gold_graphs/$*_bow_without_merge_without_expand.full.ser \
-    -devFile working/$*-webquestions.dev.forest.json \
+    -devFile working/$*-webquestions.dev.stanford.forest.deplambda.json \
     -logFile ../working/$*_bow_supervised_without_merge_without_expand/all.log.txt \
     > ../working/$*_bow_supervised_without_merge_without_expand/all.txt
 
 test_bow_supervised_without_merge_without_expand_%:
 	rm -rf ../working/$*_test_bow_supervised_without_merge_without_expand
 	mkdir -p ../working/$*_test_bow_supervised_without_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
     -pointWiseF1Threshold 0.2 \
     -semanticParseKey dependency_lambda \
     -schema data/freebase/schema/all_domains_schema.txt \
@@ -718,16 +864,16 @@ test_bow_supervised_without_merge_without_expand_%:
     -initialWordWeight -0.05 \
     -stemFeaturesWeight 0.05 \
     -endpoint localhost \
-    -supervisedCorpus "working/$*-webquestions.train.forest.json;working/$*-webquestions.dev.forest.json" \
+    -supervisedCorpus "working/$*-webquestions.train.stanford.forest.deplambda.json;working/$*-webquestions.dev.train.forest.deplambda.json" \
     -goldParsesFile data/gold_graphs/$*_bow_without_merge_without_expand.full.ser \
-    -devFile working/$*-webquestions.test.forest.json \
+    -devFile working/$*-webquestions.test.stanford.forest.deplambda.json \
     -logFile ../working/$*_test_bow_supervised_without_merge_without_expand/all.log.txt \
     > ../working/$*_test_bow_supervised_without_merge_without_expand/all.txt
 
 dependency_without_merge_without_expand_%:
 	rm -rf ../working/$*_dependency_without_merge_without_expand
 	mkdir -p ../working/$*_dependency_without_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_question_graph \
 	-schema data/freebase/schema/all_domains_schema.txt \
@@ -795,7 +941,7 @@ dependency_without_merge_without_expand_%:
 dependency_with_merge_without_expand_%:
 	rm -rf ../working/$*_dependency_with_merge_without_expand
 	mkdir -p ../working/$*_dependency_with_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_question_graph \
 	-schema data/freebase/schema/all_domains_schema.txt \
@@ -863,7 +1009,7 @@ dependency_with_merge_without_expand_%:
 test_dependency_with_merge_without_expand_%:
 	rm -rf ../working/$*_test_dependency_with_merge_without_expand
 	mkdir -p ../working/$*_test_dependency_with_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_question_graph \
 	-schema data/freebase/schema/all_domains_schema.txt \
@@ -932,7 +1078,7 @@ test_dependency_with_merge_without_expand_%:
 deplambda_without_merge_with_expand_%:
 	rm -rf ../working/$*_deplambda_without_merge_with_expand
 	mkdir -p ../working/$*_deplambda_without_merge_with_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1001,7 +1147,7 @@ deplambda_without_merge_with_expand_%:
 deplambda_with_merge_with_expand.4.3_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.4.3
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.4.3
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1071,7 +1217,7 @@ deplambda_with_merge_with_expand.4.3_%:
 test_deplambda_with_merge_with_expand.21_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.21
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.21
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1145,7 +1291,7 @@ test_deplambda_with_merge_with_expand.21_%:
 test_deplambda_with_merge_with_expand.20_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.20
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.20
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1219,7 +1365,7 @@ test_deplambda_with_merge_with_expand.20_%:
 test_deplambda_with_merge_with_expand.19_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.19
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.19
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1292,7 +1438,7 @@ test_deplambda_with_merge_with_expand.19_%:
 test_deplambda_with_merge_with_expand.18_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.18
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.18
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1366,7 +1512,7 @@ test_deplambda_with_merge_with_expand.18_%:
 test_deplambda_with_merge_with_expand.17_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.17
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.17
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1439,7 +1585,7 @@ test_deplambda_with_merge_with_expand.17_%:
 deplambda_with_merge_with_expand.17_1_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.17_1
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.17_1
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1512,7 +1658,7 @@ deplambda_with_merge_with_expand.17_1_%:
 deplambda_with_merge_with_expand.17_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.17
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.17
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1582,10 +1728,83 @@ deplambda_with_merge_with_expand.17_%:
 	-logFile ../working/$*_deplambda_with_merge_with_expand.17/all.log.txt \
 	> ../working/$*_deplambda_with_merge_with_expand.17/all.txt
 
+deplambda_stanford_with_merge_with_expand.17_%:
+	rm -rf ../working/$*_deplambda_stanford_with_merge_with_expand.17
+	mkdir -p ../working/$*_deplambda_stanford_with_merge_with_expand.17
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_lambda \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 20 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag true \
+	-urelPartGrelPartFlag true \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag true \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag true \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-stemMatchingFlag false \
+	-mediatorStemGrelPartMatchingFlag false \
+	-argumentStemMatchingFlag false \
+	-argumentStemGrelPartMatchingFlag false \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag true \
+	-useGoldRelations true \
+	-allowMerging true \
+	-handleEventEventEdges true \
+	-useBackOffGraph true \
+	-evaluateBeforeTraining false \
+    -evaluateOnlyTheFirstBest true \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight -0.05 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV" \
+	-supervisedCorpus "working/$*-webquestions.train.stanford.forest.deplambda.json" \
+	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.stanford.ser \
+	-devFile "working/$*-webquestions.dev.stanford.forest.deplambda.json" \
+	-logFile ../working/$*_deplambda_stanford_with_merge_with_expand.17/all.log.txt \
+	> ../working/$*_deplambda_stanford_with_merge_with_expand.17/all.txt
+
 test_deplambda_with_merge_with_expand.16_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.16
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.16
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1658,7 +1877,7 @@ test_deplambda_with_merge_with_expand.16_%:
 deplambda_with_merge_with_expand.16_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.16
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.16
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1731,7 +1950,7 @@ deplambda_with_merge_with_expand.16_%:
 test_deplambda_with_merge_with_expand.15_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand.15
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand.15
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1803,7 +2022,7 @@ test_deplambda_with_merge_with_expand.15_%:
 deplambda_with_merge_with_expand.15_1_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.15_1
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.15_1
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1876,7 +2095,7 @@ deplambda_with_merge_with_expand.15_1_%:
 deplambda_with_merge_with_expand.15_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.15
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.15
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -1948,7 +2167,7 @@ deplambda_with_merge_with_expand.15_%:
 deplambda_with_merge_with_expand.14_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.14
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.14
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2020,7 +2239,7 @@ deplambda_with_merge_with_expand.14_%:
 deplambda_with_merge_with_expand.13_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.13
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.13
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2091,7 +2310,7 @@ deplambda_with_merge_with_expand.13_%:
 deplambda_with_merge_with_expand.12_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.12
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.12
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2160,7 +2379,7 @@ deplambda_with_merge_with_expand.12_%:
 deplambda_with_merge_with_expand.11_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.11
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.11
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2229,7 +2448,7 @@ deplambda_with_merge_with_expand.11_%:
 deplambda_with_merge_with_expand.10_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.10
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.10
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2300,7 +2519,7 @@ deplambda_with_merge_with_expand.10_%:
 deplambda_with_merge_with_expand.9.1_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.9.1
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.9.1
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2369,7 +2588,7 @@ deplambda_with_merge_with_expand.9.1_%:
 deplambda_with_merge_with_expand.8_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.8
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.8
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2439,7 +2658,7 @@ deplambda_with_merge_with_expand.8_%:
 deplambda_with_merge_with_expand.6_%:
 	rm -rf ../working/$*_deplambda_with_merge_with_expand.6
 	mkdir -p ../working/$*_deplambda_with_merge_with_expand.6
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2509,7 +2728,7 @@ deplambda_with_merge_with_expand.6_%:
 deplambda_without_merge_without_expand_%:
 	rm -rf ../working/$*_deplambda_without_merge_without_expand
 	mkdir -p ../working/$*_deplambda_without_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2578,7 +2797,7 @@ deplambda_without_merge_without_expand_%:
 deplambda_with_merge_without_expand_%:
 	rm -rf ../working/$*_deplambda_with_merge_without_expand
 	mkdir -p ../working/$*_deplambda_with_merge_without_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
@@ -2647,7 +2866,7 @@ deplambda_with_merge_without_expand_%:
 test_deplambda_with_merge_with_expand_%:
 	rm -rf ../working/$*_test_deplambda_with_merge_with_expand
 	mkdir -p ../working/$*_test_deplambda_with_merge_with_expand
-	java -Xms2048m -cp lib/*:bin in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	java -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
 	-pointWiseF1Threshold 0.2 \
 	-semanticParseKey dependency_lambda \
 	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \

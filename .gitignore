@@ -10,3 +10,5 @@ lib/graph-parser
 lib_data/utb-models
 commands*
 *.swp
+lib_data/ud-models-v1.3/
+deplambda.jar
