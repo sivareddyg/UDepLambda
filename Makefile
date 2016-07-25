@@ -327,48 +327,6 @@ entity_dismabiguated_to_graphparser_forest_%:
 		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.test.forest.json 
 
-multi_entity_dismabiguated_to_graphparser_forest_%:
-	# TODO: Update the arguments based on the above make entry.
-	cat data/webquestions/$*/webquestions.dev.multi.disambiguated.json \
-		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
-		preprocess.capitalize true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
-		tokenize.whitespace true \
-		ssplit.eolonly true \
-		ssplit.newlineIsSentenceBreak always \
-		languageCode $* \
-		posTagKey UD \
-		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
-	> working/$*-webquestions.dev.multi_entities.forest.json
-	cat data/webquestions/$*/webquestions.train.multi.disambiguated.json \
-		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
-		preprocess.capitalize true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
-		tokenize.whitespace true \
-		ssplit.eolonly true \
-		ssplit.newlineIsSentenceBreak always \
-		languageCode $* \
-		posTagKey UD \
-		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
-		> working/$*-webquestions.train.multi_entities.forest.json
-	cat data/webquestions/$*/webquestions.test.multi.disambiguated.json \
-		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
-		preprocess.capitalize true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
-		tokenize.whitespace true \
-		ssplit.eolonly true \
-		ssplit.newlineIsSentenceBreak always \
-		languageCode $* \
-		posTagKey UD \
-		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
-		> working/$*-webquestions.test.multi_entities.forest.json
-
 data_to_oscar_%:
 	mkdir -p working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*
 	cat working/$*-webquestions.dev.forest.json \
@@ -380,18 +338,6 @@ data_to_oscar_%:
 	cat working/$*-webquestions.test.forest.json \
 		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
 		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.test.sentences.txt
-
-multi_data_to_oscar_%:
-	mkdir -p working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*
-	cat working/$*-webquestions.dev.multi_entities.forest.json \
-		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.dev.sentences.txt
-	cat working/$*-webquestions.train.multi_entities.forest.json \
-		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.train.sentences.txt
-	cat working/$*-webquestions.test.multi_entities.forest.json \
-		| java -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/sent/$*/webquestions.test.sentences.txt
 
 merge_data_from_oscar_%:
 	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
@@ -411,25 +357,6 @@ merge_data_from_oscar_%:
 		working/$*-webquestions.test.forest.json \
 		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt
-
-multi_merge_data_from_oscar_%:
-	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
-		working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.dev.sentences.tagged.parsed.conll \
-		working/$*-webquestions.dev.multi_entities.forest.json \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.dev.syntaxnet.tagged.parsed.json.txt
-
-	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
-		working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.train.sentences.tagged.parsed.conll \
-		working/$*-webquestions.train.multi_entities.forest.json \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.train.syntaxnet.tagged.parsed.json.txt
-
-	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
-		working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.test.sentences.tagged.parsed.conll \
-		working/$*-webquestions.test.multi_entities.forest.json \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
-		> working/webq_multillingual_graphpaser_relaxed_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt
 
 deplambda_forest_%:
 	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.dev.syntaxnet.tagged.parsed.json.txt \
