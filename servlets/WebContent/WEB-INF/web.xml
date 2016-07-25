@@ -180,6 +180,185 @@
   </servlet>
   
   <servlet>
+    <servlet-name>UniversalDependencyParserEnglishCased</servlet-name>
+    <servlet-class>deplambda.servlets.UniversalDependencyParser</servlet-class>
+    <init-param>
+      <param-name>annotators</param-name>
+      <param-value>tokenize, ssplit, pos, lemma, depparse</param-value>
+    </init-param>
+    <init-param>
+      <param-name>drawSvgTrees</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>svgZoomFactor</param-name>
+      <param-value>1.5</param-value>
+    </init-param>
+    <init-param>
+      <param-name>depparse.model</param-name>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.3/en/neural-parser/en-glove50.lower.nndep.model.txt.gz</param-value>
+    </init-param>
+    <init-param>
+      <param-name>pos.model</param-name>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.3/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.tagger</param-value>
+    </init-param>
+   <init-param>
+      <param-name>deplambda</param-name>
+      <param-value>deplambda</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.lexicalizePredicates</param-name>
+      <param-value>false</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.definedTypesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud.types.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.treeTransformationsFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-tree-transformation-rules.proto.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.relationPrioritiesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-relation-priorities.proto.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.lambdaAssignmentRulesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-lambda-assignment-rules.proto.txt</param-value>
+   </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>UniversalDependencyParserSpanishCased</servlet-name>
+    <servlet-class>deplambda.servlets.UniversalDependencyParser</servlet-class>
+    <init-param>
+      <param-name>annotators</param-name>
+      <param-value>tokenize, ssplit, pos, lemma, depparse</param-value>
+    </init-param>
+    <init-param>
+      <param-name>drawSvgTrees</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>svgZoomFactor</param-name>
+      <param-value>1.5</param-value>
+    </init-param>
+    <init-param>
+      <param-name>depparse.model</param-name>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.3/es/neural-parser/es-glove50.lower.nndep.model.txt.gz</param-value>
+    </init-param>
+    <init-param>
+      <param-name>pos.model</param-name>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.3/es/pos-tagger/utb-es-bidirectional-glove-distsim-lower.tagger</param-value>
+    </init-param>
+    <init-param>
+      <param-name>tokenize.language</param-name>
+      <param-value>es</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ner.model</param-name>
+      <param-value>edu/stanford/nlp/models/ner/spanish.ancora.distsim.s512.crf.ser.gz</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ner.applyNumericClassifiers</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ner.useSUTime</param-name>
+      <param-value>false</param-value>
+    </init-param>
+   <init-param>
+      <param-name>deplambda</param-name>
+      <param-value>deplambda</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.lexicalizePredicates</param-name>
+      <param-value>false</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.definedTypesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud.types.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.treeTransformationsFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-tree-transformation-rules.proto.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.relationPrioritiesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-relation-priorities.proto.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.lambdaAssignmentRulesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-lambda-assignment-rules.proto.txt</param-value>
+   </init-param>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>UniversalDependencyParserGermanCased</servlet-name>
+    <servlet-class>deplambda.servlets.UniversalDependencyParser</servlet-class>
+    <init-param>
+      <param-name>annotators</param-name>
+      <param-value>tokenize, ssplit, pos, lemma, depparse</param-value>
+    </init-param>
+    <init-param>
+      <param-name>drawSvgTrees</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>svgZoomFactor</param-name>
+      <param-value>1.5</param-value>
+    </init-param>
+    <init-param>
+      <param-name>depparse.model</param-name>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz</param-value>
+    </init-param>
+    <init-param>
+      <param-name>pos.model</param-name>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger</param-value>
+    </init-param>
+    <init-param>
+      <param-name>tokenize.language</param-name>
+      <param-value>de</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ner.model</param-name>
+      <param-value>edu/stanford/nlp/models/ner/german.hgc_175m_600.crf.ser.gz</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ner.applyNumericClassifiers</param-name>
+      <param-value>false</param-value>
+    </init-param>
+    <init-param>
+      <param-name>ner.useSUTime</param-name>
+      <param-value>false</param-value>
+    </init-param>
+   <init-param>
+      <param-name>deplambda</param-name>
+      <param-value>deplambda</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.lexicalizePredicates</param-name>
+      <param-value>false</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.definedTypesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud.types.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.treeTransformationsFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-tree-transformation-rules.proto.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.relationPrioritiesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-relation-priorities.proto.txt</param-value>
+   </init-param>
+   <init-param>
+      <param-name>deplambda.lambdaAssignmentRulesFile</param-name>
+      <param-value>/WEB-INF/lib_data/ud-lambda-assignment-rules.proto.txt</param-value>
+   </init-param>
+  </servlet>
+  
+  <servlet>
     <servlet-name>QueryUDP</servlet-name>
     <servlet-class>deplambda.servlets.QueryUDP</servlet-class>
     <init-param>
@@ -194,6 +373,18 @@
       <param-name>deUdpEndPoint</param-name>
       <param-value>http://localhost:8080/deplambda-demo/UniversalDependencyParserGerman</param-value>
     </init-param>
+    <init-param>
+      <param-name>enCasedUdpEndPoint</param-name>
+      <param-value>http://localhost:8080/deplambda-demo/UniversalDependencyParserEnglishCased</param-value>
+    </init-param>
+    <init-param>
+      <param-name>esCasedUdpEndPoint</param-name>
+      <param-value>http://localhost:8080/deplambda-demo/UniversalDependencyParserSpanishCased</param-value>
+    </init-param>
+    <init-param>
+      <param-name>deCasedUdpEndPoint</param-name>
+      <param-value>http://localhost:8080/deplambda-demo/UniversalDependencyParserGermanCased</param-value>
+    </init-param>    
   </servlet>
   
   <servlet-mapping>
@@ -224,5 +415,20 @@
   <servlet-mapping>
     <servlet-name>UniversalDependencyParserGerman</servlet-name>
     <url-pattern>/UniversalDependencyParserGerman</url-pattern>
+  </servlet-mapping>
+  
+    <servlet-mapping>
+    <servlet-name>UniversalDependencyParserEnglishCased</servlet-name>
+    <url-pattern>/UniversalDependencyParserEnglishCased</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>UniversalDependencyParserSpanishCased</servlet-name>
+    <url-pattern>/UniversalDependencyParserSpanishCased</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>UniversalDependencyParserGermanCased</servlet-name>
+    <url-pattern>/UniversalDependencyParserGermanCased</url-pattern>
   </servlet-mapping>
 </web-app>

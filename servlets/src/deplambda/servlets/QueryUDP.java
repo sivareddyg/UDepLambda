@@ -123,6 +123,24 @@ public class QueryUDP extends HttpServlet {
     } else {
       out.println("<option value=de>German</option>");
     }
+    
+    if (languageCode.equals("enCased")) {
+      out.println("<option value=enCased selected=selected>English Cased</option>");
+    } else {
+      out.println("<option value=enCased>English Cased</option>");
+    }
+
+    if (languageCode.equals("esCased")) {
+      out.println("<option value=esCased  selected=selected>Spanish Cased</option>");
+    } else {
+      out.println("<option value=esCased>Spanish Cased</option>");
+    }
+
+    if (languageCode.equals("deCased")) {
+      out.println("<option value=deCased selected=selected>German Cased</option>");
+    } else {
+      out.println("<option value=deCased>German Cased</option>");
+    }
 
     out.println("</select>");
     out.println("<input type=submit>");
