@@ -54,15 +54,27 @@ public class Sentence {
       JsonArray entities = sentence.get(SentenceKeys.ENTITIES).getAsJsonArray();
       for (JsonElement entityElement : entities) {
         JsonObject entity = entityElement.getAsJsonObject();
-        int start = 0;
-        int end = 0;
-        if (entity.has(SentenceKeys.ENTITY_INDEX)) {
-          start = entity.get(SentenceKeys.ENTITY_INDEX).getAsInt();
-          end = entity.get(SentenceKeys.ENTITY_INDEX).getAsInt();
-        } else {
-          start = entity.get(SentenceKeys.START).getAsInt();
-          end = entity.get(SentenceKeys.END).getAsInt();
+
+        Preconditions.checkArgument(
+            entity.has(SentenceKeys.ENTITY_INDEX)
+                || (entity.has(SentenceKeys.START) && entity
+                    .has(SentenceKeys.END)),
+            "An entity should have an index, or a start and an end.");
+
+        if (!entity.has(SentenceKeys.START)) {
+          int entityIndex = entity.get(SentenceKeys.ENTITY_INDEX).getAsInt();
+          entity.addProperty(SentenceKeys.START, entityIndex);
+          entity.addProperty(SentenceKeys.END, entityIndex);
         }
+
+        int start = entity.get(SentenceKeys.START).getAsInt();
+        int end = entity.get(SentenceKeys.END).getAsInt();
+
+        if (!entity.has(SentenceKeys.ENTITY_INDEX)) {
+          // The last word is the index of the whole entity.
+          entity.addProperty(SentenceKeys.ENTITY_INDEX, end);
+        }
+
         while (start <= end) {
           wordIndexToEntity.put(start, entity);
           start++;

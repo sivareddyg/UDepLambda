@@ -3,6 +3,7 @@ package deplambda.util;
 import in.sivareddy.util.SentenceKeys;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,22 +92,49 @@ public class DependencyTree extends LabeledScoredTreeNode {
     }
 
     DependencyTree rootNode = null;
+    Map<Integer, Integer> heads = new HashMap<>();
+
+    // Find the root node.
     for (int i = 0; i < words.size(); i++) {
       JsonObject word = words.get(i).getAsJsonObject();
-      int head = word.get("head").getAsInt() - 1;
-      if (head == -1) {
+      int head = word.get(SentenceKeys.HEAD_KEY).getAsInt() - 1;
+      if (head < 0) {
         // ROOT node.
         Preconditions.checkArgument(rootNode == null,
             "Multiple root nodes present: " + words);
-        rootNode = nodes.get(i);
+        int adjustedRootNodeIndex =
+            wordIndexToEntity.containsKey(i) ? wordIndexToEntity.get(i)
+                .get(SentenceKeys.ENTITY_INDEX).getAsInt() : i;
+        rootNode = nodes.get(adjustedRootNodeIndex);
+        heads.put(adjustedRootNodeIndex, -1);
+      }
+    }
+
+    for (int i = 0; i < words.size(); i++) {
+      JsonObject word = words.get(i).getAsJsonObject();
+      int head = word.get(SentenceKeys.HEAD_KEY).getAsInt() - 1;
+      if (wordIndexToEntity.containsKey(i)
+          && wordIndexToEntity.containsKey(head)
+          && wordIndexToEntity.get(i) == wordIndexToEntity.get(head)) {
+        // words belong to the same entity. Ignore.
       } else {
-        if (wordIndexToEntity.containsKey(i)
-            && wordIndexToEntity.containsKey(head)
-            && wordIndexToEntity.get(i) == wordIndexToEntity.get(head)) {
-          // words belong to the same entity. Ignore.
+        int adjustedHeadIndex =
+            wordIndexToEntity.containsKey(head) ? wordIndexToEntity.get(head)
+                .get(SentenceKeys.ENTITY_INDEX).getAsInt() : head;
+        int adjustedCurrentIndex =
+            wordIndexToEntity.containsKey(i) ? wordIndexToEntity.get(i)
+                .get(SentenceKeys.ENTITY_INDEX).getAsInt() : i;
+
+        if (heads.containsKey(adjustedCurrentIndex)) {
+          // An entity span should contain only one incoming arc. If the
+          // entity span already has a parent, ignore the incoming arc.
+        } else if (heads.containsKey(adjustedHeadIndex)
+            && heads.get(adjustedHeadIndex) == adjustedCurrentIndex) {
+          // Avoid building loops.
         } else {
-          DependencyTree parent = nodes.get(head);
-          DependencyTree current = nodes.get(i);
+          heads.put(adjustedCurrentIndex, adjustedHeadIndex);
+          DependencyTree parent = nodes.get(adjustedHeadIndex);
+          DependencyTree current = nodes.get(adjustedCurrentIndex);
           parent.addChild(current);
         }
       }
