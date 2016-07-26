@@ -366,12 +366,16 @@ entity_dismabiguated_to_graphparser_forest_%:
 		> working/$*-webquestions.test.forest.json 
 
 forest_to_conll_%:
+	cat working/$*-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		> working/$*-webquestions.dev.forest.conll 
+	cat working/$*-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		> working/$*-webquestions.train.forest.conll 
 	cat working/$*-webquestions.test.forest.json \
 		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
-		> working/$*-webquestions.test.conll 
+		> working/$*-webquestions.test.forest.conll 
 		
-	
-
 data_to_oscar_%:
 	mkdir -p working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*
 	cat working/$*-webquestions.dev.forest.json \
