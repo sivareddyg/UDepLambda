@@ -229,6 +229,7 @@ entity_dismabiguated_to_graphparser_forest_de:
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
 		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
 		preprocess.capitalizeUsingPosTags true \
 		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
@@ -246,6 +247,7 @@ entity_dismabiguated_to_graphparser_forest_de:
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
 		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
 		preprocess.capitalizeUsingPosTags true \
 		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
@@ -263,6 +265,7 @@ entity_dismabiguated_to_graphparser_forest_de:
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
 		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
 		preprocess.capitalizeUsingPosTags true \
 		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
@@ -277,11 +280,56 @@ entity_dismabiguated_to_graphparser_forest_de:
 		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
 		> working/de-webquestions.test.forest.json 
 
+entity_dismabiguated_to_graphparser_forest_ptb_tags_en:
+	cat data/webquestions/en/webquestions.dev.disambiguated.json \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos,lemma \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		posTagKey PTB \
+		postprocess.correctPosTags true \
+		> working/en-webquestions.dev.ptb-tags.forest.json 
+	cat data/webquestions/en/webquestions.train.disambiguated.json \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos,lemma \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		posTagKey PTB \
+		postprocess.correctPosTags true \
+		> working/en-webquestions.train.ptb-tags.forest.json 
+	cat data/webquestions/en/webquestions.test.disambiguated.json \
+		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos,lemma \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		posTagKey PTB \
+		postprocess.correctPosTags true \
+		> working/en-webquestions.test.ptb-tags.forest.json 
+
 entity_dismabiguated_to_graphparser_forest_%:
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
 		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
 		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
@@ -298,6 +346,7 @@ entity_dismabiguated_to_graphparser_forest_%:
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
 		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
 		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
@@ -314,6 +363,7 @@ entity_dismabiguated_to_graphparser_forest_%:
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
 		preprocess.capitalizeEntities true \
+		preprocess.capitalizeFirstWord true \
 		preprocess.mergeEntityWords true \
 		annotators tokenize,ssplit,pos,lemma,depparse \
 		tokenize.whitespace true \
