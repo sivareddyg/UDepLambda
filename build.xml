@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="deplambda">
+    <property environment="env"/>
+    <property name="graph-parser.location" value="../graph-parser"/>
+    <property name="ECLIPSE_HOME" value="../../../../Applications/Eclipse.app/Contents/Eclipse/"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="JUnit 4.libraryclasspath">
+        <pathelement location="${ECLIPSE_HOME}plugins/org.junit_4.12.0.v201504281640/junit.jar"/>
+        <pathelement location="${ECLIPSE_HOME}plugins/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+    </path>
+    <path id="graph-parser.classpath">
+        <pathelement location="${graph-parser.location}/bin"/>
+        <pathelement location="${graph-parser.location}/lib/easyccg.jar"/>
+        <pathelement location="${graph-parser.location}/lib/caffeine-1.1.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/commons-codec-1.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/commons-csv-1.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/commons-io-1.3.2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/commons-lang3-3.3.2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/gson-2.2.2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/guava-15.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/httpclient-4.2.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/httpclient-cache-4.2.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/httpcore-4.2.5.jar"/>
+        <pathelement location="${graph-parser.location}/lib/icu4j_3_4.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jackson-annotations-2.3.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jackson-core-2.3.3.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jackson-databind-2.3.3.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jcl-over-slf4j-1.7.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jena-arq-2.13.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jena-core-2.13.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jena-iri-1.1.2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jena-tdb-1.1.2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jopt-simple-4.4.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jsonld-java-0.5.1.jar"/>
+        <pathelement location="${graph-parser.location}/lib/libthrift-0.9.2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/log4j-1.2.17.jar"/>
+        <pathelement location="${graph-parser.location}/lib/slf4j-api-1.7.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/slf4j-log4j12-1.7.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/virt_jena2.jar"/>
+        <pathelement location="${graph-parser.location}/lib/virtjdbc4.jar"/>
+        <pathelement location="${graph-parser.location}/lib/xercesImpl-2.11.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/xml-apis-1.4.01.jar"/>
+        <pathelement location="${graph-parser.location}/lib/easysrl.jar"/>
+        <pathelement location="${graph-parser.location}/lib/stanford-corenlp-3.6.0-models-spanish.jar"/>
+        <pathelement location="${graph-parser.location}/lib/stanford-corenlp-3.6.0-models.jar"/>
+        <pathelement location="${graph-parser.location}/lib/stanford-corenlp-3.6.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/stanford-corenlp-caseless-2014-02-25-models.jar"/>
+        <pathelement location="${graph-parser.location}/lib/edu.mit.jwi_2.3.0.jar"/>
+        <pathelement location="${graph-parser.location}/lib/jewelcli-0.7.6.jar"/>
+        <pathelement location="${graph-parser.location}/lib/mtj-1.0-snapshot.jar"/>
+        <pathelement location="${graph-parser.location}/lib/stanford-spanish-corenlp-2015-01-08-models.jar"/>
+        <pathelement location="${graph-parser.location}/lib/junit-4.11.jar"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+    </path>
+    <path id="deplambda.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/stanford-tregex-3.5.1.jar"/>
+        <pathelement location="lib/protobuf-java-2.6.1.jar"/>
+        <pathelement location="lib/gson-2.2.2.jar"/>
+        <pathelement location="lib/maltparser-1.8.1.jar"/>
+        <pathelement location="lib/liblinear-1.8.jar"/>
+        <pathelement location="lib/log4j-1.2.17.jar"/>
+        <pathelement location="lib/whatswrong-0.2.5-SNAPSHOT-standalone.jar"/>
+        <pathelement location="lib/batik-ext-1.8.jar"/>
+        <pathelement location="lib/batik-svggen-1.8.jar"/>
+        <pathelement location="lib/batik-xml-1.8.jar"/>
+        <pathelement location="lib/batik-util-1.8.jar"/>
+        <pathelement location="lib/batik-awt-util-1.8.jar"/>
+        <pathelement location="lib/batik-dom-1.8.jar"/>
+        <pathelement location="lib/javautils-lib-3.0.jar"/>
+        <pathelement location="lib/spf-2.0.jar"/>
+        <pathelement location="lib/spf-javautils.jar"/>
+        <pathelement location="lib/stanford-corenlp-3.6.0.jar"/>
+        <path refid="JUnit 4.libraryclasspath"/>
+        <pathelement location="lib/stanford-corenlp-3.6.0-models-spanish.jar"/>
+        <pathelement location="lib/stanford-corenlp-3.6.0-models.jar"/>
+        <pathelement location="${graph-parser.location}/bin"/>
+        <pathelement location="lib/caffeine-1.1.0.jar"/>
+        <pathelement location="lib/commons-codec-1.6.jar"/>
+        <pathelement location="lib/commons-csv-1.0.jar"/>
+        <pathelement location="lib/commons-io-1.3.2.jar"/>
+        <pathelement location="lib/commons-lang3-3.3.2.jar"/>
+        <pathelement location="lib/easyccg.jar"/>
+        <pathelement location="lib/easysrl.jar"/>
+        <pathelement location="lib/guava-19.0.jar"/>
+        <pathelement location="lib/httpclient-4.2.6.jar"/>
+        <pathelement location="lib/httpclient-cache-4.2.6.jar"/>
+        <pathelement location="lib/httpcore-4.2.5.jar"/>
+        <pathelement location="lib/icu4j_3_4.jar"/>
+        <pathelement location="lib/jackson-annotations-2.3.0.jar"/>
+        <pathelement location="lib/jackson-core-2.3.3.jar"/>
+        <pathelement location="lib/jackson-databind-2.3.3.jar"/>
+        <pathelement location="lib/jcl-over-slf4j-1.7.6.jar"/>
+        <pathelement location="lib/jena-arq-2.13.0.jar"/>
+        <pathelement location="lib/jena-core-2.13.0.jar"/>
+        <pathelement location="lib/jena-iri-1.1.2.jar"/>
+        <pathelement location="lib/jena-tdb-1.1.2.jar"/>
+        <pathelement location="lib/jopt-simple-4.4.jar"/>
+        <pathelement location="lib/jsonld-java-0.5.1.jar"/>
+        <pathelement location="lib/libthrift-0.9.2.jar"/>
+        <pathelement location="lib/slf4j-api-1.7.6.jar"/>
+        <pathelement location="lib/slf4j-log4j12-1.7.6.jar"/>
+        <pathelement location="lib/virt_jena2.jar"/>
+        <pathelement location="lib/virtjdbc4.jar"/>
+        <pathelement location="lib/xercesImpl-2.11.0.jar"/>
+        <pathelement location="lib/xml-apis-1.4.01.jar"/>
+        <pathelement location="lib/edu.mit.jwi_2.3.0.jar"/>
+        <pathelement location="lib/jewelcli-0.7.6.jar"/>
+        <pathelement location="lib/mtj-1.0-snapshot.jar"/>
+        <pathelement location="lib/jregex1.2_01-src.jar"/>
+        <pathelement location="lib/fastutil-6.5.15.jar"/>
+        <pathelement location="lib/lucene-analyzers-3.6.2.jar"/>
+        <path refid="graph-parser.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin"/>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin">
+            <fileset dir="test">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="bin"/>
+    </target>
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${graph-parser.location}" inheritAll="false" target="clean"/>
+    </target>
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${graph-parser.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <src path="test"/>
+            <classpath refid="deplambda.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
+    <target name="NlpPipeline">
+        <java classname="deplambda.others.NlpPipeline" failonerror="true" fork="yes">
+            <arg line="depparse.extradependencies ref_only_uncollapsed deplambda.lambdaAssignmentRulesFile servlets/WebContent/WEB-INF/lib_data/ud-lambda-assignment-rules.proto.txt deplambda.treeTransformationsFile servlets/WebContent/WEB-INF/lib_data/ud-tree-transformation-rules.proto.txt annotators tokenize,ssplit,pos,lemma,depparse,ner svgZoomFactor 1.5 deplambda deplambda depparse.model servlets/WebContent/WEB-INF/lib_data/utb-models/en/neural-parser/en-glove50.6B.nndep.model.txt.gz pos.model servlets/WebContent/WEB-INF/lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger drawSvgTrees true deplambda.relationPrioritiesFile servlets/WebContent/WEB-INF/lib_data/ud-relation-priorities.proto.txt deplambda.definedTypesFile servlets/WebContent/WEB-INF/lib_data/ud.types.txt deplambda.lexicalizePredicates true"/>
+            <classpath refid="deplambda.classpath"/>
+        </java>
+    </target>
+    <target name="NlpPipelineTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="deplambda.others.NlpPipelineTest" todir="${junit.output.dir}"/>
+            <classpath refid="deplambda.classpath"/>
+        </junit>
+    </target>
+    <target name="TreeTransformerUniversalTest">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="deplambda.parser.TreeTransformerUniversalTest" todir="${junit.output.dir}"/>
+            <classpath refid="deplambda.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
