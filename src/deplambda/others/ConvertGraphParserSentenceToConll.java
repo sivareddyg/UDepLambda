@@ -34,7 +34,7 @@ public class ConvertGraphParserSentenceToConll extends ProcessStreamInterface {
               .getAsString() : "_";
       String fpos =
           word.has(SentenceKeys.FINE_POS_KEY) ? word.get(
-              SentenceKeys.FINE_POS_KEY).getAsString() : "_";
+              SentenceKeys.FINE_POS_KEY).getAsString() : pos;
       String feats =
           word.has(SentenceKeys.FEATS_KEY) ? word.get(SentenceKeys.FEATS_KEY)
               .getAsString() : "_";
