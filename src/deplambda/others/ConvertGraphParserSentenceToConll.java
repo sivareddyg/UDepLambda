@@ -21,10 +21,10 @@ public class ConvertGraphParserSentenceToConll extends ProcessStreamInterface {
   }
 
   public void processIndividualSentence(JsonObject sentence) {
+    int index = 1;
     for (JsonElement wordElm : sentence.get(SentenceKeys.WORDS_KEY)
         .getAsJsonArray()) {
       JsonObject word = wordElm.getAsJsonObject();
-      int index = word.get(SentenceKeys.INDEX_KEY).getAsInt();
       String wordStr = word.get(SentenceKeys.WORD_KEY).getAsString();
       String lemma =
           word.has(SentenceKeys.LEMMA_KEY) ? word.get(SentenceKeys.LEMMA_KEY)
@@ -53,6 +53,7 @@ public class ConvertGraphParserSentenceToConll extends ProcessStreamInterface {
       System.out.println(String.format(
           "%d\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s", index, wordStr, lemma, pos,
           fpos, feats, head, deprel, phead, pdeprel));
+      index++;
     }
     System.out.println();
   }
