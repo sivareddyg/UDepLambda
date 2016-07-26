@@ -232,16 +232,14 @@ entity_dismabiguated_to_graphparser_forest_de:
 		preprocess.capitalizeFirstWord true \
 		preprocess.capitalizeUsingPosTags true \
 		preprocess.mergeEntityWords true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
+		annotators tokenize,ssplit,pos,lemma \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode de \
 		posTagKey UD \
 		pos.model lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz \
 		postprocess.correctPosTags true \
-		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
 		> working/de-webquestions.dev.forest.json 
 	cat data/webquestions/de/webquestions.train.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
@@ -250,16 +248,14 @@ entity_dismabiguated_to_graphparser_forest_de:
 		preprocess.capitalizeFirstWord true \
 		preprocess.capitalizeUsingPosTags true \
 		preprocess.mergeEntityWords true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
+		annotators tokenize,ssplit,pos,lemma \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode de \
 		posTagKey UD \
 		pos.model lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz \
 		postprocess.correctPosTags true \
-		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
 		> working/de-webquestions.train.forest.json 
 	cat data/webquestions/de/webquestions.test.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
@@ -268,16 +264,14 @@ entity_dismabiguated_to_graphparser_forest_de:
 		preprocess.capitalizeFirstWord true \
 		preprocess.capitalizeUsingPosTags true \
 		preprocess.mergeEntityWords true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
+		annotators tokenize,ssplit,pos,lemma \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode de \
 		posTagKey UD \
 		pos.model lib_data/ud-models-v1.3/de/pos-tagger/utb-de-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz \
 		postprocess.correctPosTags true \
-		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
 		> working/de-webquestions.test.forest.json 
 
 entity_dismabiguated_to_graphparser_forest_ptb_tags_en:
@@ -294,7 +288,7 @@ entity_dismabiguated_to_graphparser_forest_ptb_tags_en:
 		languageCode en \
 		posTagKey PTB \
 		postprocess.correctPosTags true \
-		> working/en-webquestions.dev.ptb-tags.forest.json 
+		> working/en-ptb-webquestions.dev.forest.json 
 	cat data/webquestions/en/webquestions.train.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
@@ -308,7 +302,7 @@ entity_dismabiguated_to_graphparser_forest_ptb_tags_en:
 		languageCode en \
 		posTagKey PTB \
 		postprocess.correctPosTags true \
-		> working/en-webquestions.train.ptb-tags.forest.json 
+		> working/en-ptb-webquestions.train.forest.json 
 	cat data/webquestions/en/webquestions.test.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.addDateEntities true \
@@ -322,7 +316,7 @@ entity_dismabiguated_to_graphparser_forest_ptb_tags_en:
 		languageCode en \
 		posTagKey PTB \
 		postprocess.correctPosTags true \
-		> working/en-webquestions.test.ptb-tags.forest.json 
+		> working/en-ptb-webquestions.test.forest.json 
 
 entity_dismabiguated_to_graphparser_forest_%:
 	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
@@ -331,16 +325,14 @@ entity_dismabiguated_to_graphparser_forest_%:
 		preprocess.capitalizeEntities true \
 		preprocess.capitalizeFirstWord true \
 		preprocess.mergeEntityWords true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
+		annotators tokenize,ssplit,pos,lemma \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		posTagKey UD \
 		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
 		postprocess.correctPosTags true \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.dev.forest.json 
 	cat data/webquestions/$*/webquestions.train.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
@@ -348,16 +340,14 @@ entity_dismabiguated_to_graphparser_forest_%:
 		preprocess.capitalizeEntities true \
 		preprocess.capitalizeFirstWord true \
 		preprocess.mergeEntityWords true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
+		annotators tokenize,ssplit,pos,lemma \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		posTagKey UD \
 		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
 		postprocess.correctPosTags true \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.train.forest.json 
 	cat data/webquestions/$*/webquestions.test.disambiguated.json \
 		| java -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
@@ -365,17 +355,22 @@ entity_dismabiguated_to_graphparser_forest_%:
 		preprocess.capitalizeEntities true \
 		preprocess.capitalizeFirstWord true \
 		preprocess.mergeEntityWords true \
-		annotators tokenize,ssplit,pos,lemma,depparse \
+		annotators tokenize,ssplit,pos,lemma \
 		tokenize.whitespace true \
 		ssplit.eolonly true \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
 		posTagKey UD \
 		pos.model lib_data/ud-models-v1.3/$*/pos-tagger/utb-$*-bidirectional-glove-distsim-lower.tagger \
-		depparse.model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
 		postprocess.correctPosTags true \
-		| java -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.test.forest.json 
+
+forest_to_conll_%:
+	cat working/$*-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		> working/$*-webquestions.test.conll 
+		
+	
 
 data_to_oscar_%:
 	mkdir -p working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*
