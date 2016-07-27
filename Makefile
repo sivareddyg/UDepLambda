@@ -368,14 +368,210 @@ entity_dismabiguated_to_graphparser_forest_%:
 forest_to_conll_%:
 	cat working/$*-webquestions.dev.forest.json \
 		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		| sed -e "s/-lrb-\t-LRB-\t-LRB-/-lrb-\tSYM\tSYM/g" \
+		| sed -e "s/-rrb-\t-RRB-\t-RRB-/-rrb-\tSYM\tSYM/g" \
 		> working/$*-webquestions.dev.forest.conll 
 	cat working/$*-webquestions.train.forest.json \
 		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		| sed -e "s/-lrb-\t-LRB-\t-LRB-/-lrb-\tSYM\tSYM/g" \
+		| sed -e "s/-rrb-\t-RRB-\t-RRB-/-rrb-\tSYM\tSYM/g" \
 		> working/$*-webquestions.train.forest.conll 
 	cat working/$*-webquestions.test.forest.json \
 		| java -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		| sed -e "s/-lrb-\t-LRB-\t-LRB-/-lrb-\tSYM\tSYM/g" \
+		| sed -e "s/-rrb-\t-RRB-\t-RRB-/-rrb-\tSYM\tSYM/g" \
 		> working/$*-webquestions.test.forest.conll 
-		
+
+stanford_parse_conll_%:
+	cat working/$*-webquestions.dev.forest.conll \
+		| sed -e 's/_\t_\t_\t_$$/0\troot\t_\t_/g' \
+		> working/$*-webquestions.dev.forest.conll.tmp
+	java -cp .:lib/* edu.stanford.nlp.parser.nndep.DependencyParser \
+		-model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		-testFile working/$*-webquestions.dev.forest.conll.tmp \
+		-outFile working/$*-stanford-webquestions.dev.forest.parsed.conll
+	rm working/$*-webquestions.dev.forest.conll.tmp
+	cat working/$*-webquestions.train.forest.conll \
+		| sed -e 's/_\t_\t_\t_$$/0\troot\t_\t_/g' \
+		> working/$*-webquestions.train.forest.conll.tmp
+	java -cp .:lib/* edu.stanford.nlp.parser.nndep.DependencyParser \
+		-model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		-testFile working/$*-webquestions.train.forest.conll.tmp \
+		-outFile working/$*-stanford-webquestions.train.forest.parsed.conll
+	rm working/$*-webquestions.train.forest.conll.tmp
+	cat working/$*-webquestions.test.forest.conll \
+		| sed -e 's/_\t_\t_\t_$$/0\troot\t_\t_/g' \
+		> working/$*-webquestions.test.forest.conll.tmp
+	java -cp .:lib/* edu.stanford.nlp.parser.nndep.DependencyParser \
+		-model lib_data/ud-models-v1.3/$*/neural-parser/$*-glove50.lower.nndep.model.txt.gz \
+		-testFile working/$*-webquestions.test.forest.conll.tmp \
+		-outFile working/$*-stanford-webquestions.test.forest.parsed.conll
+	rm working/$*-webquestions.test.forest.conll.tmp
+
+merge_conll_with_forest_de-%:
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/de-$*-webquestions.dev.forest.parsed.conll \
+		working/de-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		postprocess.removeMultipleRoots true \
+		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
+		> working/de-$*-webquestions.dev.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/de-$*-webquestions.train.forest.parsed.conll \
+		working/de-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		postprocess.removeMultipleRoots true \
+		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
+		> working/de-$*-webquestions.train.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/de-$*-webquestions.test.forest.parsed.conll \
+		working/de-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		postprocess.removeMultipleRoots true \
+		| java -cp bin:lib/* deplambda.others.Stemmer de 20 \
+		> working/de-$*-webquestions.test.forest.parsed.json
+
+merge_conll_with_forest_es-%:
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/es-$*-webquestions.dev.forest.parsed.conll \
+		working/es-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		postprocess.removeMultipleRoots true \
+		| java -cp bin:lib/* deplambda.others.Stemmer es 20 \
+		> working/es-$*-webquestions.dev.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/es-$*-webquestions.train.forest.parsed.conll \
+		working/es-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		postprocess.removeMultipleRoots true \
+		| java -cp bin:lib/* deplambda.others.Stemmer es 20 \
+		> working/es-$*-webquestions.train.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/es-$*-webquestions.test.forest.parsed.conll \
+		working/es-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		postprocess.removeMultipleRoots true \
+		| java -cp bin:lib/* deplambda.others.Stemmer es 20 \
+		> working/es-$*-webquestions.test.forest.parsed.json
+
+merge_conll_with_forest_en-ptb-%:
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/en-ptb-$*-webquestions.dev.forest.parsed.conll \
+		working/en-ptb-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+        tokenize.whitespace true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		languageCode en \
+		pos.model lib_data/utb-models/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.full.tagger \
+		postprocess.removeMultipleRoots true \
+		> working/en-ptb-$*-webquestions.dev.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/en-ptb-$*-webquestions.train.forest.parsed.conll \
+		working/en-ptb-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+        tokenize.whitespace true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		languageCode en \
+		pos.model lib_data/utb-models/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.full.tagger \
+		postprocess.removeMultipleRoots true \
+		> working/en-ptb-$*-webquestions.train.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/en-ptb-$*-webquestions.test.forest.parsed.conll \
+		working/en-ptb-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+        tokenize.whitespace true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		languageCode en \
+		pos.model lib_data/utb-models/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.full.tagger \
+		postprocess.removeMultipleRoots true \
+		> working/en-ptb-$*-webquestions.test.forest.parsed.json
+
+merge_conll_with_forest_en-%:
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/en-$*-webquestions.dev.forest.parsed.conll \
+		working/en-webquestions.dev.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+        tokenize.whitespace true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		languageCode en \
+		pos.model lib_data/utb-models/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.full.tagger \
+		postprocess.removeMultipleRoots true \
+		> working/en-$*-webquestions.dev.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/en-$*-webquestions.train.forest.parsed.conll \
+		working/en-webquestions.train.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+        tokenize.whitespace true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		languageCode en \
+		pos.model lib_data/utb-models/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.full.tagger \
+		postprocess.removeMultipleRoots true \
+		> working/en-$*-webquestions.train.forest.parsed.json
+	java -cp bin:lib/* deplambda.others.MergeConllAndGraphParserFormats \
+		working/en-$*-webquestions.test.forest.parsed.conll \
+		working/en-webquestions.test.forest.json \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+        tokenize.whitespace true \
+		ssplit.newlineIsSentenceBreak always \
+		languageCode en \
+		| java -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit,pos,lemma \
+		ssplit.newlineIsSentenceBreak always \
+        tokenize.whitespace true \
+		languageCode en \
+		pos.model lib_data/utb-models/en/pos-tagger/utb-en-bidirectional-glove-distsim-lower.full.tagger \
+		postprocess.removeMultipleRoots true \
+		> working/en-$*-webquestions.test.forest.parsed.json
+
 data_to_oscar_%:
 	mkdir -p working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*
 	cat working/$*-webquestions.dev.forest.json \
@@ -408,7 +604,7 @@ merge_data_from_oscar_%:
 		> working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt
 
 deplambda_forest_%:
-	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.dev.syntaxnet.tagged.parsed.json.txt \
+	cat working/$*-webquestions.dev.forest.parsed.json \
 		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
 		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
@@ -417,8 +613,8 @@ deplambda_forest_%:
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> working/$*-webquestions.dev.forest.deplambda.json
-	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.train.syntaxnet.tagged.parsed.json.txt \
-		 | java -cp bin:lib/* deplambda.cli.RunForestTransformer \
+	cat working/$*-webquestions.train.forest.parsed.json \
+		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
 		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
 		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
@@ -426,7 +622,7 @@ deplambda_forest_%:
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> working/$*-webquestions.train.forest.deplambda.json
-	cat working/webq_multillingual_graphpaser_constrained_entity_annotations/parsed/$*/webquestions.test.syntaxnet.tagged.parsed.json.txt \
+	cat working/$*-webquestions.test.forest.parsed.json \
 		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
 		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
@@ -435,35 +631,6 @@ deplambda_forest_%:
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> working/$*-webquestions.test.forest.deplambda.json
-
-deplambda_stanford_forest_%:
-	cat working/$*-webquestions.dev.forest.json \
-		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
-		-definedTypesFile lib_data/ud.types.txt \
-		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
-		-nthreads 20  \
-		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
-		> working/$*-webquestions.dev.stanford.forest.deplambda.json
-	cat working/$*-webquestions.train.forest.json \
-		 | java -cp bin:lib/* deplambda.cli.RunForestTransformer \
-		-definedTypesFile lib_data/ud.types.txt \
-		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
-		-nthreads 20  \
-		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
-		> working/$*-webquestions.train.stanford.forest.deplambda.json
-	cat working/$*-webquestions.test.forest.json \
-		| java -cp bin:lib/* deplambda.cli.RunForestTransformer \
-		-definedTypesFile lib_data/ud.types.txt \
-		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
-		-nthreads 20  \
-		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
-		> working/$*-webquestions.test.stanford.forest.deplambda.json
 
 extract_gold_graphs_bow_dev_%:
 	mkdir -p data/gold_graphs/

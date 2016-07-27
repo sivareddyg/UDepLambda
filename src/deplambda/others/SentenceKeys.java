@@ -22,4 +22,6 @@ public class SentenceKeys extends in.sivareddy.util.SentenceKeys {
   
   public static String PENN_DEPENDENCIES_POS_TAG_CODE = "PTB";
   public static String PENN_PROPER_NOUN_TAG = "NNP";
+  
+  public static String DEFAULT_DEPENDENCY_KEY = "dep";
 }
