@@ -634,7 +634,7 @@ deplambda_forest_%:
 
 extract_gold_graphs_bow_dev_%:
 	mkdir -p data/gold_graphs/
-	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+	cat working/$*-stanford-webquestions.dev.forest.deplambda.json \
     | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
@@ -643,7 +643,7 @@ extract_gold_graphs_bow_dev_%:
         false \
         false \
         > data/gold_graphs/$*_bow_without_merge_without_expand.dev.answers.txt
-	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
+	cat working/$*-stanford-webquestions.dev.stanford.forest.deplambda.json \
     | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
@@ -655,8 +655,8 @@ extract_gold_graphs_bow_dev_%:
 
 extract_gold_graphs_bow_%:
 	mkdir -p data/gold_graphs/
-	cat working/$*-webquestions.train.stanford.forest.deplambda.json \
-        working/$*-webquestions.dev.stanford.forest.deplambda.json \
+	cat working/$*-stanford-webquestions.train.forest.deplambda.json \
+        working/$*-stanford-webquestions.dev.forest.deplambda.json \
     | java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
@@ -665,8 +665,8 @@ extract_gold_graphs_bow_%:
         false \
         false \
         > data/gold_graphs/$*_bow_without_merge_without_expand.full.answers.txt
-	#cat working/$*-webquestions.train.forest.json \
-    #    working/$*-webquestions.dev.forest.json \
+	#cat working/$*-stanford-webquestions.train.forest.deplambda.json \
+    #    working/$*-stanford-webquestions.dev.forest.deplambda.json \
     #| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
     #    data/freebase/schema/all_domains_schema.txt localhost \
     #    bow_question_graph \
@@ -718,7 +718,7 @@ extract_gold_graphs_dependency_%:
         false \
         > data/gold_graphs/$*_dependency_with_merge_without_expand.full.answers.txt
 
-extract_gold_graphs_deplambda_dev_%:
+ignore_extract_gold_graphs_deplambda_dev_%:
 	cat working/$*-webquestions.dev.forest.deplambda.json \
 		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
@@ -737,6 +737,7 @@ extract_gold_graphs_deplambda_dev_%:
 	   	false \
 		true \
 		> data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.answers.txt
+extract_gold_graphs_deplambda_dev_%:
 	cat working/$*-webquestions.dev.forest.deplambda.json \
 		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
@@ -746,6 +747,8 @@ extract_gold_graphs_deplambda_dev_%:
 	   	true \
 		false \
 		> data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.answers.txt
+
+extract_gold_graphs_deplambda_dev:
 	cat working/$*-webquestions.dev.forest.deplambda.json \
 		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
@@ -755,44 +758,6 @@ extract_gold_graphs_deplambda_dev_%:
 	   	false \
 		false \
 		> data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.answers.txt
-
-extract_gold_graphs_stanford_deplambda_dev_%:
-	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
-		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   		data/freebase/schema/all_domains_schema.txt localhost \
-		dependency_lambda \
-		data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.stanford \
-		lib_data/dummy.txt \
-	   	true \
-		true \
-		> data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.stanford.answers.txt
-	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
-		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   		data/freebase/schema/all_domains_schema.txt localhost \
-	   	dependency_lambda \
-		data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.stanford \
-		lib_data/dummy.txt \
-	   	false \
-		true \
-		> data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.stanford.answers.txt
-	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
-		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   		data/freebase/schema/all_domains_schema.txt localhost \
-		dependency_lambda \
-		data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.stanford \
-		lib_data/dummy.txt \
-	   	true \
-		false \
-		> data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.stanford.answers.txt
-	cat working/$*-webquestions.dev.stanford.forest.deplambda.json \
-		| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   		data/freebase/schema/all_domains_schema.txt localhost \
-		dependency_lambda \
-		data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.stanford \
-		lib_data/dummy.txt \
-	   	false \
-		false \
-		> data/gold_graphs/$*_deplambda_without_merge_without_expand.dev.stanford.answers.txt
 
 extract_gold_graphs_deplambda_%:
 	cat working/$*-webquestions.train.forest.deplambda.json \
@@ -835,49 +800,6 @@ extract_gold_graphs_deplambda_%:
 	#   	false \
 	#	false \
 	#	> data/gold_graphs/$*_deplambda_without_merge_without_expand.full.answers.txt
-
-extract_gold_graphs_stanford_deplambda_%:
-	cat working/$*-webquestions.train.stanford.forest.deplambda.json \
-        working/$*-webquestions.dev.stanford.forest.deplambda.json \
-	| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   		data/freebase/schema/all_domains_schema.txt localhost \
-		dependency_lambda \
-		data/gold_graphs/$*_deplambda_with_merge_with_expand.full.stanford \
-		lib_data/dummy.txt \
-	   	true \
-		true \
-		> data/gold_graphs/$*_deplambda_with_merge_with_expand.full.stanford.answers.txt
-	#cat working/$*-webquestions.train.forest.deplambda.json \
-    #    working/$*-webquestions.dev.forest.deplambda.json \
-	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   	#	data/freebase/schema/all_domains_schema.txt localhost \
-	#   	dependency_lambda \
-	#	data/gold_graphs/$*_deplambda_without_merge_with_expand.full \
-	#	lib_data/dummy.txt \
-	#   	false \
-	#	true \
-	#	> data/gold_graphs/$*_deplambda_without_merge_with_expand.full.answers.txt
-	#cat working/$*-webquestions.train.forest.deplambda.json \
-    #    working/$*-webquestions.dev.forest.deplambda.json \
-	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   	#	data/freebase/schema/all_domains_schema.txt localhost \
-	#	dependency_lambda \
-	#	data/gold_graphs/$*_deplambda_with_merge_without_expand.full \
-	#	lib_data/dummy.txt \
-	#   	true \
-	#	false \
-	#	> data/gold_graphs/$*_deplambda_with_merge_without_expand.full.answers.txt
-	#cat working/$*-webquestions.train.forest.deplambda.json \
-    #    working/$*-webquestions.dev.forest.deplambda.json \
-	#| java -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-   	#	data/freebase/schema/all_domains_schema.txt localhost \
-	#   	dependency_lambda \
-	#	data/gold_graphs/$*_deplambda_without_merge_without_expand.full \
-	#	lib_data/dummy.txt \
-	#   	false \
-	#	false \
-	#	> data/gold_graphs/$*_deplambda_without_merge_without_expand.full.answers.txt
-
 
 bow_supervised_without_merge_without_expand_%:
 	rm -rf ../working/$*_bow_supervised_without_merge_without_expand
