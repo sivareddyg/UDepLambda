@@ -343,16 +343,15 @@ public class TreeTransformerTest {
     assertTrue(TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode()));
     assertEquals(
-        "(l-ROOT w-developed t-VBD (l-nsubj w-Inc. t-NNP (l-rcmod w-found t-VB (l-wh-dobj w-which t-WP) (l-nsubj w-Jobs t-NNP) (l-dobj v-f) (l-BIND v-f)) (l-p w-, t-.)) "
-            + "(l-dobj w-shuffle t-NN) (l-p w-. t-.))", sentence.getRootNode()
-            .toString());
+        "(l-ROOT w-developed t-VBD (l-nsubj w-inc. t-NNP (l-rcmod w-found t-VB (l-wh-dobj w-which t-WP) (l-nsubj w-jobs t-NNP) (l-dobj v-f) (l-BIND v-f)) (l-p w-, t-.)) (l-dobj w-shuffle t-NN) (l-p w-. t-.))",
+        sentence.getRootNode().toString());
 
     // Binarization of tree based on relation priority.
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-Inc. (l-BIND (l-nsubj (l-wh-dobj (l-dobj w-found v-f) w-which) w-Jobs) v-f)) w-,))",
+        "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-inc. (l-BIND (l-nsubj (l-wh-dobj (l-dobj w-found v-f) w-which) w-jobs) v-f)) w-,))",
         binarizedTreeString);
 
     TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
@@ -372,7 +371,7 @@ public class TreeTransformerTest {
         TreeTransformer.composeSemantics(sentence.getRootNode(),
             relationRules.getRelationPriority(), logger, false);
     assertEquals(
-        "(lambda $0:z (exists:ex $1:z (exists:ex $2:z (and:cj (p_EVENT.ENTITY_w-developed.arg_1:epd $0 $1) (p_EVENT.ENTITY_w-developed.arg_2:epd $0 $2) (exists:ex $3:z (and:cj (p_TYPE_w-Inc.:tpd $1) (exists:ex $4:z (exists:ex $5:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:epd $3 $4) (p_EVENT.ENTITY_w-found.arg_2:epd $3 $5) (p_TYPE_w-Jobs:tpd $4) (p_TYPE_w-Inc.:tpd $5)))))) (p_TYPE_w-shuffle:tpd $2)))))",
+        "(lambda $0:z (exists:ex $1:z (exists:ex $2:z (and:cj (p_EVENT.ENTITY_w-developed.arg_1:epd $0 $1) (p_EVENT.ENTITY_w-developed.arg_2:epd $0 $2) (exists:ex $3:z (and:cj (p_TYPE_w-inc.:tpd $1) (exists:ex $4:z (exists:ex $5:z (and:cj (p_EVENT.ENTITY_w-found.arg_1:epd $3 $4) (p_EVENT.ENTITY_w-found.arg_2:epd $3 $5) (p_TYPE_w-jobs:tpd $4) (p_TYPE_w-inc.:tpd $5)))))) (p_TYPE_w-shuffle:tpd $2)))))",
         sentenceSemantics.second().get(0).toString());
   }
 
@@ -406,7 +405,7 @@ public class TreeTransformerTest {
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-Inc. (l-nsubj (l-dobj w-found w-which) w-Jobs)) w-,))",
+        "(l-nsubj (l-p (l-dobj w-developed w-shuffle) w-.) (l-p (l-rcmod w-inc. (l-nsubj (l-dobj w-found w-which) w-jobs)) w-,))",
         binarizedTreeString);
   }
 }

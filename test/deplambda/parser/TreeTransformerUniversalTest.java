@@ -416,14 +416,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-5-capital t-NOUN (l-nsubj w-2-city t-NOUN (l-det w-1-which t-DET)) (l-cop w-3-be t-VERB) (l-det w-4-the t-DET) (l-nmod w-7-US t-PROPN (l-case w-6-of t-ADP)) (l-punct w-8-? t-PUNCT))",
+        "(l-root w-5-capital t-NOUN (l-nsubj w-2-city t-NOUN (l-det w-1-which t-DET)) (l-cop w-3-be t-VERB) (l-det w-4-the t-DET) (l-nmod w-7-us t-PROPN (l-case w-6-of t-ADP)) (l-punct w-8-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-nmod (l-cop (l-det w-5-capital w-4-the) w-3-be) (l-case w-7-US w-6-of)) (l-det w-2-city w-1-which)) w-8-?)",
+        "(l-punct (l-nsubj (l-nmod (l-cop (l-det w-5-capital w-4-the) w-3-be) (l-case w-7-us w-6-of)) (l-det w-2-city w-1-which)) w-8-?)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -437,7 +437,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-5-capital:u $0) (p_EVENT_w-5-capital:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (and:c (p_TYPE_w-7-US:u $2) (p_EVENT_w-7-US:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-6-of:b $0 $2))) (and:c (and:c (p_TYPE_w-2-city:u $1) (p_EVENT_w-2-city:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (and:c (p_TYPEMOD_w-1-which:u $1) (p_TARGET:u $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-5-capital:u $0) (p_EVENT_w-5-capital:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (and:c (p_TYPE_w-7-us:u $2) (p_EVENT_w-7-us:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-6-of:b $0 $2))) (and:c (and:c (p_TYPE_w-2-city:u $1) (p_EVENT_w-2-city:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (and:c (p_TYPEMOD_w-1-which:u $1) (p_TARGET:u $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
 
     List<String> cleanedPredicates =
@@ -595,14 +595,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-3-eat t-VERB (l-nsubj w-1-I t-PRON) (l-advmod w-2-quickly t-ADV) (l-dobj w-4-bananas t-PROPN) (l-punct w-5-. t-PUNCT))",
+        "(l-root w-3-eat t-VERB (l-nsubj w-1-i t-PRON) (l-advmod w-2-quickly t-ADV) (l-dobj w-4-bananas t-PROPN) (l-punct w-5-. t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-advmod (l-dobj w-3-eat w-4-bananas) w-2-quickly) w-1-I) w-5-.)",
+        "(l-punct (l-nsubj (l-advmod (l-dobj w-3-eat w-4-bananas) w-2-quickly) w-1-i) w-5-.)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -616,14 +616,14 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-eat:u $0) (p_TYPE_w-4-bananas:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_EVENTMOD_w-2-quickly:u $0)) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-eat:u $0) (p_TYPE_w-4-bananas:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_EVENTMOD_w-2-quickly:u $0)) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[I(0:s , 0:x), eat.arg1(2:e , 0:x), eat.arg2(2:e , 3:m.bananas), quickly(1:s , 2:e)]",
+        "[eat.arg1(2:e , 0:x), eat.arg2(2:e , 3:m.bananas), i(0:s , 0:x), quickly(1:s , 2:e)]",
         cleanedPredicates.toString());
   }
 
@@ -686,14 +686,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-2-buy t-VERB (l-nsubj w-1-I t-PRON) (l-dobj w-5-table t-NOUN (l-compound w-3-hilton t-PROPN) (l-compound w-4-coffee t-NOUN)) (l-punct w-6-. t-PUNCT))",
+        "(l-root w-2-buy t-VERB (l-nsubj w-1-i t-PRON) (l-dobj w-5-table t-NOUN (l-compound w-3-hilton t-PROPN) (l-compound w-4-coffee t-NOUN)) (l-punct w-6-. t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-dobj w-2-buy (l-compound (l-compound w-5-table w-3-hilton) w-4-coffee)) w-1-I) w-6-.)",
+        "(l-punct (l-nsubj (l-dobj w-2-buy (l-compound (l-compound w-5-table w-3-hilton) w-4-coffee)) w-1-i) w-6-.)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -707,14 +707,14 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-2-buy:u $0) (and:c (exists:ex $3:<a,e> (and:c (and:c (p_TYPE_w-5-table:u $2) (p_EVENT_w-5-table:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPE_w-3-hilton:u $3) (p_EVENT.ENTITY_l-compound:b $2 $3))) (p_TYPEMOD_w-4-coffee.w-5-table:u $2)) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-2-buy:u $0) (and:c (exists:ex $3:<a,e> (and:c (and:c (p_TYPE_w-5-table:u $2) (p_EVENT_w-5-table:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPE_w-3-hilton:u $3) (p_EVENT.ENTITY_l-compound:b $2 $3))) (p_TYPEMOD_w-4-coffee.w-5-table:u $2)) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[I(0:s , 0:x), buy.arg1(1:e , 0:x), buy.arg2(1:e , 4:x), coffee.table(3:s , 4:x), table(4:s , 4:x), table.arg0(4:e , 4:x), table.compound(4:e , 2:m.hilton)]",
+        "[buy.arg1(1:e , 0:x), buy.arg2(1:e , 4:x), coffee.table(3:s , 4:x), i(0:s , 0:x), table(4:s , 4:x), table.arg0(4:e , 4:x), table.compound(4:e , 2:m.hilton)]",
         cleanedPredicates.toString());
 
     jsonSentence =
@@ -728,14 +728,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-2-like t-VERB (l-nsubj w-1-I t-PRON) (l-dobj w-5-harry t-PROPN (l-det w-3-a t-DET) (l-compound w-4-boy t-NOUN)))",
+        "(l-root w-2-like t-VERB (l-nsubj w-1-i t-PRON) (l-dobj w-5-harry t-PROPN (l-det w-3-a t-DET) (l-compound w-4-boy t-NOUN)))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-nsubj (l-dobj w-2-like (l-det (l-compound w-5-harry w-4-boy) w-3-a)) w-1-I)",
+        "(l-nsubj (l-dobj w-2-like (l-det (l-compound w-5-harry w-4-boy) w-3-a)) w-1-i)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -749,14 +749,14 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-2-like:u $0) (and:c (and:c (and:c (p_TYPE_w-5-harry:u $2) (p_EVENT_w-5-harry:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-4-boy:u $2)) (p_EMPTY:u $2)) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-2-like:u $0) (and:c (and:c (and:c (p_TYPE_w-5-harry:u $2) (p_EVENT_w-5-harry:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-4-boy:u $2)) (p_EMPTY:u $2)) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[I(0:s , 0:x), arg0(4:e , 4:m.harry), boy(3:s , 4:m.harry), like.arg1(1:e , 0:x), like.arg2(1:e , 4:m.harry)]",
+        "[arg0(4:e , 4:m.harry), boy(3:s , 4:m.harry), i(0:s , 0:x), like.arg1(1:e , 0:x), like.arg2(1:e , 4:m.harry)]",
         cleanedPredicates.toString());
   }
 
@@ -1124,14 +1124,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-movie t-NOUN (l-acl:relcl w-3-see t-VERB (l-nsubj w-2-I t-PRON) (l-dobj v-f) (l-BIND v-f)))",
+        "(l-root w-1-movie t-NOUN (l-acl:relcl w-3-see t-VERB (l-nsubj w-2-i t-PRON) (l-dobj v-f) (l-BIND v-f)))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-acl:relcl w-1-movie (l-BIND (l-nsubj (l-dobj w-3-see v-f) w-2-I) v-f))",
+        "(l-acl:relcl w-1-movie (l-BIND (l-nsubj (l-dobj w-3-see v-f) w-2-i) v-f))",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1145,14 +1145,14 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-movie:u $0) (p_EVENT_w-1-movie:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-see:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-2-I:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-movie:u $0) (p_EVENT_w-1-movie:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-see:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-2-i:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[I(1:s , 1:x), movie(0:s , 0:x), movie.arg0(0:e , 0:x), see.arg1(2:e , 1:x), see.arg2(2:e , 0:x)]",
+        "[i(1:s , 1:x), movie(0:s , 0:x), movie.arg0(0:e , 0:x), see.arg1(2:e , 1:x), see.arg2(2:e , 0:x)]",
         cleanedPredicates.toString());
 
     // no extraction
@@ -1468,14 +1468,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-3-certain t-ADJ (l-nsubj w-1-I t-PRON) (l-cop w-2-be t-VERB) (l-conj-verb w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
+        "(l-root w-3-certain t-ADJ (l-nsubj w-1-i t-PRON) (l-cop w-2-be t-VERB) (l-conj-verb w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-cop (l-conj-verb w-3-certain (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-2-be) w-1-I) w-8-.)",
+        "(l-punct (l-nsubj (l-cop (l-conj-verb w-3-certain (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-2-be) w-1-i) w-8-.)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1489,14 +1489,14 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-certain:u $2) (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-6-do:u $3) (p_TYPE_w-7-it:u $5) (p_EVENT.ENTITY_arg2:b $3 $5))) (p_TYPE_w-5-he:u $4) (p_EVENT.ENTITY_arg1:b $3 $4))) (p_CONJ:tri $0 $2 $3)))) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-certain:u $2) (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-6-do:u $3) (p_TYPE_w-7-it:u $5) (p_EVENT.ENTITY_arg2:b $3 $5))) (p_TYPE_w-5-he:u $4) (p_EVENT.ENTITY_arg1:b $3 $4))) (p_CONJ:tri $0 $2 $3)))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[I(0:s , 0:x), certain.arg1(2:e , 0:x), do.arg1(5:e , 0:x), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), it(6:s , 6:x)]",
+        "[certain.arg1(2:e , 0:x), do.arg1(5:e , 0:x), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), i(0:s , 0:x), it(6:s , 6:x)]",
         cleanedPredicates.toString());
 
 
@@ -1505,14 +1505,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-3-certain t-ADJ (l-nsubj w-1-I t-PRON) (l-cop w-2-be t-VERB) (l-ccomp w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
+        "(l-root w-3-certain t-ADJ (l-nsubj w-1-i t-PRON) (l-cop w-2-be t-VERB) (l-ccomp w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             relationRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-ccomp (l-cop w-3-certain w-2-be) (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-1-I) w-8-.)",
+        "(l-punct (l-nsubj (l-ccomp (l-cop w-3-certain w-2-be) (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-1-i) w-8-.)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1526,7 +1526,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-certain:u $0) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-6-do:u $2) (p_TYPE_w-7-it:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-5-he:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.EVENT_l-ccomp:b $0 $2))) (p_TYPE_w-1-I:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-certain:u $0) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-6-do:u $2) (p_TYPE_w-7-it:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-5-he:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.EVENT_l-ccomp:b $0 $2))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
