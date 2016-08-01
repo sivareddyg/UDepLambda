@@ -502,24 +502,44 @@ public class PostProcessLogicalForm {
       List<Integer> entityIds = new ArrayList<>();
       for (int wordId : varToEntities.get(key)) {
         JsonObject entity = sentence.getEntityAtWordIndex(wordId);
-        // It is not clear what to do in cases when a term matches to two
-        // entity sources. Current solution is to just pick the first one.
         if (entity != null) {
           int entityId =
               entity.has(SentenceKeys.ENTITY_INDEX) ? entity.get(
                   SentenceKeys.ENTITY_INDEX).getAsInt() : entity.get(
                   SentenceKeys.START).getAsInt();
           entityIds.add(entityId);
-          break;
         } else if (isNamedEntity(sentence, wordId)) {
           entityIds.add(wordId);
-          break;
         }
       }
+
+      if (entityIds.size() > 1) {
+        // Select the correct entity source.
+        for (Integer entityId : entityIds) {
+          if (isKBEntity(sentence, entityId)) {
+            entityIds = new ArrayList<>();
+            entityIds.add(entityId);
+            break;
+          }
+        }
+
+        // It is not clear what to do in cases when a term matches to two
+        // entity sources. Current solution is to just pick the first one.
+        if (entityIds.size() > 1) {
+          Integer firstEntity = entityIds.get(0);
+          entityIds = new ArrayList<>();
+          entityIds.add(firstEntity);
+        }
+      }
+
       if (entityIds.size() == 0)
         entityIds.add(varToEntities.get(key).get(0));
       varToEntities.put(key, entityIds);
     }
+  }
+
+  private static boolean isKBEntity(Sentence sentence, Integer index) {
+    return sentence.getEntityAtWordIndex(index) != null;
   }
 
   /**
