@@ -74,6 +74,6 @@ public class ConvertGraphParserSentenceToConll extends ProcessStreamInterface {
       throws IOException, InterruptedException {
     ConvertGraphParserSentenceToConll convertor =
         new ConvertGraphParserSentenceToConll();
-    convertor.processStream(System.in, null, 1, false);
+    convertor.processStream(System.in, System.out, 1, false);
   }
 }
