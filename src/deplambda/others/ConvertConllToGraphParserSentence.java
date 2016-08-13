@@ -1,10 +1,13 @@
 package deplambda.others;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,13 +21,17 @@ public class ConvertConllToGraphParserSentence {
 
   public static void convert(InputStream input, PrintStream out)
       throws IOException {
-    BufferedReader br = new BufferedReader(new InputStreamReader(input));
+    BufferedReader br =
+        new BufferedReader(new InputStreamReader(input, "UTF8"));
     JsonObject sentence = getNextSentence(br);
+    Writer writer = new OutputStreamWriter(out, "UTF-8");
+    BufferedWriter fout = new BufferedWriter(writer);
     while (sentence != null) {
-      out.println(gson.toJson(sentence));
+      fout.write(gson.toJson(sentence));
       sentence = getNextSentence(br);
     }
-    
+    br.close();
+    fout.close();
   }
 
   public static JsonObject getNextSentence(BufferedReader br) {
