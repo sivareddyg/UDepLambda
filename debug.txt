@@ -1,0 +1,28 @@
+0 [pool-1-thread-1] DEBUG: (l-aux w-4-originate w-2-did)
+3 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-4-originate:u $0))
+6 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-4-originate:u $0))
+6 [pool-1-thread-1] DEBUG: 
+
+6 [pool-1-thread-1] DEBUG: (l-nsubj (l-aux w-4-originate w-2-did) w-3-aldi)
+6 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-4-originate:u $0))
+7 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-3-aldi:u $0))
+7 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-4-originate:u $0) (p_TYPE_w-3-aldi:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7 [pool-1-thread-1] DEBUG: 
+
+8 [pool-1-thread-1] DEBUG: (l-punct (l-nsubj (l-aux w-4-originate w-2-did) w-3-aldi) w-5-?)
+8 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+8 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-4-originate:u $0) (p_TYPE_w-3-aldi:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+8 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+8 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-4-originate:u $0) (p_TYPE_w-3-aldi:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+9 [pool-1-thread-1] DEBUG: 
+
+9 [pool-1-thread-1] DEBUG: (l-mark (l-punct (l-nsubj (l-aux w-4-originate w-2-did) w-3-aldi) w-5-?) w-1-when)
+9 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+9 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-4-originate:u $0) (p_TYPE_w-3-aldi:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+9 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-1-when:u $0) (p_TARGET:u $0)))
+9 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-4-originate:u $0) (p_TYPE_w-3-aldi:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+9 [pool-1-thread-1] DEBUG: 
+
