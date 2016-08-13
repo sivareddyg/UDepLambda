@@ -64,6 +64,17 @@ rulegroup {
   name: "compound, name"
   priority: 10
   rule {
+    name: "verb particle"
+    # hang out
+    priority: 1
+    tregex: "/^l-(?:compound:prt)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+  rule {
     name: "compound between two proper nouns"
     # "Barack" "Obama"
     priority: 1
@@ -198,7 +209,7 @@ rulegroup {
   name: "nsubj"
   priority: 10
   rule {
-    name: "case"
+    name: "nsubj"
     # John shouted.
     priority: 10
     tregex: "/^l-nsubj$/=relation"
@@ -518,10 +529,21 @@ rulegroup {
     }
   }
   rule {
+    name: "adverbs that have arguments"
+    # He is "in" today"
+    priority: 15
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADV$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
     name: "advmod"
     # "genetically" modified 
     # "most" recent game
-    priority: 15
+    priority: 20
     tregex: "/^w-.*$/=word $ /^t-ADV$/"
     transformation {
       target: "word"
@@ -531,7 +553,7 @@ rulegroup {
   }
   rule {
     name: "pronouns with outgoing arcs"
-    priority: 15 
+    priority: 20 
     tregex: "/w-.*/=word $ /^t-PRON$/ $ /^l-.*$/"
     transformation {
       target: "word"
@@ -541,7 +563,7 @@ rulegroup {
   }
   rule {
     name: "pronouns with no outgoing arcs"
-    priority: 20
+    priority: 25
     tregex: "/w-.*/=word $ /^t-PRON$/"
     transformation {
       target: "word"
@@ -552,7 +574,7 @@ rulegroup {
   rule {
     name: "articles"
     # "the" car
-    priority: 20
+    priority: 25
     tregex: "/^w-.*$/=word $ /^t-DET$/"
     transformation {
       target: "word"
@@ -591,6 +613,18 @@ rulegroup {
   name: "prepositions"
   priority: 10
   rule {
+    name: "prepositions that have arguments.. probably due to parse errors" 
+    # What has MarioLopez been in?
+    # Here dep(in) = 0:root, dep(What) = in:dobj, dep(MarioLopez) = in:nsubj 
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADP$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
     name: "prepositions"
     priority: 10
     tregex: "/^w-.*/=word $ /^t-ADP$/"
@@ -606,7 +640,7 @@ rulegroup {
   # TODO: handle if, when, since, before etc.
   priority: 10
   rule {
-    name: "prepositions"
+    name: "conjunctions"
     priority: 10
     tregex: "/^w-.*/=word $ /^t-(?:CONJ|SCONJ)$/"
     transformation {
