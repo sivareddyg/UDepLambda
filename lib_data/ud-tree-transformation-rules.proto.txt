@@ -1,4 +1,34 @@
 rulegroup {
+  name: "Common Dependency Parser Errors. Use sparingly."
+  priority: 1
+  rule {
+    name: "questions wrongly tagged as mark.. Note: use sparingly"
+    priority: 1
+	# "when" did aldi originate?
+    # change the dependency relation of "when" to "advmod".
+    # (l-root w-4-originate t-VERB (l-mark w-1-when t-ADV) (l-aux w-2-did t-AUX) (l-nsubj w-3-aldi t-PROPN) (l-punct w-5-? t-PUNCT))
+    tregex: "/^l-mark$/=mark  < (/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword $ /t-(?:PRON|DET|ADV)/) > /^l-root$/"
+    transformation {
+      target: "mark"
+      action: CHANGE_LABEL 
+      label: "l-advmod"
+    }
+  }
+  rule {
+    name: "questions wrongly parsed as advcl.. Note: use sparingly"
+    priority: 1
+	# "Where" to "hang" out in Chicago?
+    # (l-root w-1-where t-ADV (l-advcl w-3-hang t-VERB (l-mark w-2-to t-PART) (l-compound:prt w-4-out t-ADP) (l-nmod w-6-chicago t-PROPN (l-case w-5-in t-ADP))) (l-punct w-7-? t-PUNCT))
+    # change the dependency relation of "hang" to "acl".
+    tregex: "/^l-advcl$/=advcl  $ (/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword $ /t-(?:PRON|DET|ADV)/) > /^l-root$/"
+    transformation {
+      target: "advcl"
+      action: CHANGE_LABEL 
+      label: "l-acl"
+    }
+  }
+}
+rulegroup {
   name: "Conjunctions"
   priority: 1
   rule {
@@ -193,7 +223,7 @@ rulegroup {
 	# what city did Obama come from?
     # TODO: Ideally this should produce same parse as "Obama comes from what city", whereas the current rule procduces "Obama comes [from] what city" where [from] is invisible.
     # (l-root w-5-come t-VERB (l-dobj w-2-city t-NOUN (l-det w-1-what t-DET)) (l-aux w-3-did t-AUX) (l-nsubj w-4-obama t-PROPN) (l-nmod w-6-from t-ADP) (l-punct w-7-? t-PUNCT))
-    tregex: "/^l-.*$/=root  < (/^l-.*$/=pobj <<  /w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword) < (/^l-nmod$/ < /^t-ADP$/ !> /^l-acl.*$/)"
+    tregex: "/^l-.*$/=root  < (/^l-.*$/=pobj <<  (/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword $ /t-(?:PRON|DET|ADV)/)) < (/^l-nmod$/ < /^t-ADP$/ !> /^l-acl.*$/)"
     transformation {
       target: "pobj"
       action: CHANGE_LABEL 
@@ -205,7 +235,7 @@ rulegroup {
     priority: 1
 	# where did Obama come from?
     # TODO: Ideally this should produce same parse as "Obama comes from where", whereas the current rule procduces "Obama comes [from] where". Here [from] is invisible.
-    tregex: "/^l-.*$/=root  < (/^l-.*$/=pobj < /w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword) < (/^l-nmod$/ < /^t-ADP$/ !> /^l-acl.*$/)"
+    tregex: "/^l-.*$/=root  < (/^l-.*$/=pobj < (/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword $ /t-(?:PRON|DET|ADV)/)) < (/^l-nmod$/ < /^t-ADP$/ !> /^l-acl.*$/)"
     transformation {
       target: "pobj"
       action: CHANGE_LABEL 
@@ -215,13 +245,13 @@ rulegroup {
 }
 rulegroup {
   name: "Control and other complement extractions - This is a hack."
-  # Always assume there is an extraction.
-  # Treat this as verb conjunction
   priority: 1
   rule {
-    name: "np conjunction"
-    # "Bill" and "Dave"
-    priority: 1
+    name: "control verbs"
+    # I want to buy laptop
+    # Always assume there is an extraction.
+    # Treat this as verb conjunction
+    priority: 5
     tregex: "/^l-(?:xcomp|ccomp|advcl)$/=relation"
     transformation {
       target: "relation"
