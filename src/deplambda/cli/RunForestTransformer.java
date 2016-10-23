@@ -1,6 +1,7 @@
 package deplambda.cli;
 
 import in.sivareddy.graphparser.cli.AbstractCli;
+import in.sivareddy.util.SentenceUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,7 +16,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 
-import deplambda.others.SentenceUtils;
 import deplambda.parser.ForestTransformerMain;
 import deplambda.parser.TreeTransformerMain;
 import deplambda.util.TransformationRuleGroups;
