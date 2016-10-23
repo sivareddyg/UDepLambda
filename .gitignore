@@ -12,3 +12,5 @@ commands*
 *.swp
 lib_data/ud-models-v1.3/
 deplambda.jar
+lib
+data
