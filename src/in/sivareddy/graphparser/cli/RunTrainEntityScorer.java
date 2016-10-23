@@ -1,7 +1,8 @@
-package deplambda.cli;
+package in.sivareddy.graphparser.cli;
 
 import in.sivareddy.graphparser.cli.AbstractCli;
 import in.sivareddy.ml.learning.StructuredPercepton;
+import in.sivareddy.util.SentenceUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,8 +15,7 @@ import joptsimple.OptionSpec;
 
 import com.google.gson.JsonObject;
 
-import deplambda.entityannotator.EntityScorer;
-import deplambda.others.SentenceUtils;
+import in.sivareddy.graphparser.util.entityannotator.EntityScorer;
 
 public class RunTrainEntityScorer extends AbstractCli {
 

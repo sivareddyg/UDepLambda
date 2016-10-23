@@ -1,10 +1,11 @@
-package deplambda.cli;
+package in.sivareddy.graphparser.cli;
 
 import in.sivareddy.graphparser.cli.AbstractCli;
 import in.sivareddy.graphparser.util.Schema;
 import in.sivareddy.graphparser.util.knowledgebase.KnowledgeBase;
 import in.sivareddy.graphparser.util.knowledgebase.KnowledgeBaseOnline;
 import in.sivareddy.ml.learning.StructuredPercepton;
+import in.sivareddy.util.SentenceUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,9 +17,8 @@ import joptsimple.OptionSpec;
 
 import com.google.gson.JsonObject;
 
-import deplambda.entityannotator.EntityDisambiguator;
-import deplambda.entityannotator.EntityScorer;
-import deplambda.others.SentenceUtils;
+import in.sivareddy.graphparser.util.entityannotator.EntityDisambiguator;
+import in.sivareddy.graphparser.util.entityannotator.EntityScorer;
 
 public class RunEntityDisambiguator extends AbstractCli {
   private OptionSpec<Boolean> useStartIndex;
