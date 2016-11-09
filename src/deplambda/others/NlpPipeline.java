@@ -2,6 +2,7 @@ package deplambda.others;
 
 import in.sivareddy.graphparser.util.EntityAnnotator;
 import in.sivareddy.graphparser.util.MergeEntity;
+import in.sivareddy.others.RenderSVG;
 import in.sivareddy.util.ProcessStreamInterface;
 
 import java.io.File;
