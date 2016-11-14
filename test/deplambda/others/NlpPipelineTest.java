@@ -23,7 +23,7 @@ public class NlpPipelineTest {
   public void tearDown() throws Exception {}
 
   @Test
-  public final void testProcessSentence() throws IOException {
+  public final void testProcessSentence() throws Exception {
     Map<String, String> options =
         ImmutableMap
             .of("annotators",
