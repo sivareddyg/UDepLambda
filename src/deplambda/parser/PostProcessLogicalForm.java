@@ -216,6 +216,9 @@ public class PostProcessLogicalForm {
         // (p_COUNT:b $0:<a,e> $1:<a,e>)
         Term countTerm = (Term) predicate.getArg(0);
         Term resultTerm = (Term) predicate.getArg(1);
+        if (!varToEntities.containsKey(countTerm)
+            || !varToEntities.containsKey(resultTerm))
+          continue;
         for (int countTermIndex : varToEntities.get(countTerm)) {
           for (int resultTermIndex : varToEntities.get(resultTerm)) {
             cleanedPredicates.add(String.format("COUNT(%d:x , %d:x)",
