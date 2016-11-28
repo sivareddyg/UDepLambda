@@ -274,7 +274,7 @@ rulegroup {
     # "give" me the "capital" of UK?
     # This happens when subj is not seen with the verb. 
     priority: 5
-    tregex: "/^l-dobj$/=relation !$ /^l-(?:nsubj|nsubjpass)$/ $ /^w-.*-(?:find|give|locate|look|name|tell)$/ $ /^t-VERB$/"
+    tregex: "/^l-dobj$/=relation !$ /^l-(?:nsubj|nsubjpass)$/ $ /^w-.*-(?:find|give|list|locate|look|name|tell)$/ $ /^t-VERB$/"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
