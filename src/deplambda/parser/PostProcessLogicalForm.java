@@ -193,8 +193,7 @@ public class PostProcessLogicalForm {
                 getEntityVar(sentence, entityIndex)));
           }
         }
-      }
-      if (basePredicate.startsWith(PredicateKeys.EVENT_EVENT_PREFIX)) {
+      } else if (basePredicate.startsWith(PredicateKeys.EVENT_EVENT_PREFIX)) {
         // (p_EVENT.EVENT_arg1:b $0:<a,e> $1:<a,e>)
         String cleanedPredicate =
             basePredicate.substring(PredicateKeys.EVENT_EVENT_PREFIX.length());
@@ -211,6 +210,16 @@ public class PostProcessLogicalForm {
           for (int argIndex : varToEvents.get(argTerm)) {
             cleanedPredicates.add(String.format("%s%s(%d:e , %d:e)",
                 lexicalizedEvent, cleanedPredicate, eventIndex, argIndex));
+          }
+        }
+      } else if (basePredicate.startsWith(PredicateKeys.COUNT_PREFIX)) {
+        // (p_COUNT:b $0:<a,e> $1:<a,e>)
+        Term countTerm = (Term) predicate.getArg(0);
+        Term resultTerm = (Term) predicate.getArg(1);
+        for (int countTermIndex : varToEntities.get(countTerm)) {
+          for (int resultTermIndex : varToEntities.get(resultTerm)) {
+            cleanedPredicates.add(String.format("COUNT(%d:x , %d:x)",
+                countTermIndex, resultTermIndex));
           }
         }
       } else if (!lexicalizePredicates
