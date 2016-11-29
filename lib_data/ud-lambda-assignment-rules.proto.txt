@@ -138,7 +138,7 @@ rulegroup {
     name: "advmod attached to question word"
     # "in" a "hat"
     priority: 5
-    tregex: "/^l-advmod$/=relation < /w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/"
+    tregex: "/^l-advmod$/=relation < /w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -255,9 +255,20 @@ rulegroup {
     }
   }
   rule {
+    name: "nsubj with cop"
+    # "Pixar" is a "company" located in CA.
+    priority: 10
+    tregex: "/^l-nsubj$/=relation $ /^l-cop$/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+  rule {
     name: "nsubj"
     # John shouted.
-    priority: 10
+    priority: 15
     tregex: "/^l-nsubj$/=relation"
     transformation {
       target: "relation"
@@ -568,7 +579,7 @@ rulegroup {
     name: "question words with parent nouns"
     # ["which" city] as opposed to [the car "which"] or ["which" is]
     priority: 1
-    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ > /l-(?:det|amod)/ $ /t-(?:PRON|DET|ADV)/"
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ > /l-(?:det|amod)/ $ /t-(?:PRON|DET|ADV)/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -579,7 +590,7 @@ rulegroup {
     name: "question words with no parent noun but has outgoing arcs"
     # "where" in california
     priority: 5
-    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /^l-.*$/ $ /t-(?:PRON|DET|ADV)/"
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /^l-.*$/ $ /t-(?:PRON|DET|ADV)/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -590,7 +601,7 @@ rulegroup {
     name: "question words with no parent noun"
     # "what" is the capital of US?
     priority: 10
-    tregex: "/w-.*-(?:what|when|who|where|which|how|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /t-(?:PRON|DET|ADV)/"
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /t-(?:PRON|DET|ADV)/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
