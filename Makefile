@@ -1132,7 +1132,7 @@ deplambda_without_merge_with_expand_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1201,7 +1201,7 @@ deplambda_with_merge_with_expand.4.3_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1273,7 +1273,7 @@ test_deplambda_with_merge_with_expand.21_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1345,7 +1345,7 @@ deplambda_with_merge_with_expand.22_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1417,7 +1417,7 @@ deplambda_with_hyperexpand.22_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -1490,7 +1490,7 @@ deplambda_with_hyperexpand.22.stem_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -1563,7 +1563,7 @@ deplambda_without_merge_without_expand.23_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1635,7 +1635,7 @@ deplambda_with_merge_with_expand.23_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1707,7 +1707,7 @@ deplambda_with_merge_with_expand.24_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1779,7 +1779,7 @@ deplambda_with_hyperexpand.24_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -1852,7 +1852,7 @@ deplambda_without_merge_with_expand.24_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1924,7 +1924,7 @@ deplambda_without_merge_without_expand.24_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -1996,7 +1996,7 @@ deplambda_without_merge_without_expand.26_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -2069,7 +2069,7 @@ deplambda_without_merge_without_expand.25_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2141,7 +2141,7 @@ deplambda_with_merge_with_expand.25_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2214,7 +2214,7 @@ test_deplambda_with_merge_with_expand.20_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2286,7 +2286,7 @@ deplambda_without_merge_with_expand.27_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2358,7 +2358,7 @@ deplambda_without_merge_with_expand.28_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2430,7 +2430,7 @@ deplambda_without_merge_with_expand.29_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2503,7 +2503,7 @@ deplambda_without_merge_without_expand.30_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2576,7 +2576,7 @@ deplambda_without_merge_with_expand.30_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2649,7 +2649,7 @@ deplambda_with_merge_without_expand.30_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2722,7 +2722,7 @@ deplambda_with_merge_with_expand.30_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -2795,7 +2795,7 @@ deplambda_with_hyperexpand.30_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -2869,7 +2869,7 @@ deplambda_with_merge_with_expand.31_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-useHyperExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -2944,7 +2944,7 @@ deplambda_with_hyperexpand.31_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3019,7 +3019,7 @@ deplambda_with_hyperexpand.31.stem_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3094,7 +3094,7 @@ deplambda_with_hyperexpand.32_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3169,7 +3169,7 @@ test_deplambda_with_hyperexpand.32_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3245,7 +3245,7 @@ dependency_with_hyperexpand.32_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3320,7 +3320,7 @@ test_dependency_with_hyperexpand.32_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3396,7 +3396,7 @@ deplambda_with_hyperexpand.32.stem_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3471,7 +3471,7 @@ test_deplambda_with_hyperexpand.32.stem_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges false \
-	-useBackOffGraph false \
+	-useExpand false \
 	-useHyperExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3547,7 +3547,7 @@ deplambda_with_merge_with_expand.32.stem_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-useHyperExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3622,7 +3622,7 @@ deplambda_with_merge_with_expand.32_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-useHyperExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
@@ -3697,7 +3697,7 @@ test_deplambda_with_merge_with_expand.19_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -3770,7 +3770,7 @@ test_deplambda_with_merge_with_expand.18_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -3844,7 +3844,7 @@ test_deplambda_with_merge_with_expand.17_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -3917,7 +3917,7 @@ deplambda_with_merge_with_expand.17_1_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -3990,7 +3990,7 @@ deplambda_with_merge_with_expand.17_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4063,7 +4063,7 @@ test_deplambda_with_merge_with_expand.16_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4136,7 +4136,7 @@ deplambda_with_merge_with_expand.16_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4209,7 +4209,7 @@ test_deplambda_with_merge_with_expand.15_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4281,7 +4281,7 @@ deplambda_with_merge_with_expand.15_1_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4354,7 +4354,7 @@ deplambda_with_merge_with_expand.15_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4424,7 +4424,7 @@ deplambda_with_merge_with_expand.14_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
     -evaluateOnlyTheFirstBest true \
 	-entityScoreFlag true \
@@ -4496,7 +4496,7 @@ deplambda_with_merge_with_expand.13_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4567,7 +4567,7 @@ deplambda_with_merge_with_expand.12_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4636,7 +4636,7 @@ deplambda_with_merge_with_expand.11_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4705,7 +4705,7 @@ deplambda_with_merge_with_expand.10_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4776,7 +4776,7 @@ deplambda_with_merge_with_expand.9.1_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4845,7 +4845,7 @@ deplambda_with_merge_with_expand.8_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4915,7 +4915,7 @@ deplambda_with_merge_with_expand.6_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -4985,7 +4985,7 @@ deplambda_without_merge_without_expand_%:
 	-useGoldRelations true \
 	-allowMerging false \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -5054,7 +5054,7 @@ deplambda_with_merge_without_expand_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph false \
+	-useExpand false \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
@@ -5123,7 +5123,7 @@ test_deplambda_with_merge_with_expand_%:
 	-useGoldRelations true \
 	-allowMerging true \
 	-handleEventEventEdges true \
-	-useBackOffGraph true \
+	-useExpand true \
 	-evaluateBeforeTraining false \
 	-entityScoreFlag true \
 	-entityWordOverlapFlag false \
