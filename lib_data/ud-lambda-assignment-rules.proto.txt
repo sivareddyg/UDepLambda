@@ -256,8 +256,19 @@ rulegroup {
   }
   rule {
     name: "nsubj with cop"
-    # "Pixar" is a "company" located in CA.
+    # what "companies" are in "CA"?
     priority: 10
+    tregex: "/^l-nsubj$/=relation $ /^l-cop$/ $ (/^l-case$/ < /^w-.*$/=casemarker)"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg1.{casemarker}:b $e $x))))))"
+    }
+  }
+  rule {
+    name: "nsubj with cop"
+    # "Pixar" is a "company" located in CA.
+    priority: 15
     tregex: "/^l-nsubj$/=relation $ /^l-cop$/"
     transformation {
       target: "relation"
@@ -268,7 +279,7 @@ rulegroup {
   rule {
     name: "nsubj"
     # John shouted.
-    priority: 15
+    priority: 20
     tregex: "/^l-nsubj$/=relation"
     transformation {
       target: "relation"
