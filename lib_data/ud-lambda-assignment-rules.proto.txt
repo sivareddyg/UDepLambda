@@ -266,17 +266,6 @@ rulegroup {
     }
   }
   rule {
-    name: "nsubj with cop"
-    # "Pixar" is a "company" located in CA.
-    priority: 15
-    tregex: "/^l-nsubj$/=relation $ /^l-cop$/"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
-    }
-  }
-  rule {
     name: "nsubj"
     # John shouted.
     priority: 20
