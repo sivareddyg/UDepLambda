@@ -791,14 +791,56 @@ public class TreeTransformerUniversalTest {
     
     assertEquals(2, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-4-live:u $0) (and:c (p_TYPE_w-6-us:u $2) (p_EVENT_w-6-us:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $0 $2))) (exists:ex $3:<a,e> (and:c (and:c (p_TYPE_w-3-people:u $1) (p_EVENT_w-3-people:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (and:c (p_TYPEMOD_w-2-many:u $3) (and:c (p_TYPE_w-1-how:u $3) (p_TARGET:u $3))) (p_COUNT:b $1 $3))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-4-live:u $0) (and:c (p_TYPE_w-6-us:u $2) (p_EVENT_w-6-us:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $0 $2))) (and:c (and:c (p_TYPE_w-3-people:u $1) (p_EVENT_w-3-people:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (exists:ex $3:<a,e> (and:c (p_TYPEMOD_w-2-many:u $1) (and:c (p_TYPE_w-1-how:u $3) (p_TARGET:u $3)) (p_COUNT:b $1 $3)))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[COUNT(2:x , 0:x), QUESTION(0:x), arg0(5:e , 5:m.us), how(0:s , 0:x), live.arg1(3:e , 2:x), live.nmod.in(3:e , 5:m.us), many(1:s , 0:x), people(2:s , 2:x), people.arg0(2:e , 2:x)]",
+        "[COUNT(2:x , 0:x), QUESTION(0:x), arg0(5:e , 5:m.us), how(0:s , 0:x), live.arg1(3:e , 2:x), live.nmod.in(3:e , 5:m.us), many(1:s , 2:x), people(2:s , 2:x), people.arg0(2:e , 2:x)]",
+        cleanedPredicates.toString());
+    
+    jsonSentence =
+        jsonParser
+            .parse(
+                "{\"words\": [{\"index\": 1, \"head\": 2, \"word\": \"Cu\\u00e1ntos\", \"dep\": \"det\", \"pos\": \"DET\", \"lemma\": \"cu\\u00e1ntos\", \"ner\": \"O\"}, {\"index\": 2, \"head\": 3, \"word\": \"personas\", \"dep\": \"nsubj\", \"pos\": \"NOUN\", \"lemma\": \"personas\", \"ner\": \"O\"}, {\"index\": 3, \"head\": 0, \"word\": \"viven\", \"dep\": \"root\", \"pos\": \"VERB\", \"lemma\": \"viven\", \"ner\": \"O\"}, {\"index\": 4, \"head\": 5, \"word\": \"en\", \"dep\": \"case\", \"pos\": \"ADP\", \"lemma\": \"en\", \"ner\": \"O\"}, {\"index\": 5, \"head\": 3, \"word\": \"Italia\", \"dep\": \"nmod\", \"pos\": \"PROPN\", \"lemma\": \"italia\", \"ner\": \"LUG\"}, {\"index\": 6, \"head\": 3, \"word\": \"?\", \"dep\": \"punct\", \"pos\": \"PUNCT\", \"sentEnd\": true, \"lemma\": \"?\", \"ner\": \"O\"}], \"sentence\": \"Cu\\u00e1ntas personas viven en Italia?\"}")
+            .getAsJsonObject();
+    sentence = new Sentence(jsonSentence);
+    
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-3-viven t-VERB (l-nsubj w-2-personas t-NOUN (l-det w-1-cuántos t-DET)) (l-nmod w-5-italia t-PROPN (l-case w-4-en t-ADP)) (l-punct w-6-? t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            relationRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-nmod w-3-viven (l-case w-5-italia w-4-en)) (l-det w-2-personas w-1-cuántos)) w-6-?)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            relationRules.getRelationPriority(), false);
+    
+    assertEquals(2, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-viven:u $0) (and:c (p_TYPE_w-5-italia:u $2) (p_EVENT_w-5-italia:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-4-en:b $0 $2))) (exists:ex $3:<a,e> (and:c (and:c (p_TYPE_w-2-personas:u $1) (p_EVENT_w-2-personas:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (and:c (p_TYPEMOD_w-1-cuántos:u $3) (p_TARGET:u $3)) (p_COUNT:b $1 $3) (p_TYPE_w-1-cuántos:u $3))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[COUNT(1:x , 0:x), QUESTION(0:x), arg0(4:e , 4:m.italia), cuántos(0:s , 0:x), personas(1:s , 1:x), personas.arg0(1:e , 1:x), viven.arg1(2:e , 1:x), viven.nmod.en(2:e , 4:m.italia)]",
         cleanedPredicates.toString());
   }
   
