@@ -1,0 +1,746 @@
+########### dependency relation rules #########
+rulegroup {
+  name: "nmod"
+  priority: 5
+  rule {
+    name: "nmod with a case marker"
+    # "saw" with a "telescope"
+    # "cat" in a "hat"
+    priority: 5
+    tregex: "/^l-(nmod|nmod:poss)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod.{casemarker}:b $e $x))))))"
+    }
+  }
+  rule {
+    name: "nmod and its variants"
+    # don't confuse this relation with nn in stanford dependencies.
+    # no seprate handling for tmod or npmod.
+    # 65 "years" "old"
+    # 6 "feet" "long"
+    # "$5" a "share"
+    # TODO: handle nmod seperately when the child is a verb, e.g., "eased" a "fraction"
+    priority: 10
+    tregex: "/^l-(?:nmod|nmod.*)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "acl"
+  priority: 10
+  rule {
+    name: "acl, acl:relcl"
+	# country Darwin belongs to
+	# movie which Cameron directed
+	# the movie which won Oscar
+    priority: 1
+    tregex: "/^l-(?:acl|acl:relcl)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+  rule {
+    name: "other acl-other cases"
+	# Cases which do not involve extractions
+	# the "issues" as he "sees" them
+    priority: 1
+    tregex: "/^l-acl-other$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $y $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "compound, name"
+  priority: 10
+  rule {
+    name: "verb particle"
+    # hang out
+    priority: 1
+    tregex: "/^l-(?:compound:prt)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+  rule {
+    name: "compound between two proper nouns"
+    # "Barack" "Obama"
+    priority: 1
+    tregex: "/^l-(?:compound|name)$/=relation $ /t-PROPN/ < /t-PROPN/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+  rule {
+    name: "compound from a noun to proper noun"
+    # "Hilton" "hotel"
+    priority: 5
+    tregex: "/^l-compound$/=relation < /t-PROPN/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $x $y))))))"
+    }
+  }
+  rule {
+    name: "compound from noun to noun"
+    # "coffee" "table"
+    priority: 10
+    tregex: "/^l-compound$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "advmod"
+  priority: 10
+  rule {
+    name: "advmod attached to question word"
+    # "in" a "hat"
+    priority: 5
+    tregex: "/^l-advmod$/=relation < /w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $x $y))))))"
+    }
+  }
+  rule {
+    name: "other advmod"
+    priority: 10
+    tregex: "/^l-advmod$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "case"
+  priority: 10
+  rule {
+    name: "case"
+    # "in" a "hat"
+    priority: 10
+    tregex: "/^l-case$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "cc"
+  priority: 10
+  rule {
+    name: "cc"
+    # "Bill" "and" Dave
+    priority: 10
+    tregex: "/^l-cc$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y))))))"
+    }
+  }
+}
+rulegroup {
+  name: "conj"
+  priority: 10
+  rule {
+    name: "conj-np, conj-vp, conj-verb"
+    # "Bill" and "Dave"
+    priority: 10
+    tregex: "/^l-conj-(?:np|vp|verb|sent)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $z:v (exists:ex $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_CONJ:tri $z $x $y)))))))"
+    }
+  }
+  rule {
+    name: "conj-adj"
+    # "quick" and "fast"
+    # TODO: The reply was quick and fast.
+    priority: 10
+    tregex: "/^l-conj-adj$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "cop"
+  priority: 10
+  rule {
+    name: "case"
+    # John "is" "old".
+    priority: 10
+    tregex: "/^l-cop$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "nsubj"
+  priority: 10
+  rule {
+    name: "nsubj from question word to number"
+    # "what" is the "number" of cities in France?
+    # This could be a parse mistake since the head word should be the number here?
+    priority: 5
+    tregex: "/^l-nsubj$/=relation < /^w-.*-(?:count|number|total|anzahl|número|numero)$/ < /^t-NOUN$/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+  rule {
+    name: "nsubj from number to question word"
+    # "what" is the "number" of cities in France?
+    priority: 5
+    tregex: "/^l-nsubj$/=relation $ /w-.*-(?:count|number|total|anzahl|número|numero)/ $ /^t-NOUN$/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+  rule {
+    name: "nsubj with cop"
+    # what "companies" are in "CA"?
+    priority: 10
+    tregex: "/^l-nsubj$/=relation $ /^l-cop$/ $ (/^l-case$/ < /^w-.*$/=casemarker)"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg1.{casemarker}:b $e $x))))))"
+    }
+  }
+  rule {
+    name: "nsubj"
+    # John shouted.
+    priority: 20
+    tregex: "/^l-nsubj$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg1:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "dobj"
+  priority: 5
+  rule {
+    name: "dobj when posed as a question"
+    # "give" me the "capital" of UK?
+    # This happens when subj is not seen with the verb. 
+    priority: 5
+    tregex: "/^l-dobj$/=relation !$ /^l-(?:nsubj|nsubjpass)$/ $ /^w-.*-(?:find|give|list|locate|look|name|tell|finden|finde|geben|gib|liste|suchen|schauen|nennen|erzählen|encontrar|encontrarnos|bien|dame|darnos|dar|lista|localizar|localiza|localizarme|mira|mirame|buscar|nombre|nombrar|dime|cuéntanos)$/ $ /^t-VERB$/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg2:b $e $x) (p_TARGET:u $x))))))"
+    }
+  }
+  rule {
+    name: "dobj"
+    # "read" the "article".
+    priority: 10
+    tregex: "/^l-dobj$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg2:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "nsubjpass"
+  priority: 10
+  rule {
+    name: "case"
+    # John shouted.
+    priority: 10
+    tregex: "/^l-nsubjpass$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_arg2:b $e $x))))))"
+    }
+  }
+}
+rulegroup {
+  name: "appos"
+  priority: 10
+  rule {
+    name: "appositives"
+    # "John", my "friend", 
+    priority: 10
+    tregex: "/^l-appos$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "det"
+  priority: 10
+  rule {
+    name: "articles, question words"
+    # The city
+    # which city
+    priority: 5
+    tregex: "/^l-det$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "amod"
+  priority: 10
+  rule {
+    name: "verb acting as adjectival modifier"
+    # I ate a hand "made" "sandwich".
+    priority: 1
+    tregex: "/^l-amod$/=relation < /t-VERB/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $y $x))))))"
+    }
+  }
+  rule {
+    name: "adjectival modifiers attached to verbs"
+    # "red" "car"
+    priority: 15
+    tregex: "/^l-amod$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+    }
+  }
+}
+rulegroup {
+  name: "auxilary verbs"
+  priority: 10
+  rule {
+    name: "punct"
+    # "Yahoo" "!"
+    priority: 10
+    tregex: "/^l-aux.*$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "xcomp"
+  # TODO: handle extractions
+  priority: 10
+  rule {
+    name: "xcomp"
+    # Sue "asked" George to "respond" to her offfer
+    priority: 10
+    tregex: "/^l-xcomp$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.EVENT_{relation}:b $x $y))))))"
+    }
+  }
+}
+rulegroup {
+  name: "other complements"
+  priority: 10
+  rule {
+    name: "ccomp, advcl"
+    # I am "certain" that he "did" it.
+    # If you "know" who did it , you should "tell" the teacher
+    # TODO: in advcl, include the conditional predicates, e.g., if, when, inorder to, before, after etc.
+    priority: 10
+    tregex: "/^l-(?:ccomp|advcl|parataxis)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.EVENT_{relation}:b $x $y))))))"
+    }
+  }
+}
+rulegroup {
+  name: "mark"
+  priority: 10
+  rule {
+    name: "mark"
+    # Forces engaged in fighting "after" insurgents attacked
+    # He says "that" you like to "swim"
+    priority: 10
+    tregex: "/^l-mark$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "punctuations"
+  priority: 10
+  rule {
+    name: "punct"
+    # "Yahoo" "!"
+    priority: 10
+    tregex: "/^l-punct$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v ($f $x))))"
+    }
+  }
+}
+rulegroup {
+  name: "BIND"
+  priority: 10
+  rule {
+    name: "BIND"
+    priority: 10
+    tregex: "/^l-BIND$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "empty:bind"
+    }
+  }
+}
+rulegroup {
+  name: "defaults"
+  priority: 100
+  rule {
+    name: "punct"
+    # "Yahoo" "!"
+    priority: 10
+    tregex: "/^l-.*$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $x $y))))))"
+    }
+  }
+}
+
+########### lexical rules #########
+rulegroup {
+  name: "verbs and auxilary verbs"
+  priority: 10
+  rule {
+    name: "verb"
+    # saw
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:VERB)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "auxilary verbs"
+    # was
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:AUX)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "nouns and proper nouns"
+  priority: 10
+  rule {
+    name: "noun with incoming l-compound from commoun nouns"
+    # "cofee" table
+    # should not match "boy" in "boy David"
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN)$/ > (l-compound $ /w-.*/=head !$ /t-PROPN/)"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}.{head}:u $x))"
+    }
+  }
+  rule {
+    name: "noun with incoming l-compound"
+    # "boy" David
+    priority: 5
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN)$/ > l-compound"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "nouns with an outgoing arc"
+    # "movie" in 2010
+    priority: 10
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN|PROPN)$/ $ /l-.*/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
+    }
+  }
+  rule {
+    name: "rest of the nouns"
+    # movie
+    priority: 15
+    tregex: "/^w-.*$/=word $ /^t-(?:NOUN|PROPN)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPE_{word}:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "articles, question words, advmods, pronouns, adjectives"
+  priority: 10 
+  rule {
+    name: "question words with parent nouns"
+    # ["which" city] as opposed to [the car "which"] or ["which" is]
+    priority: 1
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ > /l-(?:det|amod)/ $ /t-(?:PRON|DET|ADV|ADJ)/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPEMOD_{word}:u $x) (p_TARGET:u $x)))"
+    }
+  }
+  rule {
+    name: "question words with no parent noun but has outgoing arcs"
+    # "where" in california
+    priority: 5
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /^l-.*$/ $ /t-(?:PRON|DET|ADV|ADJ)/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x) (p_TARGET:u $x)))"
+    }
+  }
+  rule {
+    name: "question words with no parent noun"
+    # "what" is the capital of US?
+    priority: 10
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /t-(?:PRON|DET|ADV|ADJ)/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_TARGET:u $x)))"
+    }
+  }
+  rule {
+    name: "adverbs that have arguments"
+    # He is "in" today"
+    priority: 15
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADV$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "adjectives that have arguments"
+    # John is "happy"
+    # 65 years "old"
+    priority: 15
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADJ$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "advmod"
+    # "genetically" modified 
+    # "most" recent game
+    priority: 20
+    tregex: "/^w-.*$/=word $ /^t-ADV$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENTMOD_{word}:u $x)))"
+    }
+  }
+  rule {
+    name: "adjectives"
+    priority: 20
+    tregex: "/^w-.*/=word $ /^t-ADJ$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "pronouns with outgoing arcs"
+    priority: 20 
+    tregex: "/w-.*/=word $ /^t-PRON$/ $ /^l-.*$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
+    }
+  }
+  rule {
+    name: "pronouns with no outgoing arcs"
+    priority: 25
+    tregex: "/w-.*/=word $ /^t-PRON$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPE_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "articles"
+    # "the" car
+    priority: 25
+    tregex: "/^w-.*$/=word $ /^t-DET$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "prepositions"
+  priority: 10
+  rule {
+    name: "prepositions that have arguments.. probably due to parse errors" 
+    # What has MarioLopez been in?
+    # Here dep(in) = 0:root, dep(What) = in:dobj, dep(MarioLopez) = in:nsubj 
+    priority: 1
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADP$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EVENT_{word}:u $x))"
+    }
+  }
+  rule {
+    name: "prepositions"
+    priority: 10
+    tregex: "/^w-.*/=word $ /^t-ADP$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "conjunction words"
+  # TODO: handle if, when, since, before etc.
+  priority: 10
+  rule {
+    name: "conjunctions"
+    priority: 10
+    tregex: "/^w-.*/=word $ /^t-(?:CONJ|SCONJ)$/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "punctuations"
+  priority: 20
+  rule {
+    name: "punctuations"
+    priority: 10
+    tregex: "/^w-.*/=word > l-punct"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "default words"
+  priority: 30
+  rule {
+    name: "words with children" 
+    priority: 10
+    tregex: "/^w-.*/=word $ /l-.*/"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (and:c (p_TYPE_{word}:u $x) (p_EVENT_{word}:u $x) (p_EVENT.ENTITY_arg0:b $x $x)))"
+    }
+  }
+  rule {
+    name: "words"
+    priority: 20
+    tregex: "/^w-.*/=word"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_TYPEMOD_{word}:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "virtual"
+  priority: 1
+  rule {
+    name: "virtual default"
+    priority: 1
+    tregex: "/v-.*/=target"
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "{target}:w"
+    }
+  }
+}
