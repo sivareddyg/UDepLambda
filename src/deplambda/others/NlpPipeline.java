@@ -4,6 +4,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Appender;
+import org.apache.log4j.FileAppender;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
+
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -25,7 +31,7 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
       "deplambda.relationPrioritiesFile";
   public static String DEPLAMBDA_LAMBDA_ASSIGNMENT_RULES_FILE =
       "deplambda.lambdaAssignmentRulesFile";
-  public static String DEPLAMBDA_DEBUG = "deplambda.debug";
+  public static String DEPLAMBDA_DEBUG_TO_FILE = "deplambda.debugToFile";
 
   TreeTransformerMain treeTransformer = null;
   private Map<String, String> options;
@@ -35,7 +41,7 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
     System.err.println(options);
     this.options = options;
 
-    if (options.containsKey(DEPLAMBDA)) {
+    if (options.containsKey(DEPLAMBDA) && options.get(DEPLAMBDA).equals("true")) {
       System.err.println("Loading DepLambda Model.. ");
       try {
         MutableTypeRepository types =
@@ -71,10 +77,22 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
         Boolean lexicalizePredicates =
             Boolean.parseBoolean(options.getOrDefault(
                 DEPLAMBDA_LEXICALIZE_PREDICATES, "true"));
+        
+        Logger logger = null;
+        if (options.containsKey(DEPLAMBDA_DEBUG_TO_FILE)
+            && !options.get(DEPLAMBDA_DEBUG_TO_FILE).trim().equals("")) {
+          logger = Logger.getLogger(getClass());
+          PatternLayout layout = new PatternLayout("%r [%t] %-5p: %m%n");
+          logger.setLevel(Level.DEBUG);
+          logger.setAdditivity(false);
+          Appender fileAppender =
+              new FileAppender(layout, options.get(DEPLAMBDA_DEBUG_TO_FILE));
+          logger.addAppender(fileAppender);
+        }
 
         treeTransformer =
             new TreeTransformerMain(treeTransformationRules,
-                relationPrioritiesRules, lambdaAssignmentRules, null,
+                relationPrioritiesRules, lambdaAssignmentRules, logger,
                 lexicalizePredicates);
         System.err.println("Loaded DepLambda Model.. ");
       } catch (IOException e) {
