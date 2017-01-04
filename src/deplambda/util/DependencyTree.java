@@ -135,6 +135,10 @@ public class DependencyTree extends LabeledScoredTreeNode {
           heads.put(adjustedCurrentIndex, adjustedHeadIndex);
           DependencyTree parent = nodes.get(adjustedHeadIndex);
           DependencyTree current = nodes.get(adjustedCurrentIndex);
+          if (adjustedCurrentIndex != i) {
+            // Incoming arc label is attached to the head of the entity.
+            current.setValue(nodes.get(i).value());
+          }
           parent.addChild(current);
         }
       }

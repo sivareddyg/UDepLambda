@@ -789,7 +789,7 @@ public class TreeTransformerUniversalTest {
         TreeTransformer.composeSemantics(sentence.getRootNode(),
             relationRules.getRelationPriority(), false);
     
-    assertEquals(2, sentenceSemantics.second().size());
+    assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
         "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-4-live:u $0) (and:c (p_TYPE_w-6-us:u $2) (p_EVENT_w-6-us:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $0 $2))) (and:c (and:c (p_TYPE_w-3-people:u $1) (p_EVENT_w-3-people:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (exists:ex $3:<a,e> (and:c (p_TYPEMOD_w-2-many:u $1) (and:c (p_TYPE_w-1-how:u $3) (p_TARGET:u $3)) (p_COUNT:b $1 $3)))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
@@ -831,7 +831,7 @@ public class TreeTransformerUniversalTest {
         TreeTransformer.composeSemantics(sentence.getRootNode(),
             relationRules.getRelationPriority(), false);
     
-    assertEquals(2, sentenceSemantics.second().size());
+    assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
         "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-viven:u $0) (and:c (p_TYPE_w-5-italia:u $2) (p_EVENT_w-5-italia:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EVENT.ENTITY_l-nmod.w-4-en:b $0 $2))) (exists:ex $3:<a,e> (and:c (and:c (p_TYPE_w-2-personas:u $1) (p_EVENT_w-2-personas:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (and:c (p_TYPEMOD_w-1-cuántos:u $3) (p_TARGET:u $3)) (p_COUNT:b $1 $3) (p_TYPE_w-1-cuántos:u $3))) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
