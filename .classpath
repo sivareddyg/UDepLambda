@@ -3,11 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/stanford-tregex-3.5.1.jar" sourcepath="lib/stanford-tregex-2015-01-30/stanford-tregex-3.5.1-sources.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:platform:/resource/deplambda/lib/stanford-tregex-2015-01-30/stanford-tregex-3.5.1-javadoc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="lib" path="lib/protobuf-java-2.6.1.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.2.jar"/>
 	<classpathentry kind="lib" path="lib/maltparser-1.8.1.jar"/>
@@ -68,5 +63,6 @@
 	<classpathentry kind="lib" path="lib/lucene-core-6.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/stanford-german-2016-01-19-models.jar"/>
 	<classpathentry kind="lib" path="lib/whatswrong-0.2.4.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-tregex-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
