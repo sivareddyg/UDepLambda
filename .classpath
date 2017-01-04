@@ -13,7 +13,6 @@
 	<classpathentry kind="lib" path="lib/maltparser-1.8.1.jar"/>
 	<classpathentry kind="lib" path="lib/liblinear-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="lib/whatswrong-0.2.5-SNAPSHOT-standalone.jar"/>
 	<classpathentry kind="lib" path="lib/batik-ext-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/batik-svggen-1.8.jar"/>
 	<classpathentry kind="lib" path="lib/batik-xml-1.8.jar"/>
@@ -62,7 +61,12 @@
 	<classpathentry kind="lib" path="lib/mtj-1.0-snapshot.jar"/>
 	<classpathentry kind="lib" path="lib/jregex1.2_01-src.jar"/>
 	<classpathentry kind="lib" path="lib/fastutil-6.5.15.jar"/>
-	<classpathentry kind="lib" path="lib/lucene-analyzers-3.6.2.jar"/>
 	<classpathentry kind="src" path="/graph-parser"/>
+	<classpathentry kind="lib" path="lib/ejml-0.25.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.11.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-analyzers-common-6.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/lucene-core-6.3.0.jar"/>
+	<classpathentry kind="lib" path="lib/stanford-german-2016-01-19-models.jar"/>
+	<classpathentry kind="lib" path="lib/whatswrong-0.2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
