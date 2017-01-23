@@ -1,7 +1,8 @@
 #Brief guide to simplified logical form
 
 Consider the utterance:
-  Pixar, the company which Disney acquired, made Ratatouille.
+
+    Pixar, the company which Disney acquired, made Ratatouille.
 
 DepLambda will produce the following neo-Davidsonian representation:
 
