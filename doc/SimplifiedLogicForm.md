@@ -15,10 +15,15 @@ DepLambda will produce the following neo-Davidsonian representation:
     (p_EQUAL:<<a,e>,<<a,e>,t>> $1 $5) (p_EVENT.ENTITY_arg2:b $3 $5))) (p_TYPE_w-6-disney:u $4) 
     (p_EVENT.ENTITY_arg1:b $3 $4)))))) (p_EVENT.ENTITY_arg1:b $0 $1))))
 
-This can be a bit hard to read -- predicate symbols are adorned with type information,
-predicate names are complex: constructed from kind information (e.g. `EVENT.ENTITY`),
-and the actual predicate name (`arg0`). 
-DepLambda also produces the following simplified logical form:
+This can be a bit hard to read -- new existential variables are introduced (`$1`, `$2`, etc), the
+variables (and predicate symbols) are adorned with type information, 
+predicate names are complex (constructed, e.g., from kind information such as `EVENT.ENTITY`
+and the actual predicate name, `arg0`). Further, there are equality constraints (`(p_EQUAL:<<a,e>,<<a,e>,t>> $1 $5)`) 
+which should really be simplified away, and predications arising from the way in which the formula was constructed
+(`(p_EMPTY:u $6)`) which have no logical import and should be eliminated.
+
+DepLambda takes care of these issues. It walks the form above and produces the following simplified 
+conjunction of atomic formulas:
 
     [["company(3:e)","made(8:e)","arg1(6:e , 5:m.disney)","pixar(3:e)","arg2(8:e , 9:m.ratatouille)",
     "acquired(6:e)","arg2(6:e , 0:m.pixar)","arg0(3:e , 0:m.pixar)","company(3:s , 0:m.pixar)",
@@ -27,11 +32,15 @@ DepLambda also produces the following simplified logical form:
 Here is what is going on. The neo-Davidsonian representation typically starts 
 with a lambda expression, following by a logical formula that consists of 
 interleaved existentials and conjunctions of unary and binary atomic formulas. 
-The simplified logical form gets rid of the existential prefix by replacing 
-variables with Skolem constants whose names carry the index (minus 1) of the word
-in the utterance they stand for, and their types. The type (`:x`, `:s`, `:e`, `:m`) 
-is obtained from the kind information in the predication in which the variable
-has the "defining" occurrence.
+The simplified logical form gets rid of the existentials by exploiting the 
+idea that each variable typically occurs as the sole argument of a "defininig" 
+predication, which is also typically associated with a word in the utterance. Hence
+each variable occurrence can be replaced by a Skolem constant whose name carries the index (minus 1) of the word
+in the utterance it stands for, and the type of this occurrence. The type (`:x`, `:s`, `:e`, `:m`) 
+is obtained from the kind information in the predication in which the variable has the "defining" occurrence,
+and the predication in which this constant occurs. (Recall that in DepLambda variables take as values pairs
+of individuals, one of type "event" and one of type "individual" and the context of use is intended to determine
+which of these is implicitly selected.)
 
 Thus:
 *  `3:e` is  the constant `3` of type `event` ... the denotation of the word `company` 
