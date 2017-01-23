@@ -30,7 +30,7 @@ interleaved existentials and conjunctions of unary and binary atomic formulas.
 The simplified logical form gets rid of the existential prefix by replacing 
 variables with Skolem constants whose names carry the index (minus 1) of the word
 in the utterance they stand for, and their types. The type (`:x`, `:s`, `:e`, `:m`) 
-is obtained from the kind information in predication in which the variable
+is obtained from the kind information in the predication in which the variable
 has the "defining" occurrence.
 
 Thus:
