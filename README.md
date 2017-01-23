@@ -29,3 +29,6 @@ Check debug.txt to see step by step derivation.
 * Refinement Step: lib_data/ud-tree-transformation-rules.proto.txt
 * Binarization Step: lib_data/ud-relation-priorities.proto.txt 
 * Substitution Step: lib_data/ud-lambda-assignment-rules.proto.txt
+
+## Documentation
+See SimplifiedLogicForm.md(doc/SimplifiedLogicForm.md) for output formats.

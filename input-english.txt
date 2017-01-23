@@ -1,1 +1,1 @@
-{"sentence":"Charles Darwin studied at the University of Edinburgh in 1825."}
+{"sentence":"The firm, which detects earnings, defaulted."}
