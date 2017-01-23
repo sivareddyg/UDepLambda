@@ -26,3 +26,353 @@
 9 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-4-originate:u $0) (p_TYPE_w-3-aldi:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
 9 [pool-1-thread-1] DEBUG: 
 
+7339 [pool-1-thread-1] DEBUG: (l-det w-2-firm w-1-the)
+7340 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7342 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+7342 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7342 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7342 [pool-1-thread-1] DEBUG: 
+
+7342 [pool-1-thread-1] DEBUG: (l-dobj w-5-detects w-6-earnings)
+7344 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg2:b $2 $3))))))
+7344 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-5-detects:u $0))
+7344 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-6-earnings:u $0))
+7344 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+7344 [pool-1-thread-1] DEBUG: 
+
+7344 [pool-1-thread-1] DEBUG: (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)
+7348 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7348 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+7348 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-4-which:u $0))
+7348 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7348 [pool-1-thread-1] DEBUG: 
+
+7349 [pool-1-thread-1] DEBUG: (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which))
+7349 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_l-acl-other:b $3 $2))))))
+7349 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7349 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7349 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7349 [pool-1-thread-1] DEBUG: 
+
+7349 [pool-1-thread-1] DEBUG: (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,)
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7350 [pool-1-thread-1] DEBUG: 
+
+7350 [pool-1-thread-1] DEBUG: (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-8-defaulted:u $0))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7350 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7350 [pool-1-thread-1] DEBUG: 
+
+7350 [pool-1-thread-1] DEBUG: (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,)) w-7-,)
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7351 [pool-1-thread-1] DEBUG: 
+
+7351 [pool-1-thread-1] DEBUG: (l-punct (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,)) w-7-,) w-9-.)
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7351 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7351 [pool-1-thread-1] DEBUG: 
+
+6964 [pool-1-thread-1] DEBUG: (l-det w-2-firm w-1-the)
+6966 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+6967 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+6968 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6968 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+6968 [pool-1-thread-1] DEBUG: 
+
+6968 [pool-1-thread-1] DEBUG: (l-compound w-6-earnings w-5-tracks)
+6969 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+6970 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+6970 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPEMOD_w-5-tracks.w-6-earnings:u $0))
+6970 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $0)))
+6970 [pool-1-thread-1] DEBUG: 
+
+6970 [pool-1-thread-1] DEBUG: (l-nmod:poss (l-compound w-6-earnings w-5-tracks) w-4-which)
+6971 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_l-nmod:b $2 $3))))))
+6971 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $0)))
+6971 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-4-which:u $0) (p_TARGET:u $0)))
+6971 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $0)) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1))))
+6971 [pool-1-thread-1] DEBUG: 
+
+6971 [pool-1-thread-1] DEBUG: (l-conj-np (l-det w-2-firm w-1-the) (l-nmod:poss (l-compound w-6-earnings w-5-tracks) w-4-which))
+6975 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (exists:ex $4:<a,e> (and:c ($0 $3) ($1 $4) (p_CONJ:tri $2 $3 $4)))))))
+6975 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+6975 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $0)) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1))))
+6975 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $2) (p_EVENT_w-6-earnings:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $2)) (and:c (p_TYPE_w-4-which:u $3) (p_TARGET:u $3)) (p_EVENT.ENTITY_l-nmod:b $2 $3))) (p_CONJ:tri $0 $1 $2)))))
+6976 [pool-1-thread-1] DEBUG: 
+
+6976 [pool-1-thread-1] DEBUG: (l-punct (l-conj-np (l-det w-2-firm w-1-the) (l-nmod:poss (l-compound w-6-earnings w-5-tracks) w-4-which)) w-3-,)
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $2) (p_EVENT_w-6-earnings:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $2)) (and:c (p_TYPE_w-4-which:u $3) (p_TARGET:u $3)) (p_EVENT.ENTITY_l-nmod:b $2 $3))) (p_CONJ:tri $0 $1 $2)))))
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $2) (p_EVENT_w-6-earnings:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $2)) (and:c (p_TYPE_w-4-which:u $3) (p_TARGET:u $3)) (p_EVENT.ENTITY_l-nmod:b $2 $3))) (p_CONJ:tri $0 $1 $2)))))
+6976 [pool-1-thread-1] DEBUG: 
+
+6976 [pool-1-thread-1] DEBUG: (l-punct (l-punct (l-conj-np (l-det w-2-firm w-1-the) (l-nmod:poss (l-compound w-6-earnings w-5-tracks) w-4-which)) w-3-,) w-7-,)
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $2) (p_EVENT_w-6-earnings:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $2)) (and:c (p_TYPE_w-4-which:u $3) (p_TARGET:u $3)) (p_EVENT.ENTITY_l-nmod:b $2 $3))) (p_CONJ:tri $0 $1 $2)))))
+6976 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6977 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $2) (p_EVENT_w-6-earnings:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $2)) (and:c (p_TYPE_w-4-which:u $3) (p_TARGET:u $3)) (p_EVENT.ENTITY_l-nmod:b $2 $3))) (p_CONJ:tri $0 $1 $2)))))
+6977 [pool-1-thread-1] DEBUG: 
+
+6977 [pool-1-thread-1] DEBUG: (l-nsubj w-8-defaulted (l-punct (l-punct (l-conj-np (l-det w-2-firm w-1-the) (l-nmod:poss (l-compound w-6-earnings w-5-tracks) w-4-which)) w-3-,) w-7-,))
+6977 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+6977 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-8-defaulted:u $0))
+6977 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $2) (p_EVENT_w-6-earnings:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $2)) (and:c (p_TYPE_w-4-which:u $3) (p_TARGET:u $3)) (p_EVENT.ENTITY_l-nmod:b $2 $3))) (p_CONJ:tri $0 $1 $2)))))
+6977 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $2) (p_EVENT_w-2-firm:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EMPTY:u $2)) (exists:ex $4:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $3) (p_EVENT_w-6-earnings:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $3)) (and:c (p_TYPE_w-4-which:u $4) (p_TARGET:u $4)) (p_EVENT.ENTITY_l-nmod:b $3 $4))) (p_CONJ:tri $1 $2 $3)))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6977 [pool-1-thread-1] DEBUG: 
+
+6977 [pool-1-thread-1] DEBUG: (l-punct (l-nsubj w-8-defaulted (l-punct (l-punct (l-conj-np (l-det w-2-firm w-1-the) (l-nmod:poss (l-compound w-6-earnings w-5-tracks) w-4-which)) w-3-,) w-7-,)) w-9-.)
+6977 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6978 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $2) (p_EVENT_w-2-firm:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EMPTY:u $2)) (exists:ex $4:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $3) (p_EVENT_w-6-earnings:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $3)) (and:c (p_TYPE_w-4-which:u $4) (p_TARGET:u $4)) (p_EVENT.ENTITY_l-nmod:b $3 $4))) (p_CONJ:tri $1 $2 $3)))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6978 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6978 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $2) (p_EVENT_w-2-firm:u $2) (p_EVENT.ENTITY_arg0:b $2 $2)) (p_EMPTY:u $2)) (exists:ex $4:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $3) (p_EVENT_w-6-earnings:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_TYPEMOD_w-5-tracks.w-6-earnings:u $3)) (and:c (p_TYPE_w-4-which:u $4) (p_TARGET:u $4)) (p_EVENT.ENTITY_l-nmod:b $3 $4))) (p_CONJ:tri $1 $2 $3)))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6978 [pool-1-thread-1] DEBUG: 
+
+7422 [pool-1-thread-1] DEBUG: (l-det w-2-firm w-1-the)
+7424 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7425 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+7426 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7426 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7426 [pool-1-thread-1] DEBUG: 
+
+7426 [pool-1-thread-1] DEBUG: (l-dobj w-5-track w-6-earnings)
+7428 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg2:b $2 $3))))))
+7428 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-5-track:u $0))
+7428 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-6-earnings:u $0))
+7428 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-track:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+7428 [pool-1-thread-1] DEBUG: 
+
+7428 [pool-1-thread-1] DEBUG: (l-nsubj (l-dobj w-5-track w-6-earnings) w-4-which)
+7431 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7431 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-track:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+7431 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-4-which:u $0))
+7431 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-track:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7431 [pool-1-thread-1] DEBUG: 
+
+7431 [pool-1-thread-1] DEBUG: (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-track w-6-earnings) w-4-which))
+7431 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_l-acl-other:b $3 $2))))))
+7431 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7432 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-track:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7432 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-track:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7432 [pool-1-thread-1] DEBUG: 
+
+7432 [pool-1-thread-1] DEBUG: (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-track w-6-earnings) w-4-which)) w-3-,)
+7432 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7432 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-track:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7432 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7432 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-track:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7432 [pool-1-thread-1] DEBUG: 
+
+7432 [pool-1-thread-1] DEBUG: (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-track w-6-earnings) w-4-which)) w-3-,))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-8-defaulted:u $0))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-track:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-track:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7433 [pool-1-thread-1] DEBUG: 
+
+7433 [pool-1-thread-1] DEBUG: (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-track w-6-earnings) w-4-which)) w-3-,)) w-7-,)
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-track:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7433 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-track:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7433 [pool-1-thread-1] DEBUG: 
+
+7434 [pool-1-thread-1] DEBUG: (l-punct (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-track w-6-earnings) w-4-which)) w-3-,)) w-7-,) w-9-.)
+7434 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7434 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-track:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7434 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7434 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-track:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7434 [pool-1-thread-1] DEBUG: 
+
+7977 [pool-1-thread-1] DEBUG: (l-det w-2-firm w-1-the)
+7978 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7980 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+7980 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7980 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7980 [pool-1-thread-1] DEBUG: 
+
+7980 [pool-1-thread-1] DEBUG: (l-compound w-6-earnings w-5-traces)
+7982 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7982 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+7982 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPEMOD_w-5-traces.w-6-earnings:u $0))
+7982 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)))
+7982 [pool-1-thread-1] DEBUG: 
+
+7983 [pool-1-thread-1] DEBUG: (l-nsubj w-8-defaulted v-f)
+7983 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7983 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-8-defaulted:u $0))
+7983 [pool-1-thread-1] DEBUG: v-f:w
+7983 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (v-f:w $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7983 [pool-1-thread-1] DEBUG: 
+
+7983 [pool-1-thread-1] DEBUG: (l-BIND (l-nsubj w-8-defaulted v-f) v-f)
+7987 [pool-1-thread-1] DEBUG: empty:bind
+7987 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (v-f:w $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7987 [pool-1-thread-1] DEBUG: v-f:w
+7987 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (p_EVENT_w-8-defaulted:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2)))))
+7987 [pool-1-thread-1] DEBUG: 
+
+7987 [pool-1-thread-1] DEBUG: (l-acl (l-compound w-6-earnings w-5-traces) (l-BIND (l-nsubj w-8-defaulted v-f) v-f))
+7987 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7987 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)))
+7987 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (p_EVENT_w-8-defaulted:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2)))))
+7987 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (p_EVENT_w-8-defaulted:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))
+7988 [pool-1-thread-1] DEBUG: 
+
+7988 [pool-1-thread-1] DEBUG: (l-nmod:poss (l-acl (l-compound w-6-earnings w-5-traces) (l-BIND (l-nsubj w-8-defaulted v-f) v-f)) w-4-which)
+7988 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_l-nmod:b $2 $3))))))
+7988 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (p_EVENT_w-8-defaulted:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))
+7988 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-4-which:u $0) (p_TARGET:u $0)))
+7988 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1))))
+7988 [pool-1-thread-1] DEBUG: 
+
+7988 [pool-1-thread-1] DEBUG: (l-punct (l-nmod:poss (l-acl (l-compound w-6-earnings w-5-traces) (l-BIND (l-nsubj w-8-defaulted v-f) v-f)) w-4-which) w-7-,)
+7989 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7989 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1))))
+7989 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7989 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1))))
+7989 [pool-1-thread-1] DEBUG: 
+
+7989 [pool-1-thread-1] DEBUG: (l-appos (l-det w-2-firm w-1-the) (l-punct (l-nmod:poss (l-acl (l-compound w-6-earnings w-5-traces) (l-BIND (l-nsubj w-8-defaulted v-f) v-f)) w-4-which) w-7-,))
+7989 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1))))
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1)))))
+7990 [pool-1-thread-1] DEBUG: 
+
+7990 [pool-1-thread-1] DEBUG: (l-punct (l-appos (l-det w-2-firm w-1-the) (l-punct (l-nmod:poss (l-acl (l-compound w-6-earnings w-5-traces) (l-BIND (l-nsubj w-8-defaulted v-f) v-f)) w-4-which) w-7-,)) w-3-,)
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1)))))
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7990 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1)))))
+7991 [pool-1-thread-1] DEBUG: 
+
+7991 [pool-1-thread-1] DEBUG: (l-punct (l-punct (l-appos (l-det w-2-firm w-1-the) (l-punct (l-nmod:poss (l-acl (l-compound w-6-earnings w-5-traces) (l-BIND (l-nsubj w-8-defaulted v-f) v-f)) w-4-which) w-7-,)) w-3-,) w-9-.)
+7991 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7991 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1)))))
+7991 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7991 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $1:<a,e> (and:c (and:c (and:c (and:c (p_TYPE_w-6-earnings:u $0) (p_EVENT_w-6-earnings:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_TYPEMOD_w-5-traces.w-6-earnings:u $0)) (exists:<<a,e>,<t,t>> $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-8-defaulted:u $2) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))) (and:c (p_TYPE_w-4-which:u $1) (p_TARGET:u $1)) (p_EVENT.ENTITY_l-nmod:b $0 $1)))))
+7992 [pool-1-thread-1] DEBUG: 
+
+7253 [pool-1-thread-1] DEBUG: (l-det w-2-firm w-1-the)
+7255 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+7256 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+7256 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7256 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7256 [pool-1-thread-1] DEBUG: 
+
+7256 [pool-1-thread-1] DEBUG: (l-dobj w-5-predict w-6-earnings)
+7257 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg2:b $2 $3))))))
+7257 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-5-predict:u $0))
+7257 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-6-earnings:u $0))
+7257 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-predict:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+7257 [pool-1-thread-1] DEBUG: 
+
+7257 [pool-1-thread-1] DEBUG: (l-nsubj (l-dobj w-5-predict w-6-earnings) w-4-which)
+7260 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7260 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-predict:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+7260 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-4-which:u $0))
+7260 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-predict:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7260 [pool-1-thread-1] DEBUG: 
+
+7260 [pool-1-thread-1] DEBUG: (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-predict w-6-earnings) w-4-which))
+7262 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_l-acl-other:b $3 $2))))))
+7262 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+7262 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-predict:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7262 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-predict:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7262 [pool-1-thread-1] DEBUG: 
+
+7262 [pool-1-thread-1] DEBUG: (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-predict w-6-earnings) w-4-which)) w-3-,)
+7263 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7263 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-predict:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7263 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7263 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-predict:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7263 [pool-1-thread-1] DEBUG: 
+
+7264 [pool-1-thread-1] DEBUG: (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-predict w-6-earnings) w-4-which)) w-3-,))
+7264 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+7265 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-8-defaulted:u $0))
+7265 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-predict:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+7265 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-predict:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7265 [pool-1-thread-1] DEBUG: 
+
+7265 [pool-1-thread-1] DEBUG: (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-predict w-6-earnings) w-4-which)) w-3-,)) w-7-,)
+7265 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7265 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-predict:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7265 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7266 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-predict:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7266 [pool-1-thread-1] DEBUG: 
+
+7266 [pool-1-thread-1] DEBUG: (l-punct (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-predict w-6-earnings) w-4-which)) w-3-,)) w-7-,) w-9-.)
+7266 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+7266 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-predict:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7266 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+7266 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-predict:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+7266 [pool-1-thread-1] DEBUG: 
+
+6651 [pool-1-thread-1] DEBUG: (l-det w-2-firm w-1-the)
+6653 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (and:c ($0 $2) ($1 $2)))))
+6654 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)))
+6654 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6654 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+6654 [pool-1-thread-1] DEBUG: 
+
+6654 [pool-1-thread-1] DEBUG: (l-dobj w-5-detects w-6-earnings)
+6657 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg2:b $2 $3))))))
+6657 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-5-detects:u $0))
+6657 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-6-earnings:u $0))
+6657 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+6657 [pool-1-thread-1] DEBUG: 
+
+6658 [pool-1-thread-1] DEBUG: (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)
+6662 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+6663 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $1) (p_EVENT.ENTITY_arg2:b $0 $1))))
+6663 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_TYPE_w-4-which:u $0))
+6663 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6663 [pool-1-thread-1] DEBUG: 
+
+6663 [pool-1-thread-1] DEBUG: (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which))
+6664 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_l-acl-other:b $3 $2))))))
+6664 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)))
+6664 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-5-detects:u $0) (p_TYPE_w-6-earnings:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-4-which:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6664 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+6665 [pool-1-thread-1] DEBUG: 
+
+6665 [pool-1-thread-1] DEBUG: (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,)
+6665 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+6666 [pool-1-thread-1] DEBUG: 
+
+6666 [pool-1-thread-1] DEBUG: (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> (exists:ex $3:<a,e> (and:c ($0 $2) ($1 $3) (p_EVENT.ENTITY_arg1:b $2 $3))))))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EVENT_w-8-defaulted:u $0))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $0) (p_EVENT_w-2-firm:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EMPTY:u $0)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-5-detects:u $1) (p_TYPE_w-6-earnings:u $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-4-which:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))) (p_EVENT.ENTITY_l-acl-other:b $1 $0))))
+6666 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6666 [pool-1-thread-1] DEBUG: 
+
+6667 [pool-1-thread-1] DEBUG: (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,)) w-7-,)
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6667 [pool-1-thread-1] DEBUG: 
+
+6667 [pool-1-thread-1] DEBUG: (l-punct (l-punct (l-nsubj w-8-defaulted (l-punct (l-acl-other (l-det w-2-firm w-1-the) (l-nsubj (l-dobj w-5-detects w-6-earnings) w-4-which)) w-3-,)) w-7-,) w-9-.)
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<v,t> (lambda $1:<v,t> (lambda $2:<a,e> ($0 $2))))
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6667 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (p_EMPTY:u $0))
+6668 [pool-1-thread-1] DEBUG: (lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (p_EVENT_w-8-defaulted:u $0) (exists:ex $2:<a,e> (and:c (and:c (and:c (p_TYPE_w-2-firm:u $1) (p_EVENT_w-2-firm:u $1) (p_EVENT.ENTITY_arg0:b $1 $1)) (p_EMPTY:u $1)) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-detects:u $2) (p_TYPE_w-6-earnings:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-4-which:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.ENTITY_l-acl-other:b $2 $1))) (p_EVENT.ENTITY_arg1:b $0 $1))))
+6668 [pool-1-thread-1] DEBUG: 
+
