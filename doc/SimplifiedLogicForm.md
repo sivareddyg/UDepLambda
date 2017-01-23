@@ -34,22 +34,26 @@ is obtained from the kind information in the predication in which the variable
 has the "defining" occurrence.
 
 Thus:
-*  `3:e` is  the constant `3` of type `event` ...the denotation of the word `company` 
-in the utterance -- note the index is `3` since the comma is counted (3=4-1), 
+*  `3:e` is  the constant `3` of type `event` ... the denotation of the word `company` 
+in the utterance -- note the index is `4` (3+1) since the comma is counted
 * `0:m.pixar` is the constant `0` which stands for the named entity `pixar` 
-in the utterance (index 1)
+in the utterance (index `1`)
 * Thought not ilustrated here, `11:x` would stand for the constant `11` of 
 type `individual` that is not a named entity.
 * `3:s` is the "type" associated with constant `3` ... see below for how such a term is used.
 
 Now we can read the atomic formulas in the simplified logical form above:
 * `company(3:e)` asserts that there is an event `3` which is a "being a company" 
-event. Similarly for `made(8:e)`,`pixar(3:e)` and `acquired(6:e)`.
+event. This is a consequence of the predication `(p_EVENT_w-4-company:u $1)`
+in the lambda expression. Similarly for `made(8:e)`,`pixar(3:e)` and `acquired(6:e)`. 
 * `arg1(6:e,5:m.disney)` asserts that the `arg1` of `6:e` ("acquired") is 
-`5:m:disney` ("Disney"). Similarly for `arg2(8:e,9:m.ratatouille)`, 
-`arg2(6:e,0:m.pixar)`,`arg0(3:e,0:m.pixar)` and `arg1(8:e,0:m.pixar)`.
+`5:m:disney` ("Disney"). This is a consequence of the predications
+`(p_EVENT.ENTITY_arg1:b $3 $4)`, `(p_EVENT_w-7-acquired:u $3)` and `(p_TYPE_w-6-disney:u $4)`
+in the lambda form. Similarly for `arg2(8:e,9:m.ratatouille)`, `arg2(6:e,0:m.pixar)`,`arg0(3:e,0:m.pixar)` 
+and `arg1(8:e,0:m.pixar)`.
 * `company(3:s,0:m.pixar)` asserts that constant `0` (i.e. "pixar") is a company
-(represented by index `3`). 
+(represented by index `3`). This is a consequence of `(p_EVENT_w-1-pixar:u $1)` and `(p_TYPE_w-4-company:u $1)`
+in the lambda form.
 
 Thus we can paraphrase the simplified logical form as: there is a company event 
 (`3:e`), a make event (`8:e`), a pixar event (`3:e`), an acquired event (`6:e`).
