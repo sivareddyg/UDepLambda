@@ -31,4 +31,4 @@ Check debug.txt to see step by step derivation.
 * Substitution Step: lib_data/ud-lambda-assignment-rules.proto.txt
 
 ## Documentation
-See SimplifiedLogicForm.md(doc/SimplifiedLogicForm.md) for output formats.
+See [SimplifiedLogicForm.md](doc/SimplifiedLogicForm.md) for output formats.
