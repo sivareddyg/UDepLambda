@@ -33,4 +33,6 @@ java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This 
     deplambda.lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
     deplambda.lexicalizePredicates true \
     deplambda.debugToFile debug.txt \
-    nthreads 1
+    nthreads 1 \
+    | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.ResultPrinter deplambda.definedTypesFile lib_data/ud.types.txt 
+
