@@ -15,8 +15,6 @@ import com.google.gson.JsonObject;
 
 import deplambda.parser.TreeTransformerMain;
 import deplambda.util.TransformationRuleGroups;
-import deplambda.util.Sentence;
-import deplambda.util.TreePrinter;
 
 import edu.cornell.cs.nlp.spf.mr.lambda.FlexibleTypeComparator;
 import edu.cornell.cs.nlp.spf.mr.lambda.LogicLanguageServices;
@@ -80,7 +78,7 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
         Boolean lexicalizePredicates =
             Boolean.parseBoolean(options.getOrDefault(
                 DEPLAMBDA_LEXICALIZE_PREDICATES, "true"));
-        
+
         Logger logger = null;
         if (options.containsKey(DEPLAMBDA_DEBUG_TO_FILE)
             && !options.get(DEPLAMBDA_DEBUG_TO_FILE).trim().equals("")) {
@@ -120,8 +118,7 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
     super.processIndividualSentence(jsonSentence);
 
     if (options.containsKey(DEPLAMBDA)) {
-	System.err.println("Runnning deplambda ...");
-	treeTransformer.processSentence(jsonSentence);
+      treeTransformer.processSentence(jsonSentence);
     }
   }
 
