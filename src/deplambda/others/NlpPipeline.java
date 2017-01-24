@@ -124,8 +124,9 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
 	treeTransformer.processSentence(jsonSentence);
 	// print out tree representation of the dep parse
 	Sentence sentence = new Sentence(jsonSentence);
-	System.err.println(TreePrinter.toIndentedString(sentence.getRootNode()));
-	
+	System.out.println("DepTree: "+TreePrinter.toIndentedString(sentence.getRootNode()));
+	System.out.println("DepLambda Expr: " + jsonSentence.get(SentenceKeys.DEPLAMBDA_EXPRESSION));
+	System.out.println("DepLambda simplified: "+jsonSentence.get(SentenceKeys.DEPENDENCY_LAMBDA));
     }
   }
 
