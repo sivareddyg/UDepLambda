@@ -15,6 +15,9 @@ import com.google.gson.JsonObject;
 
 import deplambda.parser.TreeTransformerMain;
 import deplambda.util.TransformationRuleGroups;
+import deplambda.util.Sentence;
+import deplambda.util.TreePrinter;
+
 import edu.cornell.cs.nlp.spf.mr.lambda.FlexibleTypeComparator;
 import edu.cornell.cs.nlp.spf.mr.lambda.LogicLanguageServices;
 import edu.cornell.cs.nlp.spf.mr.language.type.MutableTypeRepository;
@@ -115,9 +118,12 @@ public class NlpPipeline extends in.sivareddy.graphparser.util.NlpPipeline {
 
   public void processIndividualSentence(JsonObject jsonSentence) {
     super.processIndividualSentence(jsonSentence);
+
     if (options.containsKey(DEPLAMBDA)) {
-      System.err.println("Runnning deplambda ...");
-      treeTransformer.processSentence(jsonSentence);
+	System.err.println("Runnning deplambda ...");
+	treeTransformer.processSentence(jsonSentence);
+	Sentence sentence = new Sentence(jsonSentence);
+	System.err.println(TreePrinter.toIndentedString(sentence.getRootNode()));
     }
   }
 
