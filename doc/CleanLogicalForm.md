@@ -1,38 +1,10 @@
 ##Notes on the generation of "clean logical form" from dep lambda expression
 
-Here is how post-processing works. (The information here is based on a 
-current reading of the code and some correspondence with Siva.)
+The information here is based on a 
+current reading of the code and some correspondence with Siva.
 
-By the time the PostProcessor gets its hands on a meaning form, the form may contain
-ten kinds of literals (as documented in 
-[`deplambda.others.PredicateKeys`](https://github.com/sivareddyg/UDepLambda/blob/master/src/deplambda/others/PredicateKeys.java); 
-see also the patterns in `PostProcessLogicalForm`). For a description of the types see
-[ud_types.txt](https://github.com/sivareddyg/UDepLambda/blob/master/lib_data/ud.types.txt). We use the
-following types below:
-    `tri` is `<v,<v,<v,t>>>`
-    `b` is `<v,<v,t>>`
-    `u` is `<v,t>`
-    `v` is `<a,e>`
-Below, arguments in `{...}` are specified at run-time. I also try to specify information about some of 
-the meta-variables in the predicate description gleaned from examining the current (`ud-`) rules
-in [lib_data](https://github.com/sivareddyg/UDepLambda/tree/master/lib_data). (Note:
-the earlier `deplambda-` rules in the same directory have a different syntax and correspond to an
-older version of the system.)
-  * `p_EVENT.ENTITY_<Relation>:b`. In the current set of rules, `<Relation>` is one of 
-      `l-nmod.{casemarker}` or `l-nmod`
-      `arg1.{casemarker}` or `arg0`, `arg1`, `arg2`.v
-  * `p_EVENT.EVENT_{relation}:b` 
-  * `p_COUNT:b`
-  * `p_TARGET:u`
-  * `p_EVENT_{word}:u`. `{word}` is typically of the form `w-<Index>-<Word>`, 
-  where `<Index>` is the integer index into the utterance, and `<Word>` is the corresponding word.
-  * `p_TYPE_{word}:u` 
-  * `p_TYPEMOD_{word}:u`
-  * `p_EVENTMOD_{word}:u`
-  * `p_CONJ:tri`
-  * `p_EQUAL` (Note: This exists in `PredicateKeys` but there are no instances of this in the `ud-` rules.)
-  
-Here is how processing is done.
+Here is how post-processing works. (See [Logical Vocabulary Doc](https://github.com/sivareddyg/UDepLambda/blob/master/doc/LogicalVocabulary.md) for a description of the predicates.)
+
   * Process all literals, one at a time. 
        * `p_EVENT_w-<Index>-<Word>(V)` atom: add (V, Index-1) to `varToEvent`.
        * `p_TYPE_w-<Index>-<Word>(V)` atom: add (V, Index-1) to `varToEntity`.
@@ -45,20 +17,20 @@ Here is how processing is done.
   * Invoke `populateEquals`: perform transitive closure of equalities in `equalPairs` to form sets of  equivalent terms in `unifiedSets`.
   * Now perform the same transitive closure in `varToEntity`: each var `V` mapped to a list of entities  `X` is now mapped to the list of all entities that any variable equated to `W` is mapped to. Similarly for varToEvents.
   
-This preliminary work done, enter the main loop `cleanedPredicates`, where each mainPredicate is examined one by one. Below define the "entity var for `X`" as `X:x` if `X` does not name an entity, and
+This preliminary work done, enter the main loop `cleanedPredicates`, where each mainPredicate is examined one by one. Below define the "entity rep for `X`" as `X:x` if `X` does not name an entity, and
   `X:m.<WX>` if it does and the corresponding word is `<WX>`.
   
   * `p_EVENT.ENTITY_arg<i> (E, F)` or `p_EVENT.ENTITY_<DEP>.w-<I>-<Word> (E, F)` ==>
       * `W.<Word>(V:e, <XX>)`  if V names an entity in the utterance
       * `<Word>(V:e, <XX>)`   otherwise
-  * (where `W` is the word at index `V`, for every `V` in `varToEvent` that `E` is mapped to, and `<XX>` is the entity var for `X`, for every `X` in `varToEntity`  that `F` is mapped to.)
+  * (where `W` is the word at index `V`, for every `V` in `varToEvent` that `E` is mapped to, and `<XX>` is the entity rep for `X`, for every `X` in `varToEntity`  that `F` is mapped to.)
   * `p_EVENT.EVENT_arg1:b(E, F)`: similar to above. 
   * `p_COUNT:b (C, R)` ==>  `COUNT(C1:x, R1:x)`, for every entry `C1 `for `C` in `varToEntity` and `R1` for `R`.
   * `p_EVENT_w-<I>-<WORD>:u(V)` ==> `<WORD>(E:e)` for every entry `E` for `V` in `varToEvent`.
-  * `p_TYPE_w-<I>-<WORD>:u(V)` ==> `<WORD>(I:s, <XX>)` where `<XX>` is the entity  var for `X`, for every `X` in `varToEntity` that `V` is mapped to.
-  * `p_TYPEMOD_w-<I>-<WORD>:u(V)` ==> `<WORD>(I:s, <XX>)` where `<XX>` is the entity var for `X`, for every `X` in `varToEntity` that `V` is mapped to.
+  * `p_TYPE_w-<I>-<WORD>:u(V)` ==> `<WORD>(I:s, <XX>)` where `<XX>` is the entity rep for `X`, for every `X` in `varToEntity` that `V` is mapped to.
+  * `p_TYPEMOD_w-<I>-<WORD>:u(V)` ==> `<WORD>(I:s, <XX>)` where `<XX>` is the entity rep for `X`, for every `X` in `varToEntity` that `V` is mapped to.
   * `p_EVENTMOD_w-<I>-<WORD>:u(V)` ==> `<WORD>(I:s, X:e)` for every `X` in `varToEvents` that `V` is mapped to.
-  * `p_TARGET:u (V) ==> QUESTION(<XX>)` where `<XX>` is the entity  var for `X`, for every `X` in `varToEntity` that `V` is mapped to.
+  * `p_TARGET:u (V) ==> QUESTION(<XX>)` where `<XX>` is the entity rep for `X`, for every `X` in `varToEntity` that `V` is mapped to.
     
 ###Note from Siva on preference for not named events
       
