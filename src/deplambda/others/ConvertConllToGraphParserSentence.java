@@ -28,6 +28,7 @@ public class ConvertConllToGraphParserSentence {
     BufferedWriter fout = new BufferedWriter(writer);
     while (sentence != null) {
       fout.write(gson.toJson(sentence));
+      fout.write("\n");
       sentence = getNextSentence(br);
     }
     br.close();
