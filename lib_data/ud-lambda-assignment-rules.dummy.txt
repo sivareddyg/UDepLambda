@@ -1,0 +1,45 @@
+rulegroup {
+  name: "defaults"
+  priority: 100
+  rule {
+    name: "punct"
+    # "Yahoo" "!"
+    priority: 10
+    tregex: "/^l-.*$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_dummy:b $x $y))))))"
+    }
+  }
+}
+
+########### lexical rules #########
+rulegroup {
+  name: "default words"
+  priority: 30
+  rule {
+    name: "words"
+    priority: 20
+    tregex: "/^w-.*/=word"
+    transformation {
+      target: "word"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EMPTY:u $x))"
+    }
+  }
+}
+rulegroup {
+  name: "virtual"
+  priority: 1
+  rule {
+    name: "virtual default"
+    priority: 1
+    tregex: "/v-.*/=target"
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "{target}:w"
+    }
+  }
+}

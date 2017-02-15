@@ -34,5 +34,3 @@ java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This 
     deplambda.lexicalizePredicates true \
     deplambda.debugToFile debug.txt \
     nthreads 1 \
-    | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.ResultPrinter deplambda.definedTypesFile lib_data/ud.types.txt 
-
