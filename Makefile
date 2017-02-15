@@ -297,6 +297,40 @@ entity_dismabiguated_to_plain_forest_%:
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.test.plain.forest.json 
 
+easyccg_parse_%:
+	cat working/en-webquestions.$*.plain.forest.json \
+		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline \
+		preprocess.addDateEntities true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.capitalizeEntities true \
+		preprocess.mergeEntityWords true \
+		annotators tokenize,ssplit,pos \
+		tokenize.whitespace true \
+		languageCode en \
+		ssplit.eolonly true \
+		nthreads 10 \
+		postprocess.correctPosTags true \
+		posTagKey PTB \
+		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		nthreads 10 \
+		ccgParser easyccg \
+		ccgParser.nbest 1 \
+		ccgParser.modelFolder ../graph-parser/lib_data/easyccg_model_questions/ \
+		ccgParser.parserArguments -s,-r,S[q],S[qem],S[wq] \
+		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		nthreads 10 \
+		ccgParser easyccg \
+		ccgParser.nbest 1 \
+		ccgParser.modelFolder ../graph-parser/lib_data/easyccg_model/ \
+		ccgParser.parserArguments -s,-r,S[q],S[qem],S[wq] \
+		> working/en-webquestions.$*.easyccg.json 
+
 plain_forest_to_conll_%:
 	cat working/$*-webquestions.dev.plain.forest.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
@@ -424,7 +458,7 @@ forest_to_sentences_%:
 		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.dev.sentences.txt
 	cat working/$*-webquestions.train.forest.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
-		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.train.sentences.txt
+		_tree> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.train.sentences.txt
 	cat working/$*-webquestions.test.forest.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.PrintSentencesFromWords \
 		> working/webq_multillingual_graphpaser_constrained_entity_annotations/sent/$*/webquestions.test.sentences.txt
@@ -660,18 +694,18 @@ extract_gold_graphs_dependency_hyperexpand_%:
 
 extract_gold_graphs_dependency_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
-	cat data/webquestions/$(LANG)/$*-webquestions.train.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.json \
-    | java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
-        data/freebase/schema/all_domains_schema.txt localhost \
-        dependency_question_graph \
-        data/gold_graphs/$*_dependency_without_merge_without_expand.full \
-        lib_data/dummy.txt \
-        false \
-        false \
-        > data/gold_graphs/$*_dependency_without_merge_without_expand.full.answers.txt
-	cat data/webquestions/$(LANG)/$*-webquestions.train.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.json \
+	#cat data/webquestions/$(LANG)/$*-webquestions.train.json \
+    #    data/webquestions/$(LANG)/$*-webquestions.dev.json \
+    #| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+    #    data/freebase/schema/all_domains_schema.txt localhost \
+    #    dependency_question_graph \
+    #    data/gold_graphs/$*_dependency_without_merge_without_expand.full \
+    #    lib_data/dummy.txt \
+    #    false \
+    #    false \
+    #    > data/gold_graphs/$*_dependency_without_merge_without_expand.full.answers.txt
+	cat data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json \
+        data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
@@ -733,6 +767,19 @@ extract_gold_graphs_deplambda_hyperexpand_%:
 		false \
 		true \
 		> data/gold_graphs/$*_deplambda_with_hyperexpand.full.answers.txt
+
+extract_gold_graphs_easyccg:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	cat working/en-webquestions.train.easyccg.json \
+        working/en-webquestions.dev.easyccg.json \
+	| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
+   		data/freebase/schema/all_domains_schema.txt localhost \
+		synPars \
+		data/gold_graphs/easyccg_with_merge_with_expand.full \
+		lib_data/dummy.txt \
+	   	true \
+		true \
+		> data/gold_graphs/easyccg_with_merge_with_expand.full.answers.txt
 
 extract_gold_graphs_deplambda_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
@@ -1652,157 +1699,6 @@ test_deplambda_with_hyperexpand.32_%:
 	-logFile ../working/test_deplambda_with_hyperexpand.32_$*/all.log.txt \
 	> ../working/test_deplambda_with_hyperexpand.32_$*/all.txt
 
-dependency_with_hyperexpand.32_%:
-	rm -rf ../working/$*_dependency_with_hyperexpand.32
-	mkdir -p ../working/$*_dependency_with_hyperexpand.32
-	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
-	-pointWiseF1Threshold 0.2 \
-	-semanticParseKey dependency_question_graph \
-	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
-	-schema data/freebase/schema/all_domains_schema.txt \
-	-relationTypesFile lib_data/dummy.txt \
-	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
-	-lexicon lib_data/dummy.txt \
-	-domain "http://rdf.freebase.com" \
-	-typeKey "fb:type.object.type" \
-	-nthreads 20 \
-	-trainingSampleSize 2000 \
-	-iterations 10 \
-	-nBestTrainSyntacticParses 1 \
-	-nBestTestSyntacticParses 1 \
-	-nbestGraphs 100 \
-	-forestSize 10 \
-	-ngramLength 1 \
-	-useSchema true \
-	-useKB true \
-	-addBagOfWordsGraph false \
-	-ngramGrelPartFlag true \
-	-groundFreeVariables false \
-	-groundEntityVariableEdges false \
-	-groundEntityEntityEdges false \
-	-useEmptyTypes false \
-	-ignoreTypes true \
-	-urelGrelFlag false \
-	-urelPartGrelPartFlag false \
-	-utypeGtypeFlag false \
-	-gtypeGrelFlag false \
-	-wordGrelPartFlag true \
-	-wordGrelFlag false \
-	-eventTypeGrelPartFlag false \
-	-argGrelPartFlag true \
-	-argGrelFlag false \
-	-questionTypeGrelPartFlag false \
-	-stemMatchingFlag false \
-	-mediatorStemGrelPartMatchingFlag false \
-	-argumentStemMatchingFlag false \
-	-argumentStemGrelPartMatchingFlag false \
-	-graphIsConnectedFlag false \
-	-graphHasEdgeFlag true \
-	-countNodesFlag false \
-	-edgeNodeCountFlag false \
-	-duplicateEdgesFlag true \
-	-grelGrelFlag true \
-	-useLexiconWeightsRel false \
-	-useLexiconWeightsType false \
-	-validQueryFlag true \
-	-useAnswerTypeQuestionWordFlag false \
-	-useGoldRelations true \
-	-allowMerging false \
-	-handleEventEventEdges false \
-	-useExpand false \
-	-useHyperExpand true \
-	-evaluateBeforeTraining false \
-	-entityScoreFlag true \
-	-entityWordOverlapFlag false \
-	-initialEdgeWeight -0.5 \
-	-initialTypeWeight -2.0 \
-	-initialWordWeight 0.0 \
-	-stemFeaturesWeight 0.05 \
-	-endpoint localhost \
-    -evaluateOnlyTheFirstBest true \
-	-supervisedCorpus "working/$*-webquestions.train.forest.deplambda.json" \
-	-goldParsesFile data/gold_graphs/$*_dependency_with_hyperexpand.full.ser \
-	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-devFile "working/$*-webquestions.dev.forest.deplambda.json" \
-	-logFile ../working/$*_dependency_with_hyperexpand.32/all.log.txt \
-	> ../working/$*_dependency_with_hyperexpand.32/all.txt
-
-test_dependency_with_hyperexpand.32_%:
-	rm -rf ../working/test_dependency_with_hyperexpand.32_$*
-	mkdir -p ../working/test_dependency_with_hyperexpand.32_$*
-	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
-	-pointWiseF1Threshold 0.2 \
-	-semanticParseKey dependency_question_graph \
-	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
-	-schema data/freebase/schema/all_domains_schema.txt \
-	-relationTypesFile lib_data/dummy.txt \
-	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
-	-lexicon lib_data/dummy.txt \
-	-domain "http://rdf.freebase.com" \
-	-typeKey "fb:type.object.type" \
-	-nthreads 20 \
-	-trainingSampleSize 2000 \
-	-iterations 10 \
-	-nBestTrainSyntacticParses 1 \
-	-nBestTestSyntacticParses 1 \
-	-nbestGraphs 100 \
-	-forestSize 10 \
-	-ngramLength 1 \
-	-useSchema true \
-	-useKB true \
-	-addBagOfWordsGraph false \
-	-ngramGrelPartFlag true \
-	-groundFreeVariables false \
-	-groundEntityVariableEdges false \
-	-groundEntityEntityEdges false \
-	-useEmptyTypes false \
-	-ignoreTypes true \
-	-urelGrelFlag false \
-	-urelPartGrelPartFlag false \
-	-utypeGtypeFlag false \
-	-gtypeGrelFlag false \
-	-wordGrelPartFlag true \
-	-wordGrelFlag false \
-	-eventTypeGrelPartFlag false \
-	-argGrelPartFlag true \
-	-argGrelFlag false \
-	-questionTypeGrelPartFlag false \
-	-stemMatchingFlag false \
-	-mediatorStemGrelPartMatchingFlag false \
-	-argumentStemMatchingFlag false \
-	-argumentStemGrelPartMatchingFlag false \
-	-graphIsConnectedFlag false \
-	-graphHasEdgeFlag true \
-	-countNodesFlag false \
-	-edgeNodeCountFlag false \
-	-duplicateEdgesFlag true \
-	-grelGrelFlag true \
-	-useLexiconWeightsRel false \
-	-useLexiconWeightsType false \
-	-validQueryFlag true \
-	-useAnswerTypeQuestionWordFlag false \
-	-useGoldRelations true \
-	-allowMerging false \
-	-handleEventEventEdges false \
-	-useExpand false \
-	-useHyperExpand true \
-	-evaluateBeforeTraining false \
-	-entityScoreFlag true \
-	-entityWordOverlapFlag false \
-	-initialEdgeWeight -0.5 \
-	-initialTypeWeight -2.0 \
-	-initialWordWeight 0.0 \
-	-stemFeaturesWeight 0.05 \
-	-endpoint localhost \
-    -evaluateOnlyTheFirstBest true \
-	-supervisedCorpus "working/$*-webquestions.train.forest.deplambda.json;working/$*-webquestions.dev.forest.deplambda.json" \
-	-goldParsesFile data/gold_graphs/$*_dependency_with_hyperexpand.full.ser \
-	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-devFile "working/$*-webquestions.dev.forest.deplambda.json" \
-	-testFile "working/$*-webquestions.test.forest.deplambda.json" \
-	-logFile ../working/test_dependency_with_hyperexpand.32_$*/all.log.txt \
-	> ../working/test_dependency_with_hyperexpand.32_$*/all.txt
-
 deplambda_with_hyperexpand.32.stem_%:
 	rm -rf ../working/$*_deplambda_with_hyperexpand.32.stem
 	mkdir -p ../working/$*_deplambda_with_hyperexpand.32.stem
@@ -1954,6 +1850,315 @@ test_deplambda_with_hyperexpand.32.stem_%:
 	-logFile ../working/test_deplambda_with_hyperexpand.32.stem_$*/all.log.txt \
 	> ../working/test_deplambda_with_hyperexpand.32.stem_$*/all.txt
 
+dependency_with_merge_without_expand.32_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/wq/$*/dependency_with_merge_without_expand.32
+	mkdir -p ../working/wq/$*/dependency_with_merge_without_expand.32
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 10 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag true \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag false \
+	-mediatorStemGrelPartMatchingFlag false \
+	-argumentStemMatchingFlag false \
+	-argumentStemGrelPartMatchingFlag false \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag false \
+	-useGoldRelations true \
+	-allowMerging true \
+	-handleEventEventEdges true \
+	-useExpand false \
+	-useHyperExpand false \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight 0.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-goldParsesFile data/gold_graphs/$*_dependency_with_merge_without_expand.full.ser \
+	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
+	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-logFile ../working/wq/$*/dependency_with_merge_without_expand.32/all.log.txt \
+	> ../working/wq/$*/dependency_with_merge_without_expand.32/all.txt
+
+dependency_with_hyperexpand.32_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/wq/$*/dependency_with_hyperexpand.32
+	mkdir -p ../working/wq/$*/dependency_with_hyperexpand.32
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 10 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag true \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag false \
+	-mediatorStemGrelPartMatchingFlag false \
+	-argumentStemMatchingFlag false \
+	-argumentStemGrelPartMatchingFlag false \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag false \
+	-useGoldRelations true \
+	-allowMerging false \
+	-handleEventEventEdges false \
+	-useExpand false \
+	-useHyperExpand true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight 0.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-goldParsesFile data/gold_graphs/$*_dependency_with_hyperexpand.full.ser \
+	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
+	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-logFile ../working/wq/$*/dependency_with_hyperexpand.32/all.log.txt \
+	> ../working/wq/$*/dependency_with_hyperexpand.32/all.txt
+
+dependency_with_hyperexpand.32.stem_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/wq/$*/dependency_with_hyperexpand.32.stem
+	mkdir -p ../working/wq/$*/dependency_with_hyperexpand.32.stem
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 10 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag true \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag true \
+	-mediatorStemGrelPartMatchingFlag true \
+	-argumentStemMatchingFlag true \
+	-argumentStemGrelPartMatchingFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag false \
+	-useGoldRelations true \
+	-allowMerging false \
+	-handleEventEventEdges false \
+	-useExpand false \
+	-useHyperExpand true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight 0.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-goldParsesFile data/gold_graphs/$*_dependency_with_hyperexpand.full.ser \
+	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
+	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-logFile ../working/wq/$*/dependency_with_hyperexpand.32.stem/all.log.txt \
+	> ../working/wq/$*/dependency_with_hyperexpand.32.stem/all.txt
+
+dependency_with_merge_without_expand.32.stem_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/wq/$*/dependency_with_merge_without_expand.32.stem
+	mkdir -p ../working/wq/$*/dependency_with_merge_without_expand.32.stem
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 10 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag true \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag true \
+	-mediatorStemGrelPartMatchingFlag true \
+	-argumentStemMatchingFlag true \
+	-argumentStemGrelPartMatchingFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag false \
+	-useGoldRelations true \
+	-allowMerging true \
+	-handleEventEventEdges true \
+	-useExpand false \
+	-useHyperExpand false \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight 0.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-goldParsesFile data/gold_graphs/$*_dependency_with_merge_without_expand.full.ser \
+	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
+	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-logFile ../working/wq/$*/dependency_with_merge_without_expand.32.stem/all.log.txt \
+	> ../working/wq/$*/dependency_with_merge_without_expand.32.stem/all.txt
+
+
 deplambda_with_merge_with_expand.32.stem_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
 	rm -rf ../working/wq/$*/deplambda_with_merge_with_expand.32.stem
@@ -2030,6 +2235,82 @@ deplambda_with_merge_with_expand.32.stem_%:
 	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32.stem/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32.stem/all.txt
+
+easyccg_with_merge_with_expand.32.stem:
+	rm -rf ../working/wq/en/easyccg_with_merge_with_expand.32.stem
+	mkdir -p ../working/wq/en/easyccg_with_merge_with_expand.32.stem
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey synPars \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/all_domains_schema.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-mostFrequentTypesFile data/freebase/stats/freebase_most_frequent_types.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 10 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag true \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag true \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag true \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag true \
+	-mediatorStemGrelPartMatchingFlag true \
+	-argumentStemMatchingFlag true \
+	-argumentStemGrelPartMatchingFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag true \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag false \
+	-useGoldRelations true \
+	-allowMerging true \
+	-handleEventEventEdges true \
+	-useExpand true \
+	-useHyperExpand false \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight 0.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-goldParsesFile data/gold_graphs/easyccg_with_merge_with_expand.full.ser \
+	-contentWordPosTags "NN;NNS;VB;VBD;VBG;VBN;VBP;VBZ;JJ;JJR;JJS;IN;RB;RBR;RBS;RP;WDT;WP;WRB;WP$$" \
+	-supervisedCorpus "working/en-webquestions.train.easyccg.json" \
+	-devFile "working/en-webquestions.dev.easyccg.json" \
+	-testFile "working/en-webquestions.test.easyccg.json" \
+	-logFile ../working/wq/en/easyccg_with_merge_with_expand.32.stem/all.log.txt \
+	> ../working/wq/en/easyccg_with_merge_with_expand.32.stem/all.txt
 
 test_deplambda_with_merge_with_expand.32.stem_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
