@@ -1,0 +1,215 @@
+rulegroup {
+  name: "Conjunctions"
+  priority: 1
+  rule {
+    name: "np conjunction"
+    # "Bill" and "Dave"
+    priority: 1
+    tregex: "/^l-conj$/=relation $ /^t-(?:NOUN|PROPN|PRON|ADJ)$/ < /^t-(?:NOUN|PROPN|PRON)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-np"
+    }
+  }
+  rule {
+    name: "adj conjunction"
+    # "red" and "blue"
+    priority: 1
+    tregex: "/^l-conj$/=relation $ /^t-(?:ADJ)$/ < /^t-(?:ADJ)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-adj"
+    }
+  }
+  rule {
+    name: "sentence conjunction"
+    # Cameron "directed" Titanic and Spielber "produced" Transformers.
+    priority: 1
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^l-dobj$/ < /^l-nsubj$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-sent"
+    }
+  }
+  rule {
+    name: "vp conjunction"
+    # "directed" Titanic and "produced" Titanic.
+    priority: 5
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^l-dobj$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-vp"
+    }
+  }
+  rule {
+    name: "verb conjunction"
+    # "directed" and "produced"
+    priority: 10
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-verb"
+    }
+  }
+}
+rulegroup {
+  name: "reduced relative and relative clause extractions"
+  priority: 1
+  rule {
+    name: "pobj extraction"
+    priority: 1
+    # The "country" which Darwin "belongs" to, is UK.
+    # "country" Darwin was "born" in
+    # country "which" Darwin was born in
+	# TODO: Ideally this should produce the same parse as "Darwin was born in country", however, we produce "Darwin was born[in] country" where [in] is invisible.
+    # (l-root w-1-country t-NOUN (l-acl:relcl w-5-bear t-VERB (l-dobj w-2-which t-DET) (l-nsubjpass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP)))
+    tregex: "/^l-acl.*$/=relation  < (/^l-nmod$/ < /^t-ADP$/)"
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-nmod"
+      child: "v-f"
+    }
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-f"
+    }
+  }
+  rule {
+    name: "nsubj extraction"
+    priority: 5
+    tregex: "/^l-acl.*$/=relation !< /^l-(?:nsubj|nsubjpas)$/"
+    # The company "bought" Youtube, owns Gmail. -- construction exists in Telugu 
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-f"
+    }
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-f"
+    }
+  }
+  rule {
+    name: "nsubj extraction"
+    priority: 5
+    tregex: "/^l-acl.*$/=relation < (/^l-nsubj$/ < /^t-(?:DET|ADV)$/)"
+    # The "company" which "bought" Youtube owns Gmail.
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-f"
+    }
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-f"
+    }
+  }
+  rule {
+    name: "nsubjpass extraction"
+    priority: 5
+    tregex: "/^l-acl.*$/=relation < (/^l-nsubjpass$/ < /^t-(?:DET|ADV)$/)"
+    # The "company" which is "based" in
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-nsubjpass"
+      child: "v-f"
+    }
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-f"
+    }
+  }
+  rule {
+    name: "dobj extraction"
+    priority: 10
+    tregex: "/^l-acl.*$/=relation !< /^l-dobj$/"
+    # The "movie" Cameron "directed"
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-dobj"
+      child: "v-f"
+    }
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-f"
+    }
+  }
+  rule {
+    name: "dobj extraction"
+    priority: 10 
+    tregex: "/^l-acl.*$/=relation < (/^l-dobj$/ < /^t-(?:DET|ADV)$/)"
+    # The "movie" which Cameron "directed"
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-dobj"
+      child: "v-f"
+    }
+    transformation {
+      target: "relation"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-f"
+    }
+  }
+  rule {
+    name: "no extraction"
+    priority: 15
+    tregex: "/^l-acl.*$/=relation"
+	# the "issues" as he "sees" them
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-acl-other"
+    }
+  }
+}
+rulegroup {
+  name: "question special cases"
+  priority: 1
+  rule {
+    name: "pobj"
+    priority: 1
+	# what city did Obama come from?
+    # TODO: Ideally this should produce same parse as "Obama comes from what city", whereas the current rule procduces "Obama comes [from] what city" where [from] is invisible.
+    # (l-root w-5-come t-VERB (l-dobj w-2-city t-NOUN (l-det w-1-what t-DET)) (l-aux w-3-did t-AUX) (l-nsubj w-4-obama t-PROPN) (l-nmod w-6-from t-ADP) (l-punct w-7-? t-PUNCT))
+    tregex: "/^l-.*$/=root  < (/^l-.*$/=pobj <<  (/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword $ /t-(?:PRON|DET|ADV|ADJ)/)) < (/^l-nmod$/ < /^t-ADP$/ !> /^l-acl.*$/)"
+    transformation {
+      target: "pobj"
+      action: CHANGE_LABEL 
+      label: "l-nmod"
+    }
+  }
+  rule {
+    name: "pobj"
+    priority: 1
+	# where did Obama come from?
+    # TODO: Ideally this should produce same parse as "Obama comes from where", whereas the current rule procduces "Obama comes [from] where". Here [from] is invisible.
+    tregex: "/^l-.*$/=root  < (/^l-.*$/=pobj < (/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=qword $ /t-(?:PRON|DET|ADV|ADJ)/)) < (/^l-nmod$/ < /^t-ADP$/ !> /^l-acl.*$/)"
+    transformation {
+      target: "pobj"
+      action: CHANGE_LABEL 
+      label: "l-nmod"
+    }
+  }
+}
