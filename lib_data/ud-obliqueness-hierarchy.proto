@@ -1,4 +1,8 @@
 relation {
+  name: "l-BIND"
+  priority: 9
+}
+relation {
   name: "l-conj-verb"
   priority: 10
 }
@@ -133,9 +137,5 @@ relation {
 relation {
   name: "l-punct"
   priority: 90
-}
-relation {
-  name: "l-BIND"
-  priority: 100
 }
 

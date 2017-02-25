@@ -56,7 +56,7 @@ rulegroup {
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y))))))"
     }
   }
   rule {
@@ -478,7 +478,7 @@ rulegroup {
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "empty:bind"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
     }
   }
 }
@@ -770,8 +770,18 @@ rulegroup {
   name: "virtual"
   priority: 1
   rule {
-    name: "virtual default"
+    name: "virtual word"
     priority: 1
+    tregex: "/v-w-.*/=target"
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EQUAL:b $x {target}:v))"
+    }
+  }
+  rule {
+    name: "virtual default"
+    priority: 10
     tregex: "/v-.*/=target"
     transformation {
       target: "target"
