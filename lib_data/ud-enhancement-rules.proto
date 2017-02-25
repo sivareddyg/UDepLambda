@@ -176,108 +176,108 @@ rulegroup {
     # country "which" Darwin was born in
 	# TODO: Ideally this should produce the same parse as "Darwin was born in country", however, we produce "Darwin was born[in] country" where [in] is invisible.
     # (l-root w-1-country t-NOUN (l-acl:relcl w-5-bear t-VERB (l-dobj w-2-which t-DET) (l-nsubjpass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP)))
-    tregex: "/^l-acl.*$/=relation  < (/^l-nmod$/ < /^t-ADP$/)"
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-nmod$/ < /^t-ADP$/)"
     transformation {
-      target: "relation"
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
       action: ADD_CHILD
       label: "l-nmod"
-      child: "v-f"
-    }
-    transformation {
-      target: "relation"
-      action: ADD_CHILD
-      label: "l-BIND"
-      child: "v-f"
+      child: "v-{originword}"
     }
   }
   rule {
     name: "nsubj extraction"
     priority: 5
-    tregex: "/^l-acl.*$/=relation !< /^l-(?:nsubj|nsubjpas)$/"
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword !< /^l-(?:nsubj|nsubjpass)$/"
     # The company "bought" Youtube, owns Gmail. -- construction exists in Telugu 
     transformation {
-      target: "relation"
-      action: ADD_CHILD
-      label: "l-nsubj"
-      child: "v-f"
-    }
-    transformation {
-      target: "relation"
+      target: "origin"
       action: ADD_CHILD
       label: "l-BIND"
-      child: "v-f"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
     }
   }
   rule {
     name: "nsubj extraction"
     priority: 5
-    tregex: "/^l-acl.*$/=relation < (/^l-nsubj$/ < /^t-(?:DET|ADV)$/)"
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-nsubj$/ < /^t-(?:DET|ADV)$/)"
     # The "company" which "bought" Youtube owns Gmail.
     transformation {
-      target: "relation"
-      action: ADD_CHILD
-      label: "l-nsubj"
-      child: "v-f"
-    }
-    transformation {
-      target: "relation"
+      target: "origin"
       action: ADD_CHILD
       label: "l-BIND"
-      child: "v-f"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
     }
   }
   rule {
     name: "nsubjpass extraction"
     priority: 5
-    tregex: "/^l-acl.*$/=relation < (/^l-nsubjpass$/ < /^t-(?:DET|ADV)$/)"
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-nsubjpass$/ < /^t-(?:DET|ADV)$/)"
     # The "company" which is "based" in
     transformation {
-      target: "relation"
-      action: ADD_CHILD
-      label: "l-nsubjpass"
-      child: "v-f"
-    }
-    transformation {
-      target: "relation"
+      target: "origin"
       action: ADD_CHILD
       label: "l-BIND"
-      child: "v-f"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubjpass"
+      child: "v-{originword}"
     }
   }
   rule {
     name: "dobj extraction"
     priority: 10
-    tregex: "/^l-acl.*$/=relation !< /^l-dobj$/"
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword !< /^l-dobj$/"
     # The "movie" Cameron "directed"
     transformation {
-      target: "relation"
-      action: ADD_CHILD
-      label: "l-dobj"
-      child: "v-f"
-    }
-    transformation {
-      target: "relation"
+      target: "origin"
       action: ADD_CHILD
       label: "l-BIND"
-      child: "v-f"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-dobj"
+      child: "v-{originword}"
     }
   }
   rule {
     name: "dobj extraction"
     priority: 10 
-    tregex: "/^l-acl.*$/=relation < (/^l-dobj$/ < /^t-(?:DET|ADV)$/)"
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-dobj$/ < /^t-(?:DET|ADV)$/)"
     # The "movie" which Cameron "directed"
     transformation {
-      target: "relation"
-      action: ADD_CHILD
-      label: "l-dobj"
-      child: "v-f"
-    }
-    transformation {
-      target: "relation"
+      target: "origin"
       action: ADD_CHILD
       label: "l-BIND"
-      child: "v-f"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-dobj"
+      child: "v-{originword}"
     }
   }
   rule {

@@ -165,8 +165,8 @@ public class TreeTransformer {
     DependencyTree targetNode = (DependencyTree) matcher.getNode(targetName);
     switch (transformation.getAction()) {
       case ADD_CHILD: {
-        String child = transformation.getChild();
-        String label = transformation.getLabel();
+        String child = replaceNamedVars(matcher, transformation.getChild());
+        String label = replaceNamedVars(matcher, transformation.getLabel());
         DependencyTree labelTree = new DependencyTree(new Word(label));
         DependencyTree childTree = new DependencyTree(new Word(child));
         labelTree.addChild(childTree);
@@ -174,39 +174,33 @@ public class TreeTransformer {
         break;
       }
       case ASSIGN_LAMBDA: {
-        String lambda = transformation.getLambda();
-        Pattern namedNodePattern = Pattern.compile("\\{(.+?)\\}");
-        Matcher namedNodematcher = namedNodePattern.matcher(lambda);
-        while (namedNodematcher.find()) {
-          String namedNodeString = namedNodematcher.group(1);
-          Tree namedNode = matcher.getNode(namedNodeString);
-          lambda =
-              lambda.replaceAll(String.format("\\{%s\\}", namedNodeString),
-                  replaceSpecialChars(namedNode.label().value()));
-          namedNodematcher = namedNodePattern.matcher(lambda);
-        }
+        String lambda = replaceNamedVars(matcher, transformation.getLambda());
         LogicalExpression expr = SimpleLogicalExpressionReader.read(lambda);
         targetNode.addNodeLambda(expr);
         break;
       }
       case CHANGE_LABEL: {
-        String newLabel = transformation.getLabel();
-        Pattern namedNodePattern = Pattern.compile("\\{(.+?)\\}");
-        Matcher namedNodematcher = namedNodePattern.matcher(newLabel);
-        while (namedNodematcher.find()) {
-          String namedNodeString = namedNodematcher.group(1);
-          Tree namedNode = matcher.getNode(namedNodeString);
-          newLabel =
-              newLabel.replaceAll(String.format("\\{%s\\}", namedNodeString),
-                  replaceSpecialChars(namedNode.label().value()));
-          namedNodematcher = namedNodePattern.matcher(newLabel);
-        }
-        targetNode.setLabel(new Word(newLabel));
+        String label = replaceNamedVars(matcher, transformation.getLabel());
+        targetNode.setLabel(new Word(label));
         break;
       }
       default:
         break;
     }
+  }
+  
+  private static String replaceNamedVars(TregexMatcher matcher, String original) {
+    Pattern namedNodePattern = Pattern.compile("\\{(.+?)\\}");
+    Matcher namedNodematcher = namedNodePattern.matcher(original);
+    while (namedNodematcher.find()) {
+      String namedNodeString = namedNodematcher.group(1);
+      Tree namedNode = matcher.getNode(namedNodeString);
+      original =
+          original.replaceAll(String.format("\\{%s\\}", namedNodeString),
+              replaceSpecialChars(namedNode.label().value()));
+      namedNodematcher = namedNodePattern.matcher(original);
+    }
+    return original;
   }
 
   private static String replaceSpecialChars(String name) {

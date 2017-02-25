@@ -1209,14 +1209,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-country t-NOUN (l-acl w-5-bear t-VERB (l-dobj w-2-which t-DET) (l-nsubjpass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP) (l-nmod v-f) (l-BIND v-f)))",
+        "(l-root w-1-country t-NOUN (l-acl w-5-bear t-VERB (l-dobj w-2-which t-DET) (l-nsubjpass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP) (l-nmod v-w-1-country)) (l-BIND v-w-1-country))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-acl w-1-country (l-BIND (l-nsubjpass (l-nmod (l-nmod (l-auxpass (l-dobj w-5-bear w-2-which) w-4-was) w-6-at) v-f) w-3-darwin) v-f))",
+        "(l-acl (l-BIND w-1-country v-w-1-country) (l-nsubjpass (l-nmod (l-nmod (l-auxpass (l-dobj w-5-bear w-2-which) w-4-was) w-6-at) v-w-1-country) w-3-darwin))",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1230,7 +1230,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-country:u $0) (p_EVENT_w-1-country:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-bear:u $1) (p_EMPTY:u $5) (p_EVENT.ENTITY_arg2:b $1 $5))) (p_EMPTY:u $4) (p_EVENT.ENTITY_l-nmod:b $1 $4))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_l-nmod:b $1 $3))) (p_TYPE_w-3-darwin:u $2) (p_EVENT.ENTITY_arg2:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-country:u $0) (p_EVENT_w-1-country:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EQUAL:b $0 v-w-1-country:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-bear:u $1) (p_EMPTY:u $5) (p_EVENT.ENTITY_arg2:b $1 $5))) (p_EMPTY:u $4) (p_EVENT.ENTITY_l-nmod:b $1 $4))) (p_EQUAL:b $3 v-w-1-country:v) (p_EVENT.ENTITY_l-nmod:b $1 $3))) (p_TYPE_w-3-darwin:u $2) (p_EVENT.ENTITY_arg2:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1252,14 +1252,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-company t-NOUN (l-acl:relcl w-3-buy t-VERB (l-nsubj w-2-which t-DET) (l-dobj w-4-pixar t-PROPN) (l-nsubj v-f) (l-BIND v-f)))",
+        "(l-root w-1-company t-NOUN (l-acl:relcl w-3-buy t-VERB (l-nsubj w-2-which t-DET) (l-dobj w-4-pixar t-PROPN) (l-nsubj v-w-1-company)) (l-BIND v-w-1-company))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-acl:relcl w-1-company (l-BIND (l-nsubj (l-nsubj (l-dobj w-3-buy w-4-pixar) w-2-which) v-f) v-f))",
+        "(l-acl:relcl (l-BIND w-1-company v-w-1-company) (l-nsubj (l-nsubj (l-dobj w-3-buy w-4-pixar) w-2-which) v-w-1-company))",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1273,7 +1273,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-company:u $0) (p_EVENT_w-1-company:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-3-buy:u $1) (p_TYPE_w-4-pixar:u $4) (p_EVENT.ENTITY_arg2:b $1 $4))) (p_EMPTY:u $3) (p_EVENT.ENTITY_arg1:b $1 $3))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-company:u $0) (p_EVENT_w-1-company:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EQUAL:b $0 v-w-1-company:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-3-buy:u $1) (p_TYPE_w-4-pixar:u $4) (p_EVENT.ENTITY_arg2:b $1 $4))) (p_EMPTY:u $3) (p_EVENT.ENTITY_arg1:b $1 $3))) (p_EQUAL:b $2 v-w-1-company:v) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1295,14 +1295,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-movie t-NOUN (l-acl:relcl w-3-see t-VERB (l-nsubj w-2-i t-PRON) (l-dobj v-f) (l-BIND v-f)))",
+        "(l-root w-1-movie t-NOUN (l-acl:relcl w-3-see t-VERB (l-nsubj w-2-i t-PRON) (l-dobj v-w-1-movie)) (l-BIND v-w-1-movie))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-acl:relcl w-1-movie (l-BIND (l-nsubj (l-dobj w-3-see v-f) w-2-i) v-f))",
+        "(l-acl:relcl (l-BIND w-1-movie v-w-1-movie) (l-nsubj (l-dobj w-3-see v-w-1-movie) w-2-i))",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1316,7 +1316,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-movie:u $0) (p_EVENT_w-1-movie:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-see:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-2-i:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-movie:u $0) (p_EVENT_w-1-movie:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EQUAL:b $0 v-w-1-movie:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-see:u $1) (p_EQUAL:b $3 v-w-1-movie:v) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-2-i:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1381,14 +1381,14 @@ public class TreeTransformerUniversalTest {
     TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-where t-ADV:WH (l-acl w-3-hang t-VERB (l-mark w-2-to t-PART) (l-compound:prt w-4-out t-ADP) (l-nmod w-6-chicago t-PROPN (l-case w-5-in t-ADP)) (l-nsubj v-f) (l-BIND v-f)) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-1-where t-ADV:WH (l-acl w-3-hang t-VERB (l-mark w-2-to t-PART) (l-compound:prt w-4-out t-ADP) (l-nmod w-6-chicago t-PROPN (l-case w-5-in t-ADP)) (l-nsubj v-w-1-where)) (l-punct w-7-? t-PUNCT) (l-BIND v-w-1-where))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
             obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-acl w-1-where (l-compound:prt (l-mark (l-BIND (l-nsubj (l-nmod w-3-hang (l-case w-6-chicago w-5-in)) v-f) v-f) w-2-to) w-4-out)) w-7-?)",
+        "(l-punct (l-acl (l-BIND w-1-where v-w-1-where) (l-compound:prt (l-mark (l-nsubj (l-nmod w-3-hang (l-case w-6-chicago w-5-in)) v-w-1-where) w-2-to) w-4-out)) w-7-?)",
         binarizedTreeString);
 
     // Assign lambdas.
@@ -1402,7 +1402,7 @@ public class TreeTransformerUniversalTest {
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-where:u $0) (p_EVENT_w-1-where:u $0) (p_EVENT.ENTITY_arg0:b $0 $0) (p_TARGET:u $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-hang:u $1) (and:c (p_TYPE_w-6-chicago:u $3) (p_EVENT_w-6-chicago:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $1 $3))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-where:u $0) (p_EVENT_w-1-where:u $0) (p_EVENT.ENTITY_arg0:b $0 $0) (p_TARGET:u $0)) (p_EQUAL:b $0 v-w-1-where:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-hang:u $1) (and:c (p_TYPE_w-6-chicago:u $3) (p_EVENT_w-6-chicago:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $1 $3))) (p_EQUAL:b $2 v-w-1-where:v) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
