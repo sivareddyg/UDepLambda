@@ -322,19 +322,43 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "Control and other complement extractions - This is a hack."
+  name: "Control constructions"
   priority: 1
   rule {
-    name: "control verbs"
+    name: "object of controller as subject to the controlled verb"
+    # I want John to buy a laptop
+    priority: 1
+    tregex: "/^l-xcomp$/=target !< /^l-nsubj$/ $ (/^l-dobj$/=origin < /^w-.*$/=originword)"
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "subject of controller as subject to the controlled verb"
     # I want to buy laptop
     # Always assume there is an extraction.
-    # Treat this as verb conjunction
     priority: 5
-    tregex: "/^l-(?:xcomp|ccomp|advcl)$/=relation"
+    tregex: "/^l-xcomp$/=target !< /^l-nsubj$/ $ (/^l-nsubj$/=origin < /^w-.*$/=originword)"
     transformation {
-      target: "relation"
-      action: CHANGE_LABEL
-      label: "l-conj-verb"
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
     }
   }
 }
