@@ -191,6 +191,16 @@ public class TreeTransformer {
       }
       case CHANGE_LABEL: {
         String newLabel = transformation.getLabel();
+        Pattern namedNodePattern = Pattern.compile("\\{(.+?)\\}");
+        Matcher namedNodematcher = namedNodePattern.matcher(newLabel);
+        while (namedNodematcher.find()) {
+          String namedNodeString = namedNodematcher.group(1);
+          Tree namedNode = matcher.getNode(namedNodeString);
+          newLabel =
+              newLabel.replaceAll(String.format("\\{%s\\}", namedNodeString),
+                  replaceSpecialChars(namedNode.label().value()));
+          namedNodematcher = namedNodePattern.matcher(newLabel);
+        }
         targetNode.setLabel(new Word(newLabel));
         break;
       }

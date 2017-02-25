@@ -1,4 +1,82 @@
 rulegroup {
+  name: "Question words"
+  priority: 1
+  rule {
+    name: "question words invoking COUNT"
+    priority: 1
+    # ¿Cuántas ciudades
+    # Howmany cities (how many is a single word in spanish)
+    # change the postag of from ADV to ADV:COUNT:WH.
+    tregex: "/w-.*-(?:cuánto|cuánta|cuántos|cuántas|cuanto|cuanta|cuantos|cuantas)$/=word !>> /^l-acl.*$/ $ /t-(?:PRON|DET|ADV|ADJ)/=postag"
+    transformation {
+      target: "postag"
+      action: CHANGE_LABEL 
+      label: "{postag}:COUNT:WH"
+    }
+  }
+  rule {
+    name: "Enhance question words pos tags"
+    priority: 5
+	# "when" did aldi originate?
+    # change the postag of "when" from ADV to ADV:WH.
+    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /t-(?:PRON|DET|ADV|ADJ)/=postag"
+    transformation {
+      target: "postag"
+      action: CHANGE_LABEL 
+      label: "{postag}:WH"
+    }
+  }
+  # Below are special cases when COUNT phenomenon requires wideer context
+  rule {
+    name: "nmod indicating counting"
+    # "number" of "people"
+    # "count" of "films"
+    priority: 10
+    tregex: "/^l-nmod$/=relation $ /^w-.*-(count|number|total|anzahl|número|numero)$/ $ /^t-NOUN$/ < /^l-case$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "{relation}:count"
+    }
+  }
+  rule {
+    name: "advmod in how many"
+    # "how" "many"
+    priority: 1
+    tregex: "/^l-advmod$/=relation < /^w-.*-(?:how|wie)$/ $ /^w-.*-(?:many|viel|viele|vielen)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "{relation}:count"
+    }
+  }
+  rule {
+    name: "advmod in how many"
+    # "how" many "people"
+    # how attached to people instead of many. This is likely a parser mistake. 
+    priority: 1
+    tregex: "/^l-advmod$/=relation < /^w-.*-(?:how|wie)$/ $ (/^l-.*$/ < /^w-.*-(?:many|viel|viele|vielen)$/)"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "{relation}:count"
+    }
+  }
+  # Questions without question words
+  rule {
+    name: "dobj when posed as a question"
+    # "give" me the "capital" of UK?
+    # This happens when subj is not seen with the verb. 
+    priority: 5
+    tregex: "/^l-dobj$/=relation !$ /^l-(?:nsubj|nsubjpass)$/ $ /^w-.*-(?:find|give|list|locate|look|name|tell|finden|finde|geben|gib|liste|suchen|schauen|nennen|erzählen|encontrar|encontrarnos|bien|dame|darnos|dar|lista|localizar|localiza|localizarme|mira|mirame|buscar|nombre|nombrar|dime|cuéntanos)$/ $ /^t-VERB$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "{relation}:wh"
+    }
+  }
+}
+rulegroup {
   name: "Common Dependency Parser Errors. Use sparingly."
   priority: 1
   rule {
