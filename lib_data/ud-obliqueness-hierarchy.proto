@@ -51,6 +51,10 @@ relation {
   priority: 20
 }
 relation {
+  name: "l-dobj:wh"
+  priority: 20
+}
+relation {
   name: "l-dobj-wh"
   priority: 20
 }
@@ -83,11 +87,19 @@ relation {
   priority: 40
 }
 relation {
+  name: "l-nmod:count"
+  priority: 40
+}
+relation {
   name: "l-nmod"
   priority: 40
 }
 relation {
   name: "l-advmod"
+  priority: 40
+}
+relation {
+  name: "l-advmod:count"
   priority: 40
 }
 relation {

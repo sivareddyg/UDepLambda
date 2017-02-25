@@ -28,9 +28,9 @@ java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This 
     languageCode en \
     deplambda true \
     deplambda.definedTypesFile lib_data/ud.types.txt \
-    deplambda.treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-    deplambda.relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-    deplambda.lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.proto.txt \
+    deplambda.treeTransformationsFile lib_data/ud-enhancement-rules.proto \
+    deplambda.relationPrioritiesFile lib_data/ud-obliqueness-hierarchy.proto  \
+    deplambda.lambdaAssignmentRulesFile lib_data/ud-substitution-rules.proto \
     deplambda.lexicalizePredicates true \
     deplambda.debugToFile debug.txt \
     nthreads 1 \
