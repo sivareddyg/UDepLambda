@@ -13,12 +13,11 @@ Let's setup Freebase server first.
 
 ## Multiligual WebQuestions and GraphQuestions Data
 
-
 1. cd UDepLambda
 2. git submodule update --init --recursive data/WebQuestions
 3. git submodule update --init --recursive data/GraphQuestions
 
-### Format
+### Data Format
 
 ## Paper Results replication
 
