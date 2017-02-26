@@ -54,5 +54,4 @@ Check debug.txt to see step by step derivation.
   year={2017}
   url = {https://arxiv.org/pdf/1702.03196.pdf}
 }
-
 ```
