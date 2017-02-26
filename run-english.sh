@@ -1,8 +1,6 @@
-java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs stanford default postagger, lemmatizer and ner` \
-    annotators tokenize,ssplit,pos,lemma,ner \
+java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs stanford default postagger, lemmatizer, ner and dependency parser` \
+    annotators tokenize,ssplit,pos,lemma,ner,depparse \
     tokenize.language en \
-    ner.applyNumericClassifiers false \
-    ner.useSUTime false \
     nthreads 1 \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline  `# This pipeline uses ner tags from previous steps and annotates entities` \
     preprocess.addDateEntities true \
@@ -11,15 +9,13 @@ java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This 
     tokenize.whitespace true \
     ssplit.eolonly true \
     nthreads 1 \
-    | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs UD pos tagger and UD dependency parser` \
-    preprocess.lowerCase true \
-    annotators tokenize,ssplit,pos,depparse \
+    | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs UD pos tagger` \
+    annotators tokenize,ssplit,pos \
     tokenize.whitespace true \
     ssplit.eolonly true \
     languageCode en \
     posTagKey UD \
-    pos.model lib_data/ud-models-v1.3/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.tagger \
-    depparse.model lib_data/ud-models-v1.3/en/neural-parser/en-lowercase-glove50.lower.nndep.model.txt.gz \
+    pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
     nthreads 1 \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs semantic parser` \
     annotators tokenize,ssplit \
@@ -33,4 +29,4 @@ java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This 
     deplambda.lambdaAssignmentRulesFile lib_data/ud-substitution-rules.proto \
     deplambda.lexicalizePredicates true \
     deplambda.debugToFile debug.txt \
-    nthreads 1 \
+    nthreads 1 
