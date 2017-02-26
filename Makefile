@@ -84,43 +84,43 @@ get_test_results_%:
 
 # Parse WebQuestions
 create_webquestions_en:
-	cat data/webquestions/en/webquestions.examples.test.json \
+	cat data/WebQuestions/en/webquestions.examples.test.json \
 		| python scripts/webquestions/convert_to_one_sentence_per_line.py \
 		| python scripts/webquestions/add_gold_mid_using_gold_url.py data/freebase/mid_to_key.txt.gz \
 		| java -Dfile.encoding="UTF-8" -cp lib/*: in.sivareddy.scripts.AddGoldRelationsToWebQuestionsData localhost data/freebase/schema/all_domains_schema.txt \
-		> data/webquestions/en/webquestions.test.json
-	cat data/webquestions/en/webquestions.examples.train.json \
+		> data/WebQuestions/en/webquestions.test.json
+	cat data/WebQuestions/en/webquestions.examples.train.json \
 		| python scripts/webquestions/convert_to_one_sentence_per_line.py \
-		| python scripts/webquestions/extract_subset.py data/webquestions/webquestions_sentences.train.txt \
+		| python scripts/webquestions/extract_subset.py data/WebQuestions/webquestions_sentences.train.txt \
 		| python scripts/webquestions/add_gold_mid_using_gold_url.py data/freebase/mid_to_key.txt.gz \
 		| java -Dfile.encoding="UTF-8" -cp lib/*: in.sivareddy.scripts.AddGoldRelationsToWebQuestionsData localhost data/freebase/schema/all_domains_schema.txt \
-		> data/webquestions/en/webquestions.train.json
-	cat data/webquestions/en/webquestions.examples.train.json \
+		> data/WebQuestions/en/webquestions.train.json
+	cat data/WebQuestions/en/webquestions.examples.train.json \
 		| python scripts/webquestions/convert_to_one_sentence_per_line.py \
-		| python scripts/webquestions/extract_subset.py data/webquestions/webquestions_sentences.dev.txt  \
+		| python scripts/webquestions/extract_subset.py data/WebQuestions/webquestions_sentences.dev.txt  \
 		| python scripts/webquestions/add_gold_mid_using_gold_url.py data/freebase/mid_to_key.txt.gz \
 		| java -Dfile.encoding="UTF-8" -cp lib/*: in.sivareddy.scripts.AddGoldRelationsToWebQuestionsData localhost data/freebase/schema/all_domains_schema.txt \
-		> data/webquestions/en/webquestions.dev.json
+		> data/WebQuestions/en/webquestions.dev.json
 
 create_webquestions_%:
-	cat data/webquestions/en/webquestions.train.json \
+	cat data/WebQuestions/en/webquestions.train.json \
 		| python scripts/webquestions/merge_with_english.py \
-		data/webquestions/$*/webquestions.examples.train.utterances_$* \
-		data/webquestions/$*/webquestions.examples.train.utterances \
-		> data/webquestions/$*/webquestions.train.json
-	cat data/webquestions/en/webquestions.dev.json \
+		data/WebQuestions/$*/webquestions.examples.train.utterances_$* \
+		data/WebQuestions/$*/webquestions.examples.train.utterances \
+		> data/WebQuestions/$*/webquestions.train.json
+	cat data/WebQuestions/en/webquestions.dev.json \
 		| python scripts/webquestions/merge_with_english.py \
-		data/webquestions/$*/webquestions.examples.train.utterances_$* \
-		data/webquestions/$*/webquestions.examples.train.utterances \
-		> data/webquestions/$*/webquestions.dev.json
-	cat data/webquestions/en/webquestions.test.json \
+		data/WebQuestions/$*/webquestions.examples.train.utterances_$* \
+		data/WebQuestions/$*/webquestions.examples.train.utterances \
+		> data/WebQuestions/$*/webquestions.dev.json
+	cat data/WebQuestions/en/webquestions.test.json \
 		| python scripts/webquestions/merge_with_english.py \
-		data/webquestions/$*/webquestions.examples.test.utterances_$* \
-		data/webquestions/$*/webquestions.examples.test.utterances \
-		> data/webquestions/$*/webquestions.test.json
+		data/WebQuestions/$*/webquestions.examples.test.utterances_$* \
+		data/WebQuestions/$*/webquestions.examples.test.utterances \
+		> data/WebQuestions/$*/webquestions.test.json
 
 entity_annotate_webquestions_%:
-	cat data/webquestions/$*/webquestions.train.json \
+	cat data/WebQuestions/$*/webquestions.train.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline \
 		annotators tokenize,ssplit,pos,lemma \
 		ssplit.newlineIsSentenceBreak always \
@@ -128,7 +128,7 @@ entity_annotate_webquestions_%:
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.train.json
-	cat data/webquestions/$*/webquestions.dev.json \
+	cat data/WebQuestions/$*/webquestions.dev.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline \
 		annotators tokenize,ssplit,pos,lemma \
 		ssplit.newlineIsSentenceBreak always \
@@ -136,7 +136,7 @@ entity_annotate_webquestions_%:
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.dev.json
-	cat data/webquestions/$*/webquestions.test.json \
+	cat data/WebQuestions/$*/webquestions.test.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline \
 		annotators tokenize,ssplit,pos,lemma \
 		ssplit.newlineIsSentenceBreak always \
@@ -166,12 +166,12 @@ entity_annotate_webquestions_%:
 		> working/$*-webquestions.train.ranked.json
 	# if successful, take backup. Freebase API may stop working anytime.
 	#echo "Overwriting existing files: "
-	cp -i working/$*-webquestions.train.ranked.json data/webquestions/$*/webquestions.train.ranked.json
-	cp -i working/$*-webquestions.dev.ranked.json data/webquestions/$*/webquestions.dev.ranked.json
-	cp -i working/$*-webquestions.test.ranked.json data/webquestions/$*/webquestions.test.ranked.json
+	cp -i working/$*-webquestions.train.ranked.json data/WebQuestions/$*/webquestions.train.ranked.json
+	cp -i working/$*-webquestions.dev.ranked.json data/WebQuestions/$*/webquestions.dev.ranked.json
+	cp -i working/$*-webquestions.test.ranked.json data/WebQuestions/$*/webquestions.test.ranked.json
 
 evaluate_entity_annotation_upperbound_%:
-	cat data/webquestions/$*/webquestions.dev.ranked.json \
+	cat data/WebQuestions/$*/webquestions.dev.ranked.json \
 		| python2.7 ../graph-parser/scripts/entity-annotation/get_entity_patterns.py
 
 
@@ -180,43 +180,43 @@ train_entity_annotator_%:
 	java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunTrainEntityScorer \
 		-nthreads 20 \
 		-iterations 100 \
-		-trainFile data/webquestions/$*/webquestions.train.ranked.json \
-		-devFile data/webquestions/$*/webquestions.dev.ranked.json \
-		-testFile data/webquestions/$*/webquestions.test.ranked.json \
+		-trainFile data/WebQuestions/$*/webquestions.train.ranked.json \
+		-devFile data/WebQuestions/$*/webquestions.dev.ranked.json \
+		-testFile data/WebQuestions/$*/webquestions.test.ranked.json \
 		-saveToFile data/entity-models/$*-webquestions.ser
 
 disambiguate_entities_%:
-	cat data/webquestions/$*/webquestions.dev.ranked.json \
+	cat data/WebQuestions/$*/webquestions.dev.ranked.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunEntityDisambiguator \
 		-loadModelFromFile data/entity-models/$*-webquestions.ser \
 		-endpoint localhost \
 		-nthreads 20 \
 		-nbestEntities 10 \
 		-schema data/freebase/schema/all_domains_schema.txt \
-		> data/webquestions/$*/webquestions.dev.disambiguated.json
-	cat data/webquestions/$*/webquestions.train.ranked.json \
+		> data/WebQuestions/$*/webquestions.dev.disambiguated.json
+	cat data/WebQuestions/$*/webquestions.train.ranked.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunEntityDisambiguator \
 		-loadModelFromFile data/entity-models/$*-webquestions.ser \
 		-endpoint localhost \
 		-nthreads 20 \
 		-nbestEntities 10 \
 		-schema data/freebase/schema/all_domains_schema.txt \
-		> data/webquestions/$*/webquestions.train.disambiguated.json
-	cat data/webquestions/$*/webquestions.test.ranked.json \
+		> data/WebQuestions/$*/webquestions.train.disambiguated.json
+	cat data/WebQuestions/$*/webquestions.test.ranked.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunEntityDisambiguator \
 		-loadModelFromFile data/entity-models/$*-webquestions.ser \
 		-endpoint localhost \
 		-nthreads 20 \
 		-nbestEntities 10 \
 		-schema data/freebase/schema/all_domains_schema.txt \
-		> data/webquestions/$*/webquestions.test.disambiguated.json
+		> data/WebQuestions/$*/webquestions.test.disambiguated.json
 
 entity_disambiguation_results_%:
-	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
+	cat data/WebQuestions/$*/webquestions.dev.disambiguated.json \
 	    | python2.7 ../graph-parser/scripts/entity-annotation/evaluate_entity_annotation.py 
 
 entity_dismabiguated_to_plain_forest_en:
-	cat data/webquestions/en/webquestions.dev.disambiguated.json \
+	cat data/WebQuestions/en/webquestions.dev.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.lowerCase true \
 		annotators tokenize,ssplit,pos,lemma \
@@ -231,7 +231,7 @@ entity_dismabiguated_to_plain_forest_en:
 		posTagKey UD \
 		pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
 		> working/en-webquestions.dev.plain.forest.json 
-	cat data/webquestions/en/webquestions.train.disambiguated.json \
+	cat data/WebQuestions/en/webquestions.train.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.lowerCase true \
 		annotators tokenize,ssplit,pos,lemma \
@@ -246,7 +246,7 @@ entity_dismabiguated_to_plain_forest_en:
 		posTagKey UD \
 		pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
 		> working/en-webquestions.train.plain.forest.json 
-	cat data/webquestions/en/webquestions.test.disambiguated.json \
+	cat data/WebQuestions/en/webquestions.test.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.lowerCase true \
 		annotators tokenize,ssplit,pos,lemma \
@@ -263,7 +263,7 @@ entity_dismabiguated_to_plain_forest_en:
 		> working/en-webquestions.test.plain.forest.json 
 
 entity_dismabiguated_to_plain_forest_%:
-	cat data/webquestions/$*/webquestions.dev.disambiguated.json \
+	cat data/WebQuestions/$*/webquestions.dev.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.lowerCase true \
 		annotators tokenize,ssplit,pos \
@@ -274,7 +274,7 @@ entity_dismabiguated_to_plain_forest_%:
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.dev.plain.forest.json 
-	cat data/webquestions/$*/webquestions.train.disambiguated.json \
+	cat data/WebQuestions/$*/webquestions.train.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.lowerCase true \
 		annotators tokenize,ssplit,pos \
@@ -285,7 +285,7 @@ entity_dismabiguated_to_plain_forest_%:
 		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.train.plain.forest.json 
-	cat data/webquestions/$*/webquestions.test.disambiguated.json \
+	cat data/WebQuestions/$*/webquestions.test.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
 		preprocess.lowerCase true \
 		annotators tokenize,ssplit,pos \
@@ -578,7 +578,7 @@ deplambda_forest_%:
 		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.no_aggregation.proto.txt \
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
-		> data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json
+		> data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json
 	cat working/$*-webquestions.dev.forest.parsed.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
@@ -587,7 +587,7 @@ deplambda_forest_%:
 		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.no_aggregation.proto.txt \
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
-		> data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json
+		> data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json
 	cat working/$*-webquestions.test.forest.parsed.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
@@ -596,7 +596,7 @@ deplambda_forest_%:
 		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.no_aggregation.proto.txt \
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
-		> data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json
+		> data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json
 
 merge_stanford_bistnopos_%:
 	java -Dfile.encoding="UTF-8" -cp bin/:lib/* deplambda.others.MergeTwoForestsIfDisconnected \
@@ -615,7 +615,7 @@ merge_stanford_bistnopos_%:
 extract_gold_graphs_bow_dev_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
 	mkdir -p data/gold_graphs/
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.json \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
@@ -624,7 +624,7 @@ extract_gold_graphs_bow_dev_%:
         false \
         false \
         > data/gold_graphs/$*_bow_without_merge_without_expand.dev.answers.txt
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.stanford.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.stanford.json \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
@@ -637,8 +637,8 @@ extract_gold_graphs_bow_dev_%:
 extract_gold_graphs_bow_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
 	mkdir -p data/gold_graphs/
-	cat data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json \
+        data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         bow_question_graph \
@@ -659,7 +659,7 @@ extract_gold_graphs_bow_%:
 	#	> data/gold_graphs/$*_bow_with_merge_without_expand.full.answers.txt
 
 extract_gold_graphs_dependency_dev_%:
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
@@ -680,8 +680,8 @@ extract_gold_graphs_dependency_dev_%:
 
 extract_gold_graphs_dependency_hyperexpand_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
-	cat data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json \
+        data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 	| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
@@ -694,8 +694,8 @@ extract_gold_graphs_dependency_hyperexpand_%:
 
 extract_gold_graphs_dependency_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
-	#cat data/webquestions/$(LANG)/$*-webquestions.train.json \
-    #    data/webquestions/$(LANG)/$*-webquestions.dev.json \
+	#cat data/WebQuestions/$(LANG)/$*-webquestions.train.json \
+    #    data/WebQuestions/$(LANG)/$*-webquestions.dev.json \
     #| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
     #    data/freebase/schema/all_domains_schema.txt localhost \
     #    dependency_question_graph \
@@ -704,8 +704,8 @@ extract_gold_graphs_dependency_%:
     #    false \
     #    false \
     #    > data/gold_graphs/$*_dependency_without_merge_without_expand.full.answers.txt
-	cat data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json \
+        data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
         data/freebase/schema/all_domains_schema.txt localhost \
         dependency_question_graph \
@@ -717,7 +717,7 @@ extract_gold_graphs_dependency_%:
 
 extract_gold_graphs_deplambda_dev_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
@@ -726,7 +726,7 @@ extract_gold_graphs_deplambda_dev_%:
 	   	true \
 		true \
 		> data/gold_graphs/$*_deplambda_with_merge_with_expand.dev.answers.txt
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 	   	dependency_lambda \
@@ -735,7 +735,7 @@ extract_gold_graphs_deplambda_dev_%:
 	   	false \
 		true \
 		> data/gold_graphs/$*_deplambda_without_merge_with_expand.dev.answers.txt
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
@@ -744,7 +744,7 @@ extract_gold_graphs_deplambda_dev_%:
 	   	true \
 		false \
 		> data/gold_graphs/$*_deplambda_with_merge_without_expand.dev.answers.txt
-	cat data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
@@ -756,8 +756,8 @@ extract_gold_graphs_deplambda_dev_%:
 
 extract_gold_graphs_deplambda_hyperexpand_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
-	cat data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json \
+        data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 	| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
@@ -783,8 +783,8 @@ extract_gold_graphs_easyccg:
 
 extract_gold_graphs_deplambda_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
-	cat data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json \
-        data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+	cat data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json \
+        data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
 	| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.EvaluateGraphParserOracleUsingGoldMidAndGoldRelations \
    		data/freebase/schema/all_domains_schema.txt localhost \
 		dependency_lambda \
@@ -888,9 +888,9 @@ bow_supervised_without_merge_without_expand_%:
     -endpoint localhost \
     -goldParsesFile data/gold_graphs/$*_bow_without_merge_without_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-    -supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-    -devFile data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
-    -testFile data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json \
+    -supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+    -devFile data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+    -testFile data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json \
     -logFile ../working/wq/$*/bow_supervised_without_merge_without_expand/all.log.txt \
     > ../working/wq/$*/bow_supervised_without_merge_without_expand/all.txt
 
@@ -961,9 +961,9 @@ bow_supervised_without_merge_without_expand.emb_%:
     -endpoint localhost \
     -goldParsesFile data/gold_graphs/$*_bow_without_merge_without_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-    -supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-    -devFile data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json \
-    -testFile data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json \
+    -supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+    -devFile data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json \
+    -testFile data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json \
     -logFile ../working/wq/$*/bow_supervised_without_merge_without_expand.emb/all.log.txt \
     > ../working/wq/$*/bow_supervised_without_merge_without_expand.emb/all.txt
 
@@ -1537,9 +1537,9 @@ deplambda_with_hyperexpand.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_hyperexpand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_hyperexpand.32/all.log.txt \
 	> ../working/wq/$*/deplambda_with_hyperexpand.32/all.txt
 
@@ -1617,9 +1617,9 @@ deplambda_with_hyperexpand.emb.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_hyperexpand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_hyperexpand.emb.32/all.log.txt \
 	> ../working/wq/$*/deplambda_with_hyperexpand.emb.32/all.txt
 
@@ -1921,9 +1921,9 @@ dependency_with_merge_without_expand.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_dependency_with_merge_without_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/dependency_with_merge_without_expand.32/all.log.txt \
 	> ../working/wq/$*/dependency_with_merge_without_expand.32/all.txt
 
@@ -1998,9 +1998,9 @@ dependency_with_hyperexpand.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_dependency_with_hyperexpand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/dependency_with_hyperexpand.32/all.log.txt \
 	> ../working/wq/$*/dependency_with_hyperexpand.32/all.txt
 
@@ -2075,9 +2075,9 @@ dependency_with_hyperexpand.32.stem_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_dependency_with_hyperexpand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/dependency_with_hyperexpand.32.stem/all.log.txt \
 	> ../working/wq/$*/dependency_with_hyperexpand.32.stem/all.txt
 
@@ -2152,9 +2152,9 @@ dependency_with_merge_without_expand.32.stem_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_dependency_with_merge_without_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/dependency_with_merge_without_expand.32.stem/all.log.txt \
 	> ../working/wq/$*/dependency_with_merge_without_expand.32.stem/all.txt
 
@@ -2230,9 +2230,9 @@ deplambda_with_merge_with_expand.32.stem_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32.stem/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32.stem/all.txt
 
@@ -2383,8 +2383,8 @@ test_deplambda_with_merge_with_expand.32.stem_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json;data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json;data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/test_deplambda_with_merge_with_expand.32.stem/all.log.txt \
 	> ../working/wq/$*/test_deplambda_with_merge_with_expand.32.stem/all.txt
 
@@ -2459,8 +2459,8 @@ test_deplambda_with_merge_with_expand.32.stem.answer_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json;data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json;data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/test_deplambda_with_merge_with_expand.32.stem.answer/all.log.txt \
 	> ../working/wq/$*/test_deplambda_with_merge_with_expand.32.stem.answer/all.txt
 
@@ -2536,9 +2536,9 @@ deplambda_with_merge_with_expand.32_basic_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32_basic/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32_basic/all.txt
 
@@ -2614,9 +2614,9 @@ deplambda_with_merge_with_expand.32_answerType_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32_answerType/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32_answerType/all.txt
 
@@ -2696,9 +2696,9 @@ deplambda_with_merge_with_expand.32_embonly_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32_embonly/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32_embonly/all.txt
 
@@ -2777,9 +2777,9 @@ deplambda_with_merge_with_expand.32_emb_struct_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32_emb_struct/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32_emb_struct/all.txt
 
@@ -2858,8 +2858,8 @@ test_deplambda_with_merge_with_expand.32_emb_struct_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json;data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json;data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/test_deplambda_with_merge_with_expand.32_emb_struct/all.log.txt \
 	> ../working/wq/$*/test_deplambda_with_merge_with_expand.32_emb_struct/all.txt
 
@@ -2935,9 +2935,9 @@ deplambda_with_merge_with_expand.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.32/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.32/all.txt
 
@@ -3013,8 +3013,8 @@ test_deplambda_with_merge_with_expand.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json;data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json;data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/test_deplambda_with_merge_with_expand.32/all.log.txt \
 	> ../working/wq/$*/test_deplambda_with_merge_with_expand.32/all.txt
 
@@ -3086,9 +3086,9 @@ deplambda_with_merge_with_expand.tacl2016_%:
     -evaluateOnlyTheFirstBest true \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.tacl2016/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.tacl2016/all.txt
 
@@ -3167,9 +3167,9 @@ deplambda_with_merge_with_expand.stemonly.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.stemonly.32/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.stemonly.32/all.txt
 
@@ -3248,9 +3248,9 @@ deplambda_with_merge_with_expand.emb.32_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.emb.32/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.emb.32/all.txt
 
@@ -3329,9 +3329,9 @@ deplambda_with_merge_with_expand.emb.33_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.emb.33/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.emb.33/all.txt
 
@@ -3410,9 +3410,9 @@ deplambda_with_merge_with_expand.emb.34_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.emb.34/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.emb.34/all.txt
 
@@ -3489,9 +3489,9 @@ deplambda_with_merge_with_expand.33_%:
     -evaluateOnlyTheFirstBest true \
 	-goldParsesFile data/gold_graphs/$*_deplambda_with_merge_with_expand.full.ser \
 	-contentWordPosTags "NOUN;VERB;ADJ;ADP;ADV;PRON" \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/wq/$*/deplambda_with_merge_with_expand.33/all.log.txt \
 	> ../working/wq/$*/deplambda_with_merge_with_expand.33/all.txt
 
@@ -3560,9 +3560,9 @@ deplambda_without_merge_without_expand_%:
 	-stemFeaturesWeight 0.05 \
 	-endpoint localhost \
 	-goldParsesFile data/gold_graphs/$*_deplambda_without_merge_without_expand.full.ser \
-	-supervisedCorpus "data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json" \
-	-devFile "data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
-	-testFile "data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json" \
+	-supervisedCorpus "data/WebQuestions/$(LANG)/$*-webquestions.train.deplambda.json" \
+	-devFile "data/WebQuestions/$(LANG)/$*-webquestions.dev.deplambda.json" \
+	-testFile "data/WebQuestions/$(LANG)/$*-webquestions.test.deplambda.json" \
 	-logFile ../working/$*_deplambda_without_merge_without_expand/all.log.txt \
 	> ../working/$*_deplambda_without_merge_without_expand/all.txt
 
