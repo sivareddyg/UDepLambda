@@ -3,9 +3,11 @@
 ## Install
 
 
-> wget https://www.dropbox.com/s/43zjcsgs64h3gse/udeplambda-lib.tgz?dl=0
+> git clone https://github.com/sivareddyg/UDepLambda.git
 
-> tar -xvzf udeplambda-lib.tgz
+> cd UDepLambda
+
+> git submodule update --init --recursive lib
 
 > ant build
 
