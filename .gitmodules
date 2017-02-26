@@ -1,0 +1,9 @@
+[submodule "data/webquestions"]
+	path = data/webquestions
+	url = git@bitbucket.org:sivareddyg/webquestions.git
+[submodule "data/GraphQuestions"]
+	path = data/GraphQuestions
+	url = git@bitbucket.org:sivareddyg/graphquestions.git
+[submodule "data/WebQuestions"]
+	path = data/WebQuestions
+	url = git@bitbucket.org:sivareddyg/webquestions.git
