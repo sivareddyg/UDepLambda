@@ -2,10 +2,11 @@
 
 UDepLambda is a framework to convert Universal Dependencies to Logical Forms. 
 
-For more details on the framework, please refer to
-[Universal Semantic Parsing](https://arxiv.org/abs/1702.03196)
-Siva Reddy, Oscar Täckström, Slav Petrov, Mark Steedman, Mirella Lapata
-arXiv preprint arXiv:1702.03196, 2017
+For more details, please refer to our paper:
+
+[Universal Semantic Parsing](https://arxiv.org/pdf/1702.03196)  
+Siva Reddy, Oscar Täckström, Slav Petrov, Mark Steedman, Mirella Lapata  
+arXiv:1702.03196, 2017.
 
 ## Install
 
