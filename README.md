@@ -44,6 +44,14 @@ Check debug.txt to see step by step derivation.
 * See [SimplifiedLogicForm.md](doc/SimplifiedLogicForm.md) for output formats.
 * See [doc](doc/) for additional documentation.
 
+## Contributions
+
+We welcome any kind of contributions. Please see [CONTRIBUTING.md](CONTRIBUTING.md) for instructions on how to contribute.
+
+## License
+
+UDepLambda is distributed as [Apache 2.0 license](LICENSE). However, depending on the pipeline and resources you use, you may have to get additional licenses. For example, the default pipeline uses the [Stanford CoreNLP Pipeline](https://github.com/stanfordnlp/CoreNLP), and the logical expression parsing engine is based on [Cornell Semantic Parsing Framework](https://github.com/cornell-lic/spf). You can see the list of libraries we use at https://bitbucket.org/sivareddyg/udeplambda-lib/src. 
+
 ## Reference
 
 ```
