@@ -7,23 +7,11 @@ rulegroup {
     # "saw" with a "telescope"
     # "cat" in a "hat"
     priority: 5
-    tregex: "/^l-(nmod|nmod:poss)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
+    tregex: "/^l-(nmod|nmod:poss|nmod:count)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod.{casemarker}:b $e $x))))))"
-    }
-  }
-  rule {
-    name: "nmod indicating counting"
-    # "number" of "people"
-    # "count" of "films"
-    priority: 5
-    tregex: "/^l-nmod$/=relation $ /^w-.*-(count|number|total|anzahl|número|numero)$/ $ /^t-NOUN$/ < (/^l-case$/ < /^w-.*-of$/)"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_COUNT:b $y $x))))))"
     }
   }
   rule {
@@ -56,7 +44,7 @@ rulegroup {
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y))))))"
     }
   }
   rule {
@@ -124,33 +112,10 @@ rulegroup {
   name: "advmod"
   priority: 10
   rule {
-    name: "advmod in how many"
-    # "how" "many"
-    priority: 1
-    tregex: "/^l-advmod$/=relation < /^w-.*-(?:how|wie)$/ $ /^w-.*-(?:many|viel|viele|vielen)$/"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_COUNT:b $x $y))))))"
-    }
-  }
-  rule {
-    name: "advmod in how many"
-    # "how" many "people"
-    # how attached to people instead of many. This is likely a parser mistake. 
-    priority: 1
-    tregex: "/^l-advmod$/=relation < /^w-.*-(?:how|wie)$/ $ (/^l-.*$/ < /^w-.*-(?:many|viel|viele|vielen)$/)"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_COUNT:b $x $y))))))"
-    }
-  }
-  rule {
     name: "advmod attached to question word"
     # "in" a "hat"
     priority: 5
-    tregex: "/^l-advmod$/=relation < /w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/"
+    tregex: "/^l-advmod$/=relation < /^t-.*:WH$/"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -248,18 +213,7 @@ rulegroup {
     # "what" is the "number" of cities in France?
     # This could be a parse mistake since the head word should be the number here?
     priority: 5
-    tregex: "/^l-nsubj$/=relation < /^w-.*-(?:count|number|total|anzahl|número|numero)$/ < /^t-NOUN$/"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
-    }
-  }
-  rule {
-    name: "nsubj from number to question word"
-    # "what" is the "number" of cities in France?
-    priority: 5
-    tregex: "/^l-nsubj$/=relation $ /w-.*-(?:count|number|total|anzahl|número|numero)/ $ /^t-NOUN$/"
+    tregex: "/^l-nsubj$/=relation < /^l-nmod:count$/"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -297,7 +251,7 @@ rulegroup {
     # "give" me the "capital" of UK?
     # This happens when subj is not seen with the verb. 
     priority: 5
-    tregex: "/^l-dobj$/=relation !$ /^l-(?:nsubj|nsubjpass)$/ $ /^w-.*-(?:find|give|list|locate|look|name|tell|finden|finde|geben|gib|liste|suchen|schauen|nennen|erzählen|encontrar|encontrarnos|bien|dame|darnos|dar|lista|localizar|localiza|localizarme|mira|mirame|buscar|nombre|nombrar|dime|cuéntanos)$/ $ /^t-VERB$/"
+    tregex: "/^l-dobj:wh$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -351,18 +305,6 @@ rulegroup {
   priority: 10
   rule {
     name: "articles, question words"
-    # ¿Cuántas ciudades
-    # Howmany cities (how many is a single word in spanish)
-    priority: 1
-    tregex: "/^l-det$/=relation $ /^t-NOUN$/ < /^w-.*-(?:cuánto|cuánta|cuántos|cuántas|cuanto|cuanta|cuantos|cuantas)$/=word"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_COUNT:b $x $y) (p_TYPE_{word}:u $y))))))"
-    }
-  }
-  rule {
-    name: "articles, question words"
     # The city
     # which city
     priority: 5
@@ -386,18 +328,6 @@ rulegroup {
       target: "relation"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.ENTITY_{relation}:b $y $x))))))"
-    }
-  }
-  rule {
-    name: "COUNT predicates"
-    # "cuánta" "hijos"
-    # how-many people
-    priority: 10
-    tregex: "/^l-amod$/=relation $ /^t-NOUN$/ < /^w-.*-(?:cuánto|cuánta|cuántos|cuántas|cuanto|cuanta|cuantos|cuantas)$/=word"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_COUNT:b $x $y) (p_TYPE_{word}:u $y))))))"
     }
   }
   rule {
@@ -501,7 +431,7 @@ rulegroup {
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
-      lambda: "empty:bind"
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (and:c ($f $x) ($g $x)))))"
     }
   }
 }
@@ -604,7 +534,7 @@ rulegroup {
     name: "question words with parent nouns"
     # ["which" city] as opposed to [the car "which"] or ["which" is]
     priority: 1
-    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ > /l-(?:det|amod)/ $ /t-(?:PRON|DET|ADV|ADJ)/"
+    tregex: "/^w-.*$/=word $ /t-.*:WH$/ > /l-(?:det|amod)/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -615,7 +545,7 @@ rulegroup {
     name: "question words with no parent noun but has outgoing arcs"
     # "where" in california
     priority: 5
-    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /^l-.*$/ $ /t-(?:PRON|DET|ADV|ADJ)/"
+    tregex: "/^w-.*$/=word $ /t-.*:WH$/ $ /^l-.*$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -626,7 +556,7 @@ rulegroup {
     name: "question words with no parent noun"
     # "what" is the capital of US?
     priority: 10
-    tregex: "/w-.*-(?:what|when|who|where|which|how|whom|whose|why|quién|qué|dónde|cuándo|cuánto|cuánta|cuántos|cuántas|cuál|quiénes|cuáles|cómo|adónde|porqué|quien|que|donde|cuando|cuanto|cuanta|cuantos|cuantas|cual|quienes|cuales|como|adonde|porque|wer|welche|welcher|wen|wem|welchen|welchem|wessen|was|welches|warum|weshalb|weswegen|wieso|wie|wofür|wofuer|wozu|womit|wodurch|worum|worüber|worueber|wobei|wovon|wo|wohin|woher|woran|worin|worauf|worunter|wovor|wohinter|wann|wan|wieviele|wieviel|wievele|wievievel)$/=word !>> /^l-acl.*$/ $ /t-(?:PRON|DET|ADV|ADJ)/"
+    tregex: "/^w-.*$/=word $ /t-.*:WH$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -793,8 +723,18 @@ rulegroup {
   name: "virtual"
   priority: 1
   rule {
-    name: "virtual default"
+    name: "virtual word"
     priority: 1
+    tregex: "/v-w-.*/=target"
+    transformation {
+      target: "target"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $x:v (p_EQUAL:b $x {target}:v))"
+    }
+  }
+  rule {
+    name: "virtual default"
+    priority: 10
     tregex: "/v-.*/=target"
     transformation {
       target: "target"
