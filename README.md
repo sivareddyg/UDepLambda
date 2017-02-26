@@ -1,7 +1,13 @@
 # UDepLambda
 
-## Install
+UDepLambda is a framework to convert Universal Dependencies to Logical Forms. 
 
+For more details on the framework, please refer to
+[Universal Semantic Parsing](https://arxiv.org/abs/1702.03196)
+Siva Reddy, Oscar Täckström, Slav Petrov, Mark Steedman, Mirella Lapata
+arXiv preprint arXiv:1702.03196, 2017
+
+## Install
 
 > git clone https://github.com/sivareddyg/UDepLambda.git
 
@@ -27,10 +33,25 @@ Check debug.txt to see step by step derivation.
 
 ## Important files
 
-* Type System: lib_data/ud.types.txt 
-* Refinement Step: lib_data/ud-tree-transformation-rules.proto.txt
-* Binarization Step: lib_data/ud-relation-priorities.proto.txt 
-* Substitution Step: lib_data/ud-lambda-assignment-rules.proto.txt
+* [Type System](lib_data/ud.types.txt) and [related documentation](doc/LogicalVocabulary.md)
+* [Enhancement Step Rules](lib_data/ud-enhancement-rules.proto)
+* [Binarization Step Rules](lib_data/ud-obliqueness-hierarchy.proto)
+* [Substitution Step Rules](lib_data/ud-substitution-rules.proto)
 
 ## Documentation
-See [SimplifiedLogicForm.md](doc/SimplifiedLogicForm.md) for output formats.
+* See [FreebaseExperiments.md](doc/FreebaseExperiments.md) for Freebase semantic parsing experiments.
+* See [SimplifiedLogicForm.md](doc/SimplifiedLogicForm.md) for output formats.
+* See [doc](doc/) for additional documentation.
+
+## Reference
+
+```
+@article{reddy2017universal,
+  title={Universal Semantic Parsing},
+  author={Reddy, Siva and T{\"a}ckstr{\"o}m, Oscar and Petrov, Slav and Steedman, Mark and Lapata, Mirella},
+  journal={arXiv preprint arXiv:1702.03196},
+  year={2017}
+  url = {https://arxiv.org/pdf/1702.03196.pdf}
+}
+
+```
