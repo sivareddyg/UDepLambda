@@ -573,27 +573,27 @@ deplambda_forest_%:
 	cat working/$*-webquestions.train.forest.parsed.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
-		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.no_aggregation.proto.txt \
+		-treeTransformationsFile lib_data/ud-enhancement-rules.proto \
+		-relationPrioritiesFile lib_data/ud-obliqueness-hierarchy.proto \
+		-lambdaAssignmentRulesFile lib_data/ud-substitution-rules.no_aggregation.proto \
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> data/webquestions/$(LANG)/$*-webquestions.train.deplambda.json
 	cat working/$*-webquestions.dev.forest.parsed.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
-		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.no_aggregation.proto.txt \
+		-treeTransformationsFile lib_data/ud-enhancement-rules.proto \
+		-relationPrioritiesFile lib_data/ud-obliqueness-hierarchy.proto \
+		-lambdaAssignmentRulesFile lib_data/ud-substitution-rules.no_aggregation.proto \
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> data/webquestions/$(LANG)/$*-webquestions.dev.deplambda.json
 	cat working/$*-webquestions.test.forest.parsed.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.cli.RunForestTransformer \
 		-definedTypesFile lib_data/ud.types.txt \
-		-treeTransformationsFile lib_data/ud-tree-transformation-rules.proto.txt \
-		-relationPrioritiesFile lib_data/ud-relation-priorities.proto.txt \
-		-lambdaAssignmentRulesFile lib_data/ud-lambda-assignment-rules.no_aggregation.proto.txt \
+		-treeTransformationsFile lib_data/ud-enhancement-rules.proto \
+		-relationPrioritiesFile lib_data/ud-obliqueness-hierarchy.proto \
+		-lambdaAssignmentRulesFile lib_data/ud-substitution-rules.no_aggregation.proto \
 		-nthreads 20  \
 		| python scripts/dependency_semantic_parser/remove_spurious_predicates_from_forest.py \
 		> data/webquestions/$(LANG)/$*-webquestions.test.deplambda.json
