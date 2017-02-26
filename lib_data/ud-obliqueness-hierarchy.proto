@@ -1,4 +1,8 @@
 relation {
+  name: "l-BIND"
+  priority: 9
+}
+relation {
   name: "l-conj-verb"
   priority: 10
 }
@@ -51,6 +55,10 @@ relation {
   priority: 20
 }
 relation {
+  name: "l-dobj:wh"
+  priority: 20
+}
+relation {
   name: "l-dobj-wh"
   priority: 20
 }
@@ -83,11 +91,19 @@ relation {
   priority: 40
 }
 relation {
+  name: "l-nmod:count"
+  priority: 40
+}
+relation {
   name: "l-nmod"
   priority: 40
 }
 relation {
   name: "l-advmod"
+  priority: 40
+}
+relation {
+  name: "l-advmod:count"
   priority: 40
 }
 relation {
@@ -121,9 +137,5 @@ relation {
 relation {
   name: "l-punct"
   priority: 90
-}
-relation {
-  name: "l-BIND"
-  priority: 100
 }
 

@@ -31,9 +31,9 @@ import edu.cornell.cs.nlp.utils.composites.Pair;
 
 public class TreeTransformerUniversalTest {
 
-  static TransformationRuleGroups treeTransformationRules;
-  static TransformationRuleGroups lambdaAssignmentRules;
-  static TransformationRuleGroups relationRules;
+  static TransformationRuleGroups enhancementRules;
+  static TransformationRuleGroups substitutionRules;
+  static TransformationRuleGroups obliquenessHierarchyRules;
   static MutableTypeRepository types;
   static JsonParser jsonParser = new JsonParser();
   static Logger logger = Logger.getLogger("TreeTransformerUniversalTest");
@@ -47,15 +47,15 @@ public class TreeTransformerUniversalTest {
           types, new FlexibleTypeComparator()).closeOntology(false)
           .setNumeralTypeName("i").build());
 
-      treeTransformationRules =
+      enhancementRules =
           new TransformationRuleGroups(
-              "lib_data/ud-tree-transformation-rules.proto.txt");
-      relationRules =
+              "lib_data/ud-enhancement-rules.proto");
+      obliquenessHierarchyRules =
           new TransformationRuleGroups(
-              "lib_data/ud-relation-priorities.proto.txt");
-      lambdaAssignmentRules =
+              "lib_data/ud-obliqueness-hierarchy.proto");
+      substitutionRules =
           new TransformationRuleGroups(
-              "lib_data/ud-lambda-assignment-rules.proto.txt");
+              "lib_data/ud-substitution-rules.proto");
       PatternLayout layout = new PatternLayout("%r [%t] %-5p: %m%n");
       logger.setLevel(Level.DEBUG);
       logger.setAdditivity(false);
@@ -82,24 +82,24 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals("(l-root w-1-yahoo t-PROPN (l-punct w-2-! t-PUNCT))", sentence
         .getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-punct w-1-yahoo w-2-!)", binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -117,7 +117,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-india t-PROPN (l-case w-1-in t-ADP) (l-punct w-3-. t-PUNCT))",
@@ -125,18 +125,18 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-punct (l-case w-2-india w-1-in) w-3-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -155,7 +155,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-1-city t-NOUN (l-nmod w-3-india t-PROPN (l-case w-2-in t-ADP)) (l-punct w-4-. t-PUNCT))",
@@ -163,18 +163,18 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-punct (l-nmod w-1-city (l-case w-3-india w-2-in)) w-4-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -190,7 +190,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-1-see t-VERB (l-nmod w-3-telescope t-NOUN (l-case w-2-with t-ADP)) (l-punct w-4-. t-PUNCT))",
@@ -198,19 +198,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nmod w-1-see (l-case w-3-telescope w-2-with)) w-4-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -226,7 +226,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-3-book t-NOUN (l-nmod:poss w-1-darwin t-PROPN (l-case w-2-'s t-PART)))",
@@ -234,18 +234,18 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-nmod:poss w-3-book (l-case w-1-darwin w-2-'s))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -261,7 +261,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-1-see t-VERB (l-nmod w-3-telescope t-NOUN (l-case w-2-with t-ADP)) (l-nmod w-5-mountain t-NOUN (l-case w-4-on t-ADP)))",
@@ -269,19 +269,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-nmod (l-nmod w-1-see (l-case w-3-telescope w-2-with)) (l-case w-5-mountain w-4-on))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -297,24 +297,24 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals("(l-root w-2-old t-ADJ (l-nmod:npmod w-1-year t-NOUN))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-nmod:npmod w-2-old w-1-year)", binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -333,7 +333,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-sleep t-VERB (l-nsubj w-1-john t-PROPN) (l-nmod w-4-couch t-NOUN (l-case w-3-on t-ADP)) (l-punct w-5-. t-PUNCT))",
@@ -341,19 +341,19 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod w-2-sleep (l-case w-4-couch w-3-on)) w-1-john) w-5-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -369,7 +369,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-3-old t-ADJ (l-nsubj w-1-john t-PROPN) (l-cop w-2-be t-VERB) (l-punct w-4-. t-PUNCT))",
@@ -377,18 +377,18 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-punct (l-nsubj (l-cop w-3-old w-2-be) w-1-john) w-4-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -413,27 +413,27 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-5-capital t-NOUN (l-nsubj w-2-city t-NOUN (l-det w-1-which t-DET)) (l-cop w-3-be t-VERB) (l-det w-4-the t-DET) (l-nmod w-7-us t-PROPN (l-case w-6-of t-ADP)) (l-punct w-8-? t-PUNCT))",
+        "(l-root w-5-capital t-NOUN (l-nsubj w-2-city t-NOUN (l-det w-1-which t-DET:WH)) (l-cop w-3-be t-VERB) (l-det w-4-the t-DET) (l-nmod w-7-us t-PROPN (l-case w-6-of t-ADP)) (l-punct w-8-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod (l-cop (l-det w-5-capital w-4-the) w-3-be) (l-case w-7-us w-6-of)) (l-det w-2-city w-1-which)) w-8-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -458,27 +458,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-4-capital t-NOUN (l-nsubj w-1-what t-PRON) (l-cop w-2-be t-VERB) (l-det w-3-the t-DET) (l-nmod w-6-uk t-PROPN (l-case w-5-of t-ADP)) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-4-capital t-NOUN (l-nsubj w-1-what t-PRON:WH) (l-cop w-2-be t-VERB) (l-det w-3-the t-DET) (l-nmod w-6-uk t-PROPN (l-case w-5-of t-ADP)) (l-punct w-7-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod (l-cop (l-det w-4-capital w-3-the) w-2-be) (l-case w-6-uk w-5-of)) w-1-what) w-7-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -505,7 +505,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-nominate t-VERB (l-nsubj w-1-bush t-PROPN) (l-dobj w-3-anderson t-PROPN) (l-nmod w-5-judge t-NOUN (l-case w-4-as t-ADP) (l-nmod w-8-court t-NOUN (l-case w-6-of t-ADP) (l-det w-7-the t-DET))) (l-punct w-9-. t-PUNCT))",
@@ -513,19 +513,19 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod (l-dobj w-2-nominate w-3-anderson) (l-case (l-nmod w-5-judge (l-case (l-det w-8-court w-7-the) w-6-of)) w-4-as)) w-1-bush) w-9-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -550,27 +550,27 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-4-bear t-VERB (l-advmod w-1-where t-ADV) (l-auxpass w-2-was t-AUX) (l-nsubj w-3-cameron t-PROPN) (l-punct w-5-? t-PUNCT))",
+        "(l-root w-4-bear t-VERB (l-advmod w-1-where t-ADV:WH) (l-auxpass w-2-was t-AUX) (l-nsubj w-3-cameron t-PROPN) (l-punct w-5-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-advmod (l-auxpass w-4-bear w-2-was) w-1-where) w-3-cameron) w-5-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -592,7 +592,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-3-eat t-VERB (l-nsubj w-1-i t-PRON) (l-advmod w-2-quickly t-ADV) (l-dobj w-4-bananas t-PROPN) (l-punct w-5-. t-PUNCT))",
@@ -600,19 +600,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-advmod (l-dobj w-3-eat w-4-bananas) w-2-quickly) w-1-i) w-5-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -634,27 +634,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-4-originate t-VERB (l-advmod w-1-when t-ADV) (l-aux w-2-did t-AUX) (l-nsubj w-3-aldi t-PROPN) (l-punct w-5-? t-PUNCT))",
+        "(l-root w-4-originate t-VERB (l-advmod w-1-when t-ADV:WH) (l-aux w-2-did t-AUX) (l-nsubj w-3-aldi t-PROPN) (l-punct w-5-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-advmod (l-aux w-4-originate w-2-did) w-1-when) w-3-aldi) w-5-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -680,7 +680,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-see t-VERB (l-nsubj w-1-he t-PRON) (l-dobj w-6-horse t-NOUN (l-det w-3-a t-DET) (l-amod w-4-fast t-ADJ) (l-amod w-5-provoke t-VERB)) (l-punct w-7-. t-PUNCT))",
@@ -688,19 +688,19 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-dobj w-2-see (l-det (l-amod (l-amod w-6-horse w-4-fast) w-5-provoke) w-3-a)) w-1-he) w-7-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -725,27 +725,27 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-what t-PRON (l-cop w-2-be t-VERB) (l-nsubj w-4-number t-NOUN (l-det w-3-the t-DET) (l-nmod w-6-cities t-NOUN (l-case w-5-of t-ADP))) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-1-what t-PRON:WH (l-cop w-2-be t-VERB) (l-nsubj w-4-number t-NOUN (l-det w-3-the t-DET) (l-nmod:count w-6-cities t-NOUN (l-case w-5-of t-ADP))) (l-punct w-7-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-cop w-1-what w-2-be) (l-nmod (l-det w-4-number w-3-the) (l-case w-6-cities w-5-of))) w-7-?)",
+        "(l-punct (l-nsubj (l-cop w-1-what w-2-be) (l-nmod:count (l-det w-4-number w-3-the) (l-case w-6-cities w-5-of))) w-7-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(2, sentenceSemantics.second().size());
     assertEquals(
@@ -767,27 +767,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
     
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-4-live t-VERB (l-nsubj w-3-people t-NOUN (l-amod w-2-many t-ADJ (l-advmod w-1-how t-ADV))) (l-nmod w-6-us t-PROPN (l-case w-5-in t-ADP)) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-4-live t-VERB (l-nsubj w-3-people t-NOUN (l-amod w-2-many t-ADJ (l-advmod:count w-1-how t-ADV:WH))) (l-nmod w-6-us t-PROPN (l-case w-5-in t-ADP)) (l-punct w-7-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-nmod w-4-live (l-case w-6-us w-5-in)) (l-amod w-3-people (l-advmod w-2-many w-1-how))) w-7-?)",
+        "(l-punct (l-nsubj (l-nmod w-4-live (l-case w-6-us w-5-in)) (l-amod w-3-people (l-advmod:count w-2-many w-1-how))) w-7-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
     
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -809,27 +809,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
     
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-3-viven t-VERB (l-nsubj w-2-personas t-NOUN (l-det w-1-cuántos t-DET)) (l-nmod w-5-italia t-PROPN (l-case w-4-en t-ADP)) (l-punct w-6-? t-PUNCT))",
+        "(l-root w-3-viven t-VERB (l-nsubj w-2-personas t-NOUN (l-det w-1-cuántos t-DET:COUNT:WH)) (l-nmod w-5-italia t-PROPN (l-case w-4-en t-ADP)) (l-punct w-6-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod w-3-viven (l-case w-5-italia w-4-en)) (l-det w-2-personas w-1-cuántos)) w-6-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
     
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -854,7 +854,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-buy t-VERB (l-nsubj w-1-i t-PRON) (l-dobj w-5-table t-NOUN (l-compound w-3-hilton t-PROPN) (l-compound w-4-coffee t-NOUN)) (l-punct w-6-. t-PUNCT))",
@@ -862,19 +862,19 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-dobj w-2-buy (l-compound (l-compound w-5-table w-3-hilton) w-4-coffee)) w-1-i) w-6-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -896,7 +896,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-like t-VERB (l-nsubj w-1-i t-PRON) (l-dobj w-5-harry t-PROPN (l-det w-3-a t-DET) (l-compound w-4-boy t-NOUN)))",
@@ -904,19 +904,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-nsubj (l-dobj w-2-like (l-det (l-compound w-5-harry w-4-boy) w-3-a)) w-1-i)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -941,7 +941,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-8-win t-VERB (l-nsubj w-2-john t-PROPN (l-amod w-1-reverend t-ADJ) (l-punct w-3-, t-PUNCT) (l-appos w-4-husband t-NOUN (l-nmod w-6-may t-PROPN (l-case w-5-of t-ADP)))) (l-punct w-7-, t-PUNCT) (l-dobj w-9-lottery t-NOUN) (l-punct w-10-. t-PUNCT))",
@@ -949,19 +949,19 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-punct (l-nsubj (l-dobj w-8-win w-9-lottery) (l-punct (l-appos (l-amod w-2-john w-1-reverend) (l-nmod w-4-husband (l-case w-6-may w-5-of))) w-3-,)) w-7-,) w-10-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -987,7 +987,7 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-4-found t-VERB (l-nsubj w-1-bill t-PROPN (l-cc w-2-and t-CONJ) (l-conj-np w-3-dave t-PROPN)) (l-dobj w-5-hp t-PROPN) (l-punct w-6-. t-PUNCT))",
@@ -995,19 +995,19 @@ public class TreeTransformerUniversalTest {
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-dobj w-4-found w-5-hp) (l-conj-np (l-cc w-1-bill w-2-and) w-3-dave)) w-6-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1030,7 +1030,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-4-reply t-NOUN (l-amod w-1-quick t-ADJ (l-cc w-2-and t-CONJ) (l-conj-adj w-3-fast t-ADJ)))",
@@ -1038,19 +1038,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-amod w-4-reply (l-conj-adj (l-cc w-1-quick w-2-and) w-3-fast))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1074,7 +1074,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-direct t-VERB (l-nsubj w-1-cameron t-PROPN) (l-dobj w-3-titanic t-PROPN) (l-cc w-4-and t-CONJ) (l-conj-vp w-5-produce t-VERB (l-dobj w-6-avatar t-PROPN)) (l-punct w-7-. t-PUNCT))",
@@ -1082,19 +1082,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-conj-vp (l-dobj (l-cc w-2-direct w-4-and) w-3-titanic) (l-dobj w-5-produce w-6-avatar)) w-1-cameron) w-7-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1117,7 +1117,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-direct t-VERB (l-nsubj w-1-cameron t-PROPN) (l-cc w-3-and t-CONJ) (l-conj-verb w-4-produce t-VERB) (l-dobj w-5-titanic t-PROPN) (l-punct w-6-. t-PUNCT))",
@@ -1125,19 +1125,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-dobj (l-cc (l-conj-verb w-2-direct w-4-produce) w-3-and) w-5-titanic) w-1-cameron) w-6-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1160,7 +1160,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-eat t-VERB (l-nsubj w-1-cameron t-PROPN) (l-dobj w-3-sandwich t-NOUN) (l-punct w-4-; t-PUNCT) (l-cc w-5-and t-CONJ) (l-conj-sent w-7-drink t-VERB (l-nsubj w-6-speilberg t-PROPN) (l-dobj w-8-coke t-PROPN)) (l-punct w-9-. t-PUNCT))",
@@ -1168,19 +1168,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-punct (l-conj-sent (l-nsubj (l-dobj (l-cc w-2-eat w-5-and) w-3-sandwich) w-1-cameron) (l-nsubj (l-dobj w-7-drink w-8-coke) w-6-speilberg)) w-4-;) w-9-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1206,31 +1206,31 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-country t-NOUN (l-acl w-5-bear t-VERB (l-dobj w-2-which t-DET) (l-nsubjpass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP) (l-nmod v-f) (l-BIND v-f)))",
+        "(l-root w-1-country t-NOUN (l-acl w-5-bear t-VERB (l-dobj w-2-which t-DET) (l-nsubjpass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP) (l-nmod v-w-1-country)) (l-BIND v-w-1-country))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-acl w-1-country (l-BIND (l-nsubjpass (l-nmod (l-nmod (l-auxpass (l-dobj w-5-bear w-2-which) w-4-was) w-6-at) v-f) w-3-darwin) v-f))",
+        "(l-acl (l-BIND w-1-country v-w-1-country) (l-nsubjpass (l-nmod (l-nmod (l-auxpass (l-dobj w-5-bear w-2-which) w-4-was) w-6-at) v-w-1-country) w-3-darwin))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-country:u $0) (p_EVENT_w-1-country:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-bear:u $1) (p_EMPTY:u $5) (p_EVENT.ENTITY_arg2:b $1 $5))) (p_EMPTY:u $4) (p_EVENT.ENTITY_l-nmod:b $1 $4))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_l-nmod:b $1 $3))) (p_TYPE_w-3-darwin:u $2) (p_EVENT.ENTITY_arg2:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-country:u $0) (p_EVENT_w-1-country:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EQUAL:b $0 v-w-1-country:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-bear:u $1) (p_EMPTY:u $5) (p_EVENT.ENTITY_arg2:b $1 $5))) (p_EMPTY:u $4) (p_EVENT.ENTITY_l-nmod:b $1 $4))) (p_EQUAL:b $3 v-w-1-country:v) (p_EVENT.ENTITY_l-nmod:b $1 $3))) (p_TYPE_w-3-darwin:u $2) (p_EVENT.ENTITY_arg2:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1249,31 +1249,31 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-company t-NOUN (l-acl:relcl w-3-buy t-VERB (l-nsubj w-2-which t-DET) (l-dobj w-4-pixar t-PROPN) (l-nsubj v-f) (l-BIND v-f)))",
+        "(l-root w-1-company t-NOUN (l-acl:relcl w-3-buy t-VERB (l-nsubj w-2-which t-DET) (l-dobj w-4-pixar t-PROPN) (l-nsubj v-w-1-company)) (l-BIND v-w-1-company))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-acl:relcl w-1-company (l-BIND (l-nsubj (l-nsubj (l-dobj w-3-buy w-4-pixar) w-2-which) v-f) v-f))",
+        "(l-acl:relcl (l-BIND w-1-company v-w-1-company) (l-nsubj (l-nsubj (l-dobj w-3-buy w-4-pixar) w-2-which) v-w-1-company))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-company:u $0) (p_EVENT_w-1-company:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-3-buy:u $1) (p_TYPE_w-4-pixar:u $4) (p_EVENT.ENTITY_arg2:b $1 $4))) (p_EMPTY:u $3) (p_EVENT.ENTITY_arg1:b $1 $3))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-company:u $0) (p_EVENT_w-1-company:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EQUAL:b $0 v-w-1-company:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-3-buy:u $1) (p_TYPE_w-4-pixar:u $4) (p_EVENT.ENTITY_arg2:b $1 $4))) (p_EMPTY:u $3) (p_EVENT.ENTITY_arg1:b $1 $3))) (p_EQUAL:b $2 v-w-1-company:v) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1292,31 +1292,31 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-movie t-NOUN (l-acl:relcl w-3-see t-VERB (l-nsubj w-2-i t-PRON) (l-dobj v-f) (l-BIND v-f)))",
+        "(l-root w-1-movie t-NOUN (l-acl:relcl w-3-see t-VERB (l-nsubj w-2-i t-PRON) (l-dobj v-w-1-movie)) (l-BIND v-w-1-movie))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-acl:relcl w-1-movie (l-BIND (l-nsubj (l-dobj w-3-see v-f) w-2-i) v-f))",
+        "(l-acl:relcl (l-BIND w-1-movie v-w-1-movie) (l-nsubj (l-dobj w-3-see v-w-1-movie) w-2-i))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-movie:u $0) (p_EVENT_w-1-movie:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-see:u $1) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $3) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-2-i:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-movie:u $0) (p_EVENT_w-1-movie:u $0) (p_EVENT.ENTITY_arg0:b $0 $0)) (p_EQUAL:b $0 v-w-1-movie:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-see:u $1) (p_EQUAL:b $3 v-w-1-movie:v) (p_EVENT.ENTITY_arg2:b $1 $3))) (p_TYPE_w-2-i:u $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1335,7 +1335,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-2-issue t-NOUN (l-det w-1-the t-DET) (l-acl-other w-5-see t-VERB (l-mark w-3-as t-SCONJ) (l-nsubj w-4-he t-PRON) (l-dobj w-6-they t-PRON)))",
@@ -1343,19 +1343,19 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-acl-other (l-det w-2-issue w-1-the) (l-mark (l-nsubj (l-dobj w-5-see w-6-they) w-4-he) w-3-as))",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1378,31 +1378,31 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-where t-ADV (l-acl w-3-hang t-VERB (l-mark w-2-to t-PART) (l-compound:prt w-4-out t-ADP) (l-nmod w-6-chicago t-PROPN (l-case w-5-in t-ADP)) (l-nsubj v-f) (l-BIND v-f)) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-1-where t-ADV:WH (l-acl w-3-hang t-VERB (l-mark w-2-to t-PART) (l-compound:prt w-4-out t-ADP) (l-nmod w-6-chicago t-PROPN (l-case w-5-in t-ADP)) (l-nsubj v-w-1-where)) (l-punct w-7-? t-PUNCT) (l-BIND v-w-1-where))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-acl w-1-where (l-compound:prt (l-mark (l-BIND (l-nsubj (l-nmod w-3-hang (l-case w-6-chicago w-5-in)) v-f) v-f) w-2-to) w-4-out)) w-7-?)",
+        "(l-punct (l-acl (l-BIND w-1-where v-w-1-where) (l-compound:prt (l-mark (l-nsubj (l-nmod w-3-hang (l-case w-6-chicago w-5-in)) v-w-1-where) w-2-to) w-4-out)) w-7-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (and:c (and:c (p_TYPE_w-1-where:u $0) (p_EVENT_w-1-where:u $0) (p_EVENT.ENTITY_arg0:b $0 $0) (p_TARGET:u $0)) (exists:<<a,e>,<t,t>> $1:<a,e> (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-hang:u $1) (and:c (p_TYPE_w-6-chicago:u $3) (p_EVENT_w-6-chicago:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $1 $3))) (p_EQUAL:<<a,e>,<<a,e>,t>> $0 $2) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (and:c (and:c (p_TYPE_w-1-where:u $0) (p_EVENT_w-1-where:u $0) (p_EVENT.ENTITY_arg0:b $0 $0) (p_TARGET:u $0)) (p_EQUAL:b $0 v-w-1-where:v)) (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-hang:u $1) (and:c (p_TYPE_w-6-chicago:u $3) (p_EVENT_w-6-chicago:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_EVENT.ENTITY_l-nmod.w-5-in:b $1 $3))) (p_EQUAL:b $2 v-w-1-where:v) (p_EVENT.ENTITY_arg1:b $1 $2))))))",
         sentenceSemantics.second().get(0).toString());
     cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
@@ -1425,27 +1425,27 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-5-come t-VERB (l-nmod w-2-city t-NOUN (l-det w-1-what t-DET)) (l-aux w-3-did t-AUX) (l-nsubj w-4-obama t-PROPN) (l-nmod w-6-from t-ADP) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-5-come t-VERB (l-nmod w-2-city t-NOUN (l-det w-1-what t-DET:WH)) (l-aux w-3-did t-AUX) (l-nsubj w-4-obama t-PROPN) (l-nmod w-6-from t-ADP) (l-punct w-7-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod (l-nmod (l-aux w-5-come w-3-did) (l-det w-2-city w-1-what)) w-6-from) w-4-obama) w-7-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1468,27 +1468,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-4-come t-VERB (l-nmod w-1-where t-ADV) (l-aux w-2-did t-AUX) (l-nsubj w-3-obama t-PROPN) (l-nmod w-5-from t-ADP) (l-punct w-6-? t-PUNCT))",
+        "(l-root w-4-come t-VERB (l-nmod w-1-where t-ADV:WH) (l-aux w-2-did t-AUX) (l-nsubj w-3-obama t-PROPN) (l-nmod w-5-from t-ADP) (l-punct w-6-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-nmod (l-nmod (l-aux w-4-come w-2-did) w-1-where) w-5-from) w-3-obama) w-6-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1511,27 +1511,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-2-direct t-VERB (l-nsubj w-1-who t-PRON) (l-dobj w-3-titanic t-PROPN) (l-punct w-4-? t-PUNCT))",
+        "(l-root w-2-direct t-VERB (l-nsubj w-1-who t-PRON:WH) (l-dobj w-3-titanic t-PROPN) (l-punct w-4-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-dobj w-2-direct w-3-titanic) w-1-who) w-4-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1554,27 +1554,27 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-3-marry t-VERB (l-dobj w-1-who t-PRON) (l-nsubj w-2-jim t-PROPN) (l-punct w-4-? t-PUNCT))",
+        "(l-root w-3-marry t-VERB (l-dobj w-1-who t-PRON:WH) (l-nsubj w-2-jim t-PROPN) (l-punct w-4-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
         "(l-punct (l-nsubj (l-dobj w-3-marry w-1-who) w-2-jim) w-4-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1597,7 +1597,7 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
         "(l-root w-3-in t-ADV (l-cop w-1-be t-VERB) (l-nsubj w-2-he t-PRON) (l-punct w-4-? t-PUNCT))",
@@ -1605,18 +1605,18 @@ public class TreeTransformerUniversalTest {
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals("(l-punct (l-nsubj (l-cop w-3-in w-1-be) w-2-he) w-4-?)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1638,26 +1638,26 @@ public class TreeTransformerUniversalTest {
     sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-1-give t-VERB (l-iobj w-2-i t-PRON) (l-dobj w-4-capital t-NOUN (l-det w-3-the t-DET) (l-nmod w-6-uk t-PROPN (l-case w-5-of t-ADP))) (l-punct w-7-? t-PUNCT))",
+        "(l-root w-1-give t-VERB (l-iobj w-2-i t-PRON) (l-dobj:wh w-4-capital t-NOUN (l-det w-3-the t-DET) (l-nmod w-6-uk t-PROPN (l-case w-5-of t-ADP))) (l-punct w-7-? t-PUNCT))",
         sentence.getRootNode().toString());
 
     binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
-    assertEquals("(l-iobj (l-punct (l-dobj w-1-give (l-nmod (l-det w-4-capital w-3-the) (l-case w-6-uk w-5-of))) w-7-?) w-2-i)",
+            obliquenessHierarchyRules.getRelationPriority());
+    assertEquals("(l-iobj (l-punct (l-dobj:wh w-1-give (l-nmod (l-det w-4-capital w-3-the) (l-case w-6-uk w-5-of))) w-7-?) w-2-i)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
@@ -1681,74 +1681,40 @@ public class TreeTransformerUniversalTest {
     Sentence sentence = new Sentence(jsonSentence);
 
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
 
-    // Comment this test case if you are handling xcomp properly.
     assertEquals(
-        "(l-root w-2-ask t-VERB (l-nsubj w-1-sue t-PROPN) (l-dobj w-3-george t-PROPN) (l-conj-verb w-5-respond t-VERB (l-mark w-4-to t-PART) (l-nmod w-8-offer t-NOUN (l-case w-6-to t-ADP) (l-nmod:poss w-7-she t-PRON))) (l-punct w-9-. t-PUNCT))",
+        "(l-root w-2-ask t-VERB (l-nsubj w-1-sue t-PROPN) (l-dobj w-3-george t-PROPN (l-BIND v-w-3-george)) (l-xcomp w-5-respond t-VERB (l-mark w-4-to t-PART) (l-nmod w-8-offer t-NOUN (l-case w-6-to t-ADP) (l-nmod:poss w-7-she t-PRON)) (l-nsubj v-w-3-george)) (l-punct w-9-. t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-dobj (l-conj-verb w-2-ask (l-mark (l-nmod w-5-respond (l-case (l-nmod:poss w-8-offer w-7-she) w-6-to)) w-4-to)) w-3-george) w-1-sue) w-9-.)",
+        "(l-punct (l-nsubj (l-xcomp (l-dobj w-2-ask (l-BIND w-3-george v-w-3-george)) (l-mark (l-nsubj (l-nmod w-5-respond (l-case (l-nmod:poss w-8-offer w-7-she) w-6-to)) v-w-3-george) w-4-to)) w-1-sue) w-9-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (exists:ex $4:<a,e> (and:c (p_EVENT_w-2-ask:u $3) (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-respond:u $4) (exists:ex $6:<a,e> (and:c (and:c (p_TYPE_w-8-offer:u $5) (p_EVENT_w-8-offer:u $5) (p_EVENT.ENTITY_arg0:b $5 $5)) (p_TYPE_w-7-she:u $6) (p_EVENT.ENTITY_l-nmod:b $5 $6))) (p_EVENT.ENTITY_l-nmod.w-6-to:b $4 $5))) (p_CONJ:tri $0 $3 $4)))) (p_TYPE_w-3-george:u $2) (p_EVENT.ENTITY_arg2:b $0 $2))) (p_TYPE_w-1-sue:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-2-ask:u $0) (and:c (and:c (p_TYPE_w-3-george:u $3) (p_EVENT_w-3-george:u $3) (p_EVENT.ENTITY_arg0:b $3 $3)) (p_EQUAL:b $3 v-w-3-george:v)) (p_EVENT.ENTITY_arg2:b $0 $3))) (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-5-respond:u $2) (exists:ex $6:<a,e> (and:c (and:c (p_TYPE_w-8-offer:u $5) (p_EVENT_w-8-offer:u $5) (p_EVENT.ENTITY_arg0:b $5 $5)) (p_TYPE_w-7-she:u $6) (p_EVENT.ENTITY_l-nmod:b $5 $6))) (p_EVENT.ENTITY_l-nmod.w-6-to:b $2 $5))) (p_EQUAL:b $4 v-w-3-george:v) (p_EVENT.ENTITY_arg1:b $2 $4))) (p_EVENT.EVENT_l-xcomp:b $0 $2))) (p_TYPE_w-1-sue:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[ask.arg1(1:e , 0:m.sue), ask.arg2(1:e , 2:m.george), offer(7:s , 7:x), offer.arg0(7:e , 7:x), offer.nmod(7:e , 6:x), respond.arg1(4:e , 0:m.sue), respond.arg2(4:e , 2:m.george), respond.nmod.to(4:e , 7:x), she(6:s , 6:x)]",
+        "[arg0(2:e , 2:m.george), ask.arg1(1:e , 0:m.sue), ask.arg2(1:e , 2:m.george), ask.xcomp(1:e , 4:e), offer(7:s , 7:x), offer.arg0(7:e , 7:x), offer.nmod(7:e , 6:x), respond.arg1(4:e , 2:m.george), respond.nmod.to(4:e , 7:x), she(6:s , 6:x)]",
         cleanedPredicates.toString());
-
-    /*- // uncomment this block if you don't use the hack that xcomp is similar to conj.
-    assertEquals(
-        "(l-root w-2-ask t-VERB (l-nsubj w-1-sue t-PROPN) (l-dobj w-3-george t-PROPN) (l-xcomp w-5-respond t-VERB (l-mark w-4-to t-PART) (l-nmod w-8-offer t-NOUN (l-case w-6-to t-ADP) (l-nmod:poss w-7-she t-PRON))) (l-punct w-9-. t-PUNCT))",
-        sentence.getRootNode().toString());
-
-    String binarizedTreeString =
-        TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
-    assertEquals(
-        "(l-punct (l-nsubj (l-xcomp (l-dobj w-2-ask w-3-george) (l-mark (l-nmod w-5-respond (l-case (l-nmod:poss w-8-offer w-7-she) w-6-to)) w-4-to)) w-1-sue) w-9-.)",
-        binarizedTreeString);
-
-    // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
-        sentence.getRootNode());
-
-    // Composing lambda.
-    Pair<String, List<LogicalExpression>> sentenceSemantics =
-        TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
-
-    assertEquals(1, sentenceSemantics.second().size());
-    assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (exists:ex $3:<a,e> (and:c (p_EVENT_w-2-ask:u $0) (p_TYPE_w-3-george:u $3) (p_EVENT.ENTITY_arg2:b $0 $3))) (exists:ex $4:<a,e> (and:c (p_EVENT_w-5-respond:u $2) (exists:ex $5:<a,e> (and:c (and:c (p_TYPE_w-8-offer:u $4) (p_EVENT_w-8-offer:u $4) (p_EVENT.ENTITY_arg0:b $4 $4)) (p_TYPE_w-7-she:u $5) (p_EVENT.ENTITY_l-nmod:b $4 $5))) (p_EVENT.ENTITY_l-nmod.w-6-to:b $2 $4))) (p_EVENT.EVENT_l-xcomp:b $0 $2))) (p_TYPE_w-1-sue:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
-        sentenceSemantics.second().get(0).toString());
-    List<String> cleanedPredicates =
-        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
-            sentenceSemantics.second().get(0), true));
-    Collections.sort(cleanedPredicates);
-    assertEquals(
-        "[ask.arg1(1:e , 0:m.sue), ask.arg2(1:e , 2:m.george), ask.xcomp(1:e , 4:e), offer(7:s , 7:x), offer.arg0(7:e , 7:x), offer.nmod(7:e , 6:x), respond.nmod.to(4:e , 7:x), she(6:s , 6:x)]",
-        cleanedPredicates.toString());*/
   }
 
   @Test
@@ -1762,38 +1728,38 @@ public class TreeTransformerUniversalTest {
 
     // Comment this test case if you are handling ccomp properly.
     // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
         sentence.getRootNode());
     assertEquals(
-        "(l-root w-3-certain t-ADJ (l-nsubj w-1-i t-PRON) (l-cop w-2-be t-VERB) (l-conj-verb w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
+        "(l-root w-3-certain t-ADJ (l-nsubj w-1-i t-PRON) (l-cop w-2-be t-VERB) (l-ccomp w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
         sentence.getRootNode().toString());
 
     String binarizedTreeString =
         TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
+            obliquenessHierarchyRules.getRelationPriority());
     assertEquals(
-        "(l-punct (l-nsubj (l-cop (l-conj-verb w-3-certain (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-2-be) w-1-i) w-8-.)",
+        "(l-punct (l-nsubj (l-ccomp (l-cop w-3-certain w-2-be) (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-1-i) w-8-.)",
         binarizedTreeString);
 
     // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
         sentence.getRootNode());
 
     // Composing lambda.
     Pair<String, List<LogicalExpression>> sentenceSemantics =
         TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
+            obliquenessHierarchyRules.getRelationPriority(), false);
 
     assertEquals(1, sentenceSemantics.second().size());
     assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (p_EVENT_w-3-certain:u $2) (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-6-do:u $3) (p_TYPE_w-7-it:u $5) (p_EVENT.ENTITY_arg2:b $3 $5))) (p_TYPE_w-5-he:u $4) (p_EVENT.ENTITY_arg1:b $3 $4))) (p_CONJ:tri $0 $2 $3)))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-certain:u $0) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-6-do:u $2) (p_TYPE_w-7-it:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-5-he:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.EVENT_l-ccomp:b $0 $2))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
         sentenceSemantics.second().get(0).toString());
     List<String> cleanedPredicates =
         Lists.newArrayList(PostProcessLogicalForm.process(sentence,
             sentenceSemantics.second().get(0), true));
     Collections.sort(cleanedPredicates);
     assertEquals(
-        "[certain.arg1(2:e , 0:x), do.arg1(5:e , 0:x), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), i(0:s , 0:x), it(6:s , 6:x)]",
+        "[certain.arg1(2:e , 0:x), certain.ccomp(2:e , 5:e), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), i(0:s , 0:x), it(6:s , 6:x)]",
         cleanedPredicates.toString());
 
 
