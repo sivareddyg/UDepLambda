@@ -34,7 +34,7 @@ Check debug.txt to see step by step derivation.
 
 ## Important files
 
-* [Type System](lib_data/ud.types.txt) and [related documentation](doc/LogicalVocabulary.md)
+* [Type System](lib_data/ud.types.txt)
 * [Enhancement Step Rules](lib_data/ud-enhancement-rules.proto)
 * [Binarization Step Rules](lib_data/ud-obliqueness-hierarchy.proto)
 * [Substitution Step Rules](lib_data/ud-substitution-rules.proto)
