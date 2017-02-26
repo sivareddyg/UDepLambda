@@ -7,3 +7,6 @@
 [submodule "data/WebQuestions"]
 	path = data/WebQuestions
 	url = git@bitbucket.org:sivareddyg/webquestions.git
+[submodule "lib"]
+	path = lib
+	url = git@bitbucket.org:sivareddyg/udeplambda-lib.git
