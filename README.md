@@ -67,6 +67,6 @@ UDepLambda is distributed as [Apache 2.0 license](LICENSE). However, depending o
 ## Publications/Projects using UDepLambda
 
 [Universal Dependencies to Logical Forms with Negation Scope](https://arxiv.org/pdf/1702.03305.pdf)  
-Federico Fancellu, Siva Reddy, Adam Lopez, Bonnie Webber
+Federico Fancellu, Siva Reddy, Adam Lopez, Bonnie Webber  
 arXiv:1702.03305, 2017.
 
