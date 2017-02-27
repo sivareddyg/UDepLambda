@@ -97,63 +97,87 @@
     <servlet-name>UniversalDependencyParserSpanish</servlet-name>
     <servlet-class>deplambda.servlets.UniversalDependencyParser</servlet-class>
     <init-param>
-      <param-name>annotators</param-name>
+      <param-name>pipelineCount</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>0-annotators</param-name>
       <param-value>tokenize, ssplit, pos, lemma, ner, depparse</param-value>
     </init-param>
     <init-param>
-      <param-name>drawSvgTrees</param-name>
+      <param-name>0-drawSvgTrees</param-name>
       <param-value>true</param-value>
     </init-param>
     <init-param>
-      <param-name>svgZoomFactor</param-name>
+      <param-name>0-svgZoomFactor</param-name>
       <param-value>1.5</param-value>
     </init-param>
     <init-param>
-      <param-name>depparse.model</param-name>
+      <param-name>0-depparse.model</param-name>
       <param-value>/WEB-INF/lib_data/ud-models-v1.3/es/neural-parser/es-glove50.lower.nndep.model.txt.gz</param-value>
     </init-param>
     <init-param>
-      <param-name>pos.model</param-name>
+      <param-name>0-pos.model</param-name>
       <param-value>/WEB-INF/lib_data/ud-models-v1.3/es/pos-tagger/utb-caseless-es-bidirectional-glove-distsim-lower.tagger</param-value>
     </init-param>
     <init-param>
-      <param-name>tokenize.language</param-name>
+      <param-name>0-tokenize.language</param-name>
       <param-value>es</param-value>
     </init-param>
     <init-param>
-      <param-name>ner.model</param-name>
+      <param-name>0-ner.model</param-name>
       <param-value>edu/stanford/nlp/models/ner/spanish.ancora.distsim.s512.crf.ser.gz</param-value>
     </init-param>
     <init-param>
-      <param-name>ner.applyNumericClassifiers</param-name>
+      <param-name>0-ner.applyNumericClassifiers</param-name>
       <param-value>false</param-value>
     </init-param>
     <init-param>
-      <param-name>ner.useSUTime</param-name>
+      <param-name>0-ner.useSUTime</param-name>
       <param-value>false</param-value>
     </init-param>
+    <init-param>
+      <param-name>1-annotators</param-name>
+      <param-value>tokenize, ssplit</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-tokenize.whitespace</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-ssplit.eolonly</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-preprocess.addDateEntities</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-preprocess.addNamedEntities</param-name>
+      <param-value>true</param-value>
+    </init-param>
    <init-param>
-      <param-name>deplambda</param-name>
+      <param-name>1-deplambda</param-name>
       <param-value>true</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.lexicalizePredicates</param-name>
+      <param-name>1-deplambda.lexicalizePredicates</param-name>
       <param-value>true</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.definedTypesFile</param-name>
+      <param-name>1-deplambda.definedTypesFile</param-name>
       <param-value>/WEB-INF/lib_data/ud.types.txt</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.treeTransformationsFile</param-name>
+      <param-name>1-deplambda.treeTransformationsFile</param-name>
       <param-value>/WEB-INF/lib_data/ud-enhancement-rules.proto</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.relationPrioritiesFile</param-name>
+      <param-name>1-deplambda.relationPrioritiesFile</param-name>
       <param-value>/WEB-INF/lib_data/ud-obliqueness-hierarchy.proto</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.lambdaAssignmentRulesFile</param-name>
+      <param-name>1-deplambda.lambdaAssignmentRulesFile</param-name>
       <param-value>/WEB-INF/lib_data/ud-substitution-rules.proto</param-value>
    </init-param>
   </servlet>
@@ -162,63 +186,87 @@
     <servlet-name>UniversalDependencyParserGerman</servlet-name>
     <servlet-class>deplambda.servlets.UniversalDependencyParser</servlet-class>
     <init-param>
-      <param-name>annotators</param-name>
+      <param-name>pipelineCount</param-name>
+      <param-value>2</param-value>
+    </init-param>
+    <init-param>
+      <param-name>0-annotators</param-name>
       <param-value>tokenize, ssplit, pos, lemma, ner, depparse</param-value>
     </init-param>
     <init-param>
-      <param-name>drawSvgTrees</param-name>
+      <param-name>0-drawSvgTrees</param-name>
       <param-value>true</param-value>
     </init-param>
     <init-param>
-      <param-name>svgZoomFactor</param-name>
+      <param-name>0-svgZoomFactor</param-name>
       <param-value>1.5</param-value>
     </init-param>
     <init-param>
-      <param-name>depparse.model</param-name>
+      <param-name>0-depparse.model</param-name>
       <param-value>/WEB-INF/lib_data/ud-models-v1.3/de/neural-parser/de-glove50.lower.nndep.model.txt.gz</param-value>
     </init-param>
     <init-param>
-      <param-name>pos.model</param-name>
+      <param-name>0-pos.model</param-name>
       <param-value>/WEB-INF/lib_data/ud-models-v1.3/de/pos-tagger/utb-caseless-de-bidirectional-glove-distsim-lower.tagger</param-value>
     </init-param>
     <init-param>
-      <param-name>tokenize.language</param-name>
+      <param-name>0-tokenize.language</param-name>
       <param-value>de</param-value>
     </init-param>
     <init-param>
-      <param-name>ner.model</param-name>
+      <param-name>0-ner.model</param-name>
       <param-value>edu/stanford/nlp/models/ner/german.hgc_175m_600.crf.ser.gz</param-value>
     </init-param>
     <init-param>
-      <param-name>ner.applyNumericClassifiers</param-name>
+      <param-name>0-ner.applyNumericClassifiers</param-name>
       <param-value>false</param-value>
     </init-param>
     <init-param>
-      <param-name>ner.useSUTime</param-name>
+      <param-name>0-ner.useSUTime</param-name>
       <param-value>false</param-value>
     </init-param>
+    <init-param>
+      <param-name>1-annotators</param-name>
+      <param-value>tokenize, ssplit</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-tokenize.whitespace</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-ssplit.eolonly</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-preprocess.addDateEntities</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>1-preprocess.addNamedEntities</param-name>
+      <param-value>true</param-value>
+    </init-param>
    <init-param>
-      <param-name>deplambda</param-name>
+      <param-name>1-deplambda</param-name>
       <param-value>true</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.lexicalizePredicates</param-name>
+      <param-name>1-deplambda.lexicalizePredicates</param-name>
       <param-value>true</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.definedTypesFile</param-name>
+      <param-name>1-deplambda.definedTypesFile</param-name>
       <param-value>/WEB-INF/lib_data/ud.types.txt</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.treeTransformationsFile</param-name>
+      <param-name>1-deplambda.treeTransformationsFile</param-name>
       <param-value>/WEB-INF/lib_data/ud-enhancement-rules.proto</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.relationPrioritiesFile</param-name>
+      <param-name>1-deplambda.relationPrioritiesFile</param-name>
       <param-value>/WEB-INF/lib_data/ud-obliqueness-hierarchy.proto</param-value>
    </init-param>
    <init-param>
-      <param-name>deplambda.lambdaAssignmentRulesFile</param-name>
+      <param-name>1-deplambda.lambdaAssignmentRulesFile</param-name>
       <param-value>/WEB-INF/lib_data/ud-substitution-rules.proto</param-value>
    </init-param>
   </servlet>
