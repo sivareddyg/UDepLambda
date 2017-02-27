@@ -1,3 +1,6 @@
+########### Enhancement rules #########
+# These rules are constantly updated and may not reflect the rules in the paper
+
 rulegroup {
   name: "Question words"
   priority: 1

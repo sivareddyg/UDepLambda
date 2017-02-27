@@ -38,6 +38,7 @@ public class UniversalDependencyParser extends HttpServlet {
    */
   public UniversalDependencyParser() {
     super();
+    System.setProperty("java.awt.headless", "true");
   }
 
   /**

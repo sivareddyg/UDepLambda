@@ -57,6 +57,7 @@ public class QueryUDP extends HttpServlet {
    */
   public QueryUDP() {
     super();
+    System.setProperty("java.awt.headless", "true");
   }
 
   /**
