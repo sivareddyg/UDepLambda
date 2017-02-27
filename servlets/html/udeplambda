@@ -1,0 +1,116 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import cgi
+import cgitb; cgitb.enable()     # aor troubleshooting
+import urllib
+
+form = cgi.FieldStorage()
+query = ""
+if "query" not in form:
+  query = "Pixar, the company which Disney acquired, made Ratatouille."
+else:
+  query = form["query"].value
+
+if "language" not in form:
+  language = "en"
+else:
+  language = form["language"].value
+
+print "Content-Type: text/html"
+print
+print """\
+<html>
+<head>
+ <meta charset="utf-8">
+<title>UDepLambda Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+</head>
+<body style="padding-left:10; padding-right:10">
+<font color=#006400 size=6>UDepLambda Demo</font>
+<P>
+<form action=udeplambda method=POST><font size="3">
+    <script type="text/javascript">
+    <!--//--><![CDATA[
+
+    function showSample() {
+      queryOptions = document.getElementById("query");
+      languageOptions = document.getElementById("language");
+      queryOptions.value = document.getElementById("defaultQuery."+
+                 languageOptions.selectedIndex).value;
+      query = queryOptions.value;
+      language = languageOptions.value;
+    }
+
+    function handleOnChangeParserSelect() {
+      queryOptions = document.getElementById("query");
+      languageOptions = document.getElementById("language");
+      for (var i = 0; i < 3 ; i++) {
+         defaultQuery = document.getElementById("defaultQuery."+ i);
+         if (queryOptions.value == defaultQuery.value) { showSample(); break; }
+      }
+    }
+
+    function eraseText() {
+       document.getElementById("query").value = "";
+    }
+
+    <!--//-->]]>
+    </script>
+
+       <input type="hidden" name="defaultQuery.0"
+              id="defaultQuery.0"
+              value="Pixar, the company which Disney acquired, made Ratatouille." />
+    
+       <input type="hidden" name="defaultQuery.1"
+              id="defaultQuery.1"
+              value="Pixar, die Firma die Disney kaufte, machte Ratatouille." />
+ 
+       <input type="hidden" name="defaultQuery.2"
+              id="defaultQuery.2"
+              value="Pixar, la empresa que Disney adquirió, hizo Ratatouille." />
+       
+Please enter your sentence <input type="button" value="Clear" style="height:24px" onclick="eraseText();">
+<br>
+<textarea name=query id=query style="width: 500px; height: 8em" rows=31 cols=7>
+%s</textarea>
+<br>
+<br>
+<select name="language" id="language" onchange="handleOnChangeParserSelect();">
+""" %query
+
+if language == "en":
+  print "<option value=en selected=selected>English</option>"
+else:
+  print "<option value=en>English</option>"
+
+if language == "de":
+  print "<option value=de selected=selected>German</option>"
+else:
+  print "<option value=de>German</option>"
+
+if language == "es":
+  print "<option value=es selected=selected>Spanish</option>"
+else:
+  print "<option value=es>Spanish</option>"
+
+print """</select>
+<input type=submit> </font>
+
+</form>"""
+
+in_dict = {'query': urllib.quote(query), 'language': language, 'viaurl': 'true'}
+
+params = urllib.urlencode(in_dict)
+
+f = urllib.urlopen("http://bravas:8080/deplambda-demo/?", params)
+print f.read().split("</form>")[-1]
+#print params
+
+print """\
+</body>
+</html>"""
