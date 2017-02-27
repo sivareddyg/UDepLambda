@@ -21,7 +21,9 @@ Let's setup Freebase server first.
 
 ## Paper Results replication
 
-TODO
+TODO: commands
+
+TODO: share output files.
 
 ## Running your own pipeline
 
