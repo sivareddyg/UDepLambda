@@ -8,25 +8,42 @@ For more details, please refer to our paper:
 Siva Reddy, Oscar Täckström, Slav Petrov, Mark Steedman, Mirella Lapata  
 arXiv:1702.03196, 2017.
 
-## Install
+## Installation
 
-> git clone https://github.com/sivareddyg/UDepLambda.git
+### Requirements
 
-> cd UDepLambda
+* Java 8 
+* Ant 1.8.2 or higher
 
-> git submodule update --init --recursive lib
+### Installation commands
 
-> ant build
+Run the following commands in a terminal:
+
+    git clone https://github.com/sivareddyg/UDepLambda.git
+    cd UDepLambda
+    git submodule update --init --recursive lib
+    git submodule update --init --recursive lib_data/ud-models-v1.3
+    git submodule update --init --recursive lib_data/ud-models-v1.2
+    ant build
+
+### Eclipse setup
+File -> Import -> Existing Projects into Workspace -> Select root directory as UDepLambda -> Finish
 
 ## Usage:
 
-> cat input-english.txt | sh run-english.sh
+For English:
 
-> cat input-spanish.txt | sh run-spanish.sh
+    cat input-english.txt | sh run-english.sh
 
-> cat input-german.txt | sh run-german.sh
+For German:
 
-Check debug.txt to see step by step derivation.
+    cat input-german.txt | sh run-german.sh
+    
+For Spanish:  
+
+    cat input-spanish.txt | sh run-spanish.sh
+
+Check [debug.txt](debug.txt) to see step by step derivation.
 
 ## Web Demo (based on old version of rules)
 
@@ -69,4 +86,3 @@ UDepLambda is distributed as [Apache 2.0 license](LICENSE). However, depending o
 [Universal Dependencies to Logical Forms with Negation Scope](https://arxiv.org/pdf/1702.03305.pdf)  
 Federico Fancellu, Siva Reddy, Adam Lopez, Bonnie Webber  
 arXiv:1702.03305, 2017.
-
