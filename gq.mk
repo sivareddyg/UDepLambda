@@ -237,7 +237,7 @@ entity_dismabiguated_to_plain_forest_%:
 		ssplit.eolonly true \
 		languageCode $* \
 		posTagKey UD \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.graphparser.util.NlpPipeline \
 		preprocess.addDateEntities true \
@@ -257,7 +257,7 @@ entity_dismabiguated_to_plain_forest_%:
 		ssplit.eolonly true \
 		languageCode $* \
 		posTagKey UD \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.graphparser.util.NlpPipeline \
 		preprocess.addDateEntities true \
@@ -277,7 +277,7 @@ entity_dismabiguated_to_plain_forest_%:
 		ssplit.eolonly true \
 		languageCode $* \
 		posTagKey UD \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.graphparser.util.NlpPipeline \
 		preprocess.addDateEntities true \

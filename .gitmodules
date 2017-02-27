@@ -10,3 +10,9 @@
 [submodule "lib"]
 	path = lib
 	url = git@bitbucket.org:sivareddyg/udeplambda-lib.git
+[submodule "lib_data/ud-models-v1.2"]
+	path = lib_data/ud-models-v1.2
+	url = https://sivareddyg@bitbucket.org/sivareddyg/ud-models-v1.2.git
+[submodule "lib_data/ud-models-v1.3"]
+	path = lib_data/ud-models-v1.3
+	url = https://sivareddyg@bitbucket.org/sivareddyg/ud-models-v1.3.git

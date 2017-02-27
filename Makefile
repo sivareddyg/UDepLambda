@@ -125,7 +125,7 @@ entity_annotate_webquestions_%:
 		annotators tokenize,ssplit,pos,lemma \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.train.json
 	cat data/WebQuestions/$*/webquestions.dev.json \
@@ -133,7 +133,7 @@ entity_annotate_webquestions_%:
 		annotators tokenize,ssplit,pos,lemma \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.dev.json
 	cat data/WebQuestions/$*/webquestions.test.json \
@@ -141,7 +141,7 @@ entity_annotate_webquestions_%:
 		annotators tokenize,ssplit,pos,lemma \
 		ssplit.newlineIsSentenceBreak always \
 		languageCode $* \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* in.sivareddy.scripts.NounPhraseAnnotator $*_ud \
 		> working/$*-webquestions.test.json
 
@@ -229,7 +229,7 @@ entity_dismabiguated_to_plain_forest_en:
 		ssplit.eolonly true \
 		languageCode en \
 		posTagKey UD \
-		pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
 		> working/en-webquestions.dev.plain.forest.json 
 	cat data/WebQuestions/en/webquestions.train.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
@@ -244,7 +244,7 @@ entity_dismabiguated_to_plain_forest_en:
 		ssplit.eolonly true \
 		languageCode en \
 		posTagKey UD \
-		pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
 		> working/en-webquestions.train.plain.forest.json 
 	cat data/WebQuestions/en/webquestions.test.disambiguated.json \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.util.CreateGraphParserForestFromEntityDisambiguatedSentences \
@@ -259,7 +259,7 @@ entity_dismabiguated_to_plain_forest_en:
 		ssplit.eolonly true \
 		languageCode en \
 		posTagKey UD \
-		pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
 		> working/en-webquestions.test.plain.forest.json 
 
 entity_dismabiguated_to_plain_forest_%:
@@ -271,7 +271,7 @@ entity_dismabiguated_to_plain_forest_%:
 		ssplit.eolonly true \
 		languageCode $* \
 		posTagKey UD \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.dev.plain.forest.json 
 	cat data/WebQuestions/$*/webquestions.train.disambiguated.json \
@@ -282,7 +282,7 @@ entity_dismabiguated_to_plain_forest_%:
 		ssplit.eolonly true \
 		languageCode $* \
 		posTagKey UD \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.train.plain.forest.json 
 	cat data/WebQuestions/$*/webquestions.test.disambiguated.json \
@@ -293,7 +293,7 @@ entity_dismabiguated_to_plain_forest_%:
 		ssplit.eolonly true \
 		languageCode $* \
 		posTagKey UD \
-		pos.model lib_data/utb-models/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
+		pos.model lib_data/ud-models-v1.2/$*/pos-tagger/utb-caseless-$*-bidirectional-glove-distsim-lower.full.tagger \
 		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.Stemmer $* 20 \
 		> working/$*-webquestions.test.plain.forest.json 
 
