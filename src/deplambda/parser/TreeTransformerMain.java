@@ -1,10 +1,11 @@
 package deplambda.parser;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -66,8 +67,12 @@ public class TreeTransformerMain extends ProcessStreamInterface {
     // Post processing lambdas.
     JsonArray jsonParses = new JsonArray();
     for (LogicalExpression parse : sentenceSemantics.second()) {
-      Set<String> cleaned =
-          PostProcessLogicalForm.process(sentence, parse, lexicalizePredicates);
+      List<String> cleaned =
+          Lists.newArrayList(PostProcessLogicalForm.process(sentence, parse,
+              lexicalizePredicates));
+
+      // TODO: Better sorting function is required.
+      Collections.sort(cleaned);
       jsonParses.add(jsonParser.parse(gson.toJson(cleaned)));
     }
     sent.add(SentenceKeys.DEPENDENCY_LAMBDA, jsonParses);

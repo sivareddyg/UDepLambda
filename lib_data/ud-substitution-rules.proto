@@ -1,4 +1,6 @@
-########### dependency relation rules #########
+########### Substitution rules #########
+# These rules are constantly updated and may not reflect the rules in the paper
+
 rulegroup {
   name: "nmod"
   priority: 5
