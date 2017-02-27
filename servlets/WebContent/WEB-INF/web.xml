@@ -57,7 +57,7 @@
     </init-param>
     <init-param>
       <param-name>2-pos.model</param-name>
-      <param-value>/WEB-INF/lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger</param-value>
+      <param-value>/WEB-INF/lib_data/ud-models-v1.2/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger</param-value>
     </init-param>
    <init-param>
       <param-name>2-deplambda</param-name>
