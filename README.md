@@ -45,9 +45,9 @@ For Spanish:
 
 Check [debug.txt](debug.txt) to see step by step derivation.
 
-## Web Demo (based on old version of rules)
+## Web Demo
 
-> http://sivareddy.in/deplambda.html
+> http://sivareddy.in/udeplambda.html
 
 ## Important files
 
