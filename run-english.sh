@@ -15,7 +15,7 @@ java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This 
     ssplit.eolonly true \
     languageCode en \
     posTagKey UD \
-    pos.model lib_data/utb-models/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
+    pos.model lib_data/ud-models-v1.2/en/pos-tagger/utb-caseless-en-bidirectional-glove-distsim-lower.full.tagger \
     nthreads 1 \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs semantic parser` \
     annotators tokenize,ssplit \
