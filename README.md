@@ -26,6 +26,8 @@ Run the following commands in a terminal:
     git submodule update --init --recursive lib_data/ud-models-v1.2
     ant build
 
+[Troubleshooting](https://github.com/sivareddyg/UDepLambda/issues/8#issuecomment-283096846)
+
 ### Eclipse setup
 File -> Import -> Existing Projects into Workspace -> Select root directory as UDepLambda -> Finish
 
