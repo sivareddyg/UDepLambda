@@ -1,15 +1,12 @@
-[submodule "data/webquestions"]
-	path = data/webquestions
-	url = git@bitbucket.org:sivareddyg/webquestions.git
 [submodule "data/GraphQuestions"]
 	path = data/GraphQuestions
-	url = git@bitbucket.org:sivareddyg/graphquestions.git
+	url = https://sivareddyg@bitbucket.org/sivareddyg/graphquestions.git
 [submodule "data/WebQuestions"]
 	path = data/WebQuestions
-	url = git@bitbucket.org:sivareddyg/webquestions.git
+	url = https://sivareddyg@bitbucket.org/sivareddyg/webquestions.git
 [submodule "lib"]
 	path = lib
-	url = git@bitbucket.org:sivareddyg/udeplambda-lib.git
+	url = https://sivareddyg@bitbucket.org/sivareddyg/udeplambda-lib.git
 [submodule "lib_data/ud-models-v1.2"]
 	path = lib_data/ud-models-v1.2
 	url = https://sivareddyg@bitbucket.org/sivareddyg/ud-models-v1.2.git
