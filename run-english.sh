@@ -1,6 +1,7 @@
 java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs stanford default postagger, lemmatizer, ner and dependency parser` \
     annotators tokenize,ssplit,pos,lemma,ner,depparse \
     tokenize.language en \
+    ssplit.eolonly true \
     nthreads 1 \
     | java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline  `# This pipeline uses ner tags from previous steps and annotates entities` \
     preprocess.addDateEntities true \

@@ -329,10 +329,18 @@ public class PostProcessLogicalForm {
       return String.format("%d:x", entityIndex);
     } else {
       return String.format("%d:m.%s", entityIndex,
-          sentence.getLemma(entityIndex));
+          getEntityName(sentence, entityIndex));
     }
   }
 
+  private static String getEntityName(Sentence sentence, int entityIndex) {
+    JsonObject entityObj = sentence.getEntityAtWordIndex(entityIndex);
+    if (entityObj == null || !entityObj.has(SentenceKeys.PHRASE))
+      return sentence.getLemma(entityIndex);
+    else
+      return entityObj.get(SentenceKeys.PHRASE).getAsString().replace(" ", "_");
+  }
+  
   /**
    * Removes jargon from the base predicate, e.g. p_EVENT_w-eat becomes eat
    * 
