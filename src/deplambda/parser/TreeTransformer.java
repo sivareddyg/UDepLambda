@@ -204,7 +204,7 @@ public class TreeTransformer {
   }
 
   private static String replaceSpecialChars(String name) {
-    return name.replaceAll("[\\(\\)\\:,]+", "-SPL-");
+    return name.replaceAll("[\\(\\)\\:,#]+", "-SPL-");
   }
 
   /**
