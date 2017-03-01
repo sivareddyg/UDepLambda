@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -34,7 +35,8 @@ import deplambda.others.SentenceKeys;
 public class QueryUDP extends HttpServlet {
   private static final long serialVersionUID = 1L;
   private String charset = "UTF-8";
-  private JsonParser jsonParser = new JsonParser();
+  private static JsonParser jsonParser = new JsonParser();
+  private static Gson gson = new Gson();
   private Map<String, String> udpEndPoints = new HashMap<>();
 
   /**
@@ -135,7 +137,9 @@ public class QueryUDP extends HttpServlet {
         viaurl != null && viaurl.equals("true") ? URLDecoder.decode(queryText,
             charset) : queryText;
 
-    String queryTextJson = String.format("{\"sentence\": \"%s\"}", queryText);
+    JsonObject queryTextJsonObject = new JsonObject();
+    queryTextJsonObject.addProperty(SentenceKeys.SENTENCE_KEY, queryText);
+    String queryTextJson = gson.toJson(queryTextJsonObject);
     queryTextJson = URLEncoder.encode(queryTextJson, charset);
 
     String requestQuery = String.format("query=%s", queryTextJson);

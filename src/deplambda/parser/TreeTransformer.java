@@ -196,7 +196,7 @@ public class TreeTransformer {
       String namedNodeString = namedNodematcher.group(1);
       Tree namedNode = matcher.getNode(namedNodeString);
       original =
-          original.replaceAll(String.format("\\{%s\\}", namedNodeString),
+          original.replace(String.format("{%s}", namedNodeString),
               replaceSpecialChars(namedNode.label().value()));
       namedNodematcher = namedNodePattern.matcher(original);
     }
@@ -204,7 +204,7 @@ public class TreeTransformer {
   }
 
   private static String replaceSpecialChars(String name) {
-    return name.replaceAll("[\\(\\)\\:,]+", "-SPL-");
+    return name.replaceAll("[\\(\\)\\:,#]+", "-SPL-");
   }
 
   /**

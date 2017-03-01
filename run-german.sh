@@ -1,6 +1,7 @@
 java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.NlpPipeline `# This pipeline runs stanford ner` \
     annotators tokenize,ssplit,ner \
     tokenize.language de \
+    ssplit.eolonly true \
     ner.model edu/stanford/nlp/models/ner/german.hgc_175m_600.crf.ser.gz \
     ner.applyNumericClassifiers false \
     ner.useSUTime false \

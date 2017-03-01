@@ -125,6 +125,10 @@
       <param-value>es</param-value>
     </init-param>
     <init-param>
+      <param-name>0-ssplit.eolonly</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
       <param-name>0-ner.model</param-name>
       <param-value>edu/stanford/nlp/models/ner/spanish.ancora.distsim.s512.crf.ser.gz</param-value>
     </init-param>
@@ -212,6 +216,10 @@
     <init-param>
       <param-name>0-tokenize.language</param-name>
       <param-value>de</param-value>
+    </init-param>
+    <init-param>
+      <param-name>0-ssplit.eolonly</param-name>
+      <param-value>true</param-value>
     </init-param>
     <init-param>
       <param-name>0-ner.model</param-name>
