@@ -1108,6 +1108,50 @@ public class TreeTransformerUniversalTest {
         "[direct.arg1(1:e , 0:m.cameron), direct.arg2(1:e , 2:m.titanic), produce.arg1(4:e , 0:m.cameron), produce.arg2(4:e , 5:m.avatar)]",
         cleanedPredicates.toString());
 
+    // VP conjunction tricky.
+    // issue: https://github.com/sivareddyg/UDepLambda/issues/10
+    jsonSentence =
+        jsonParser
+            .parse(
+                "{\"sentence\":\"John ate apple and suffered.\",\"words\":[{\"word\":\"John\",\"lemma\":\"John\",\"pos\":\"PROPN\",\"ner\":\"PERSON\",\"index\":1,\"head\":2,\"dep\":\"nsubj\"},{\"word\":\"ate\",\"lemma\":\"eat\",\"pos\":\"VERB\",\"ner\":\"O\",\"dep\":\"root\",\"head\":0,\"index\":2},{\"word\":\"apple\",\"lemma\":\"apple\",\"pos\":\"PROPN\",\"ner\":\"O\",\"index\":3,\"head\":2,\"dep\":\"dobj\"},{\"word\":\"and\",\"lemma\":\"and\",\"pos\":\"CONJ\",\"ner\":\"O\",\"index\":4,\"head\":2,\"dep\":\"cc\"},{\"word\":\"suffered\",\"lemma\":\"suffer\",\"pos\":\"VERB\",\"ner\":\"O\",\"index\":5,\"head\":2,\"dep\":\"conj\"},{\"word\":\".\",\"lemma\":\".\",\"pos\":\"PUNCT\",\"ner\":\"O\",\"index\":6,\"head\":2,\"dep\":\"punct\",\"sentEnd\":true}],\"entities\":[{\"phrase\":\"John\",\"start\":0,\"end\":0,\"index\":0}]}")
+            .getAsJsonObject();
+    sentence = new Sentence(jsonSentence);
+
+    // TreeTransformationRules for modifying the structure of a tree.
+    TreeTransformer.applyRuleGroupsOnTree(enhancementRules,
+        sentence.getRootNode());
+    assertEquals(
+        "(l-root w-2-eat t-VERB (l-nsubj w-1-john t-PROPN) (l-dobj w-3-apple t-PROPN) (l-cc w-4-and t-CONJ) (l-conj-vp w-5-suffer t-VERB) (l-punct w-6-. t-PUNCT))",
+        sentence.getRootNode().toString());
+
+    binarizedTreeString =
+        TreeTransformer.binarizeTree(sentence.getRootNode(),
+            obliquenessHierarchyRules.getRelationPriority());
+    assertEquals(
+        "(l-punct (l-nsubj (l-conj-vp (l-dobj (l-cc w-2-eat w-4-and) w-3-apple) w-5-suffer) w-1-john) w-6-.)",
+        binarizedTreeString);
+
+    // Assign lambdas.
+    TreeTransformer.applyRuleGroupsOnTree(substitutionRules,
+        sentence.getRootNode());
+
+    // Composing lambda.
+    sentenceSemantics =
+        TreeTransformer.composeSemantics(sentence.getRootNode(),
+            obliquenessHierarchyRules.getRelationPriority(), false);
+
+    assertEquals(1, sentenceSemantics.second().size());
+    assertEquals(
+        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (exists:ex $5:<a,e> (and:c (p_EVENT_w-2-eat:u $2) (p_EMPTY:u $5))) (p_TYPE_w-3-apple:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_EVENT_w-5-suffer:u $3) (p_CONJ:tri $0 $2 $3)))) (p_TYPE_w-1-john:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
+        sentenceSemantics.second().get(0).toString());
+    cleanedPredicates =
+        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
+            sentenceSemantics.second().get(0), true));
+    Collections.sort(cleanedPredicates);
+    assertEquals(
+        "[eat.arg1(1:e , 0:m.John), eat.arg2(1:e , 2:m.apple), suffer.arg1(4:e , 0:m.John)]",
+        cleanedPredicates.toString());
+    
     // Verb conjunction.
     jsonSentence =
         jsonParser
