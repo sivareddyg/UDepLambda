@@ -408,17 +408,28 @@ rulegroup {
 }
 rulegroup {
   name: "xcomp"
-  # TODO: handle extractions
   priority: 10
   rule {
     name: "xcomp"
     # Sue "asked" George to "respond" to her offfer
-    priority: 10
-    tregex: "/^l-xcomp$/=relation"
+    priority: 1
+    tregex: "/^l-xcomp$/=relation !< /t-(?:NOUN|PROPN)/"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.EVENT_{relation}:b $x $y))))))"
+    }
+  }
+  rule {
+    name: "xcomp when attached to a noun/propn"
+    # Elizabeth became queen.
+    # An additional arg2 predicate is created between the control verb and the noun.
+    priority: 5
+    tregex: "/^l-xcomp$/=relation < /t-(?:NOUN|PROPN)/"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_EVENT.EVENT_{relation}:b $x $y) (p_EVENT.ENTITY_arg2:b $x $y))))))"
     }
   }
 }
