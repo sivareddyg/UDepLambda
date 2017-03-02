@@ -17,11 +17,12 @@
 
 ## TODOs
 
-1. Logical expression parser has difficulty parsing certain characters. Replace these characters with parsable symbols.
-2. Visualization of logical forms is pretty bad currently.
+1. ~~Logical expression parser has difficulty parsing certain characters. Replace these characters with parsable symbols.~~
+2. Visualization of logical forms in graph format -- brat visualization?
 3. Alternate output forms
 4. Documentation describing sentences and logical forms.
 5. Making the rules fine grained, e.g., arg0 is not always required. Instantiate it only when it is necessary.
-6. A nicer web demo.
+6. **A nicer web demo**
+7. Move from tregex to semgrex -- a major change
 
 Thanks a lot for contributing! This is the only way to keep this project alive. 
