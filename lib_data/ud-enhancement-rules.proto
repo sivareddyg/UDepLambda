@@ -184,9 +184,20 @@ rulegroup {
     }
   }
   rule {
+    name: "vp conjunction"
+    # John "ate" apple and "suffered".
+    priority: 10
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ $,, /^l-dobj$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-vp"
+    }
+  }
+  rule {
     name: "verb conjunction"
     # "directed" and "produced"
-    priority: 10
+    priority: 15
     tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^t-(?:VERB)$/"
     transformation {
       target: "relation"
