@@ -38,6 +38,7 @@ import edu.cornell.cs.nlp.utils.composites.Pair;
  * @author Siva Reddy
  *
  */
+@Deprecated
 public class TreeTransformerTest {
 
   TransformationRuleGroups treeTransformationRules;
