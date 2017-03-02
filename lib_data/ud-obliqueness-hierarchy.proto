@@ -66,10 +66,6 @@ relation {
   priority: 20
 }
 relation {
-  name: "l-conj-vp"
-  priority: 25
-}
-relation {
   name: "l-auxpass"
   priority: 30
 }
@@ -116,6 +112,10 @@ relation {
 relation {
   name: "l-ccomp"
   priority: 40
+}
+relation {
+  name: "l-conj-vp"
+  priority: 45
 }
 relation {
   name: "l-nsubj"
