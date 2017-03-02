@@ -1805,43 +1805,6 @@ public class TreeTransformerUniversalTest {
     assertEquals(
         "[certain.arg1(2:e , 0:x), certain.ccomp(2:e , 5:e), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), i(0:s , 0:x), it(6:s , 6:x)]",
         cleanedPredicates.toString());
-
-
-    /*- // uncomment this block if you don't use the hack that xcomp is similar to conj.
-    // TreeTransformationRules for modifying the structure of a tree.
-    TreeTransformer.applyRuleGroupsOnTree(treeTransformationRules,
-        sentence.getRootNode());
-    assertEquals(
-        "(l-root w-3-certain t-ADJ (l-nsubj w-1-i t-PRON) (l-cop w-2-be t-VERB) (l-ccomp w-6-do t-VERB (l-mark w-4-that t-SCONJ) (l-nsubj w-5-he t-PRON) (l-dobj w-7-it t-PRON)) (l-punct w-8-. t-PUNCT))",
-        sentence.getRootNode().toString());
-
-    String binarizedTreeString =
-        TreeTransformer.binarizeTree(sentence.getRootNode(),
-            relationRules.getRelationPriority());
-    assertEquals(
-        "(l-punct (l-nsubj (l-ccomp (l-cop w-3-certain w-2-be) (l-mark (l-nsubj (l-dobj w-6-do w-7-it) w-5-he) w-4-that)) w-1-i) w-8-.)",
-        binarizedTreeString);
-
-    // Assign lambdas.
-    TreeTransformer.applyRuleGroupsOnTree(lambdaAssignmentRules,
-        sentence.getRootNode());
-
-    // Composing lambda.
-    Pair<String, List<LogicalExpression>> sentenceSemantics =
-        TreeTransformer.composeSemantics(sentence.getRootNode(),
-            relationRules.getRelationPriority(), false);
-
-    assertEquals(1, sentenceSemantics.second().size());
-    assertEquals(
-        "(lambda $0:<a,e> (exists:ex $1:<a,e> (and:c (exists:ex $2:<a,e> (and:c (p_EVENT_w-3-certain:u $0) (exists:ex $3:<a,e> (and:c (exists:ex $4:<a,e> (and:c (p_EVENT_w-6-do:u $2) (p_TYPE_w-7-it:u $4) (p_EVENT.ENTITY_arg2:b $2 $4))) (p_TYPE_w-5-he:u $3) (p_EVENT.ENTITY_arg1:b $2 $3))) (p_EVENT.EVENT_l-ccomp:b $0 $2))) (p_TYPE_w-1-i:u $1) (p_EVENT.ENTITY_arg1:b $0 $1))))",
-        sentenceSemantics.second().get(0).toString());
-    List<String> cleanedPredicates =
-        Lists.newArrayList(PostProcessLogicalForm.process(sentence,
-            sentenceSemantics.second().get(0), true));
-    Collections.sort(cleanedPredicates);
-    assertEquals(
-        "[I(0:s , 0:x), certain.arg1(2:e , 0:x), certain.ccomp(2:e , 5:e), do.arg1(5:e , 4:x), do.arg2(5:e , 6:x), he(4:s , 4:x), it(6:s , 6:x)]",
-        cleanedPredicates.toString());*/
   }
 
   @Test

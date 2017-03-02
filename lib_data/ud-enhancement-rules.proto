@@ -334,7 +334,7 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "Control constructions"
+  name: "xcomp constructions"    
   priority: 1
   rule {
     name: "object of controller as subject to the controlled verb"
@@ -373,4 +373,6 @@ rulegroup {
       child: "v-{originword}"
     }
   }
+  # TODO: Note clear how to handle "Elizabeth became queen"
+  # Currently this sentence is handled as "(Elizabeth became (Elizabeth is queen))"
 }
