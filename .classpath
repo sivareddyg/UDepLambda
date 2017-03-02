@@ -60,6 +60,5 @@
 	<classpathentry kind="lib" path="lib/mtj-1.0-snapshot.jar"/>
 	<classpathentry kind="lib" path="lib/jregex1.2_01-src.jar"/>
 	<classpathentry kind="lib" path="lib/fastutil-6.5.15.jar"/>
-	<classpathentry kind="lib" path="lib/graph-parser.jar" sourcepath="/graph-parser/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
