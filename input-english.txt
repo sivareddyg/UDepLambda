@@ -1,1 +1,3 @@
 {"sentence":"Charles Darwin studied at the University of Edinburgh in 1825."}
+{"sentence":"I'm Allan."}
+{"sentence":"Disney won an Oscar for the movie Frozen"}

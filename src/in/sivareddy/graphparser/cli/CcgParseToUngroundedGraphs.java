@@ -153,7 +153,7 @@ public class CcgParseToUngroundedGraphs {
       logger.addAppender(stdoutAppender);
 
       String line = br.readLine();
-      // String line = "{\"sentence\" : \"Obama 's birthplace is Kenya .\"}";
+      //String line = "{\"sentence\" : \"I'm Allan.\"}";
       while (line != null) {
         if (line.trim().equals("") || line.charAt(0) == '#') {
           line = br.readLine();
