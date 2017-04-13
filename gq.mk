@@ -1,3 +1,67 @@
+dump_gq_%:
+	java -cp lib/*:bin deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.capitalizeEntities true \
+		languageCode $* \
+		posTagKey UD \
+		nthreads 1 \
+		< data/GraphQuestions/$*/$*-bilty-bist-graphquestions.train.deplambda.forest.json \
+		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		> working/$*-gq-train.conll.srl.tmp
+	cut -f2 working/$*-gq-train.conll.srl.tmp \
+		| sed -e 's/^/\t/g' \
+		> working/$*-gq-train.conll.srl.input
+
+	java -cp lib/*:bin deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.capitalizeEntities true \
+		languageCode $* \
+		posTagKey UD \
+		nthreads 1 \
+		< data/GraphQuestions/$*/$*-bilty-bist-graphquestions.test.deplambda.forest.json \
+		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		> working/$*-gq-test.conll.srl.tmp
+	cut -f2 working/$*-gq-test.conll.srl.tmp \
+		| sed -e 's/^/\t/g' \
+		> working/$*-gq-test.conll.srl.input
+
+	java -cp lib/*:bin deplambda.others.NlpPipeline \
+		annotators tokenize,ssplit \
+		tokenize.whitespace true \
+		ssplit.eolonly true \
+		preprocess.capitalizeFirstWord true \
+		preprocess.capitalizeEntities true \
+		languageCode $* \
+		posTagKey UD \
+		nthreads 1 \
+		< data/GraphQuestions/$*/$*-bilty-bist-graphquestions.dev.deplambda.forest.json \
+		| java -Dfile.encoding="UTF-8" -cp bin:lib/* deplambda.others.ConvertGraphParserSentenceToConll \
+		> working/$*-gq-dev.conll.srl.tmp
+	cut -f2 working/$*-gq-dev.conll.srl.tmp \
+		| sed -e 's/^/\t/g' \
+		> working/$*-gq-dev.conll.srl.input
+
+correct-args-using-srl_%:
+	python scripts/modify-arg1-arg2-srl.py \
+		data/GraphQuestions/$*/$*-bilty-bist-graphquestions.train.deplambda.forest.json \
+		working/$*-gq-train.conll.srl.output \
+		> data/GraphQuestions/$*/$*-bilty-bist-srl-graphquestions.train.deplambda.forest.json
+	python scripts/modify-arg1-arg2-srl.py \
+		data/GraphQuestions/$*/$*-bilty-bist-graphquestions.dev.deplambda.forest.json \
+		working/$*-gq-dev.conll.srl.output \
+		> data/GraphQuestions/$*/$*-bilty-bist-srl-graphquestions.dev.deplambda.forest.json
+	python scripts/modify-arg1-arg2-srl.py \
+		data/GraphQuestions/$*/$*-bilty-bist-graphquestions.test.deplambda.forest.json \
+		working/$*-gq-test.conll.srl.output \
+		> data/GraphQuestions/$*/$*-bilty-bist-srl-graphquestions.test.deplambda.forest.json
+
+
 process_gq:
 	python scripts/graphquestions/convert_to_graph_parser_format.py data/freebase/mid_to_key.txt.gz \
 		< data/GraphQuestions/original/freebase13/graphquestions.training.json \
@@ -1168,6 +1232,85 @@ gq_dependency_with_hyperexpand.33.emb_%:
 	-logFile ../working/gq/$*/dependency_with_hyperexpand.33.emb/all.log.txt \
 	> ../working/gq/$*/dependency_with_hyperexpand.33.emb/all.txt
 
+test_dependency_with_hyperexpand.33.emb_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/gq/$*/test_dependency_with_hyperexpand.33.emb
+	mkdir -p ../working/gq/$*/test_dependency_with_hyperexpand.33.emb
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_question_graph \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/sempre2_schema_gp_format.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-embeddingFile data/embeddings/twelve.table4.translation_invariance.window_3+size_40.normalized.de-en-es \
+	-mostFrequentTypesFile lib_data/dummy.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 5 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag false \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag false \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag false \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag false \
+	-mediatorStemGrelPartMatchingFlag false \
+	-argumentStemMatchingFlag false \
+	-argumentStemGrelPartMatchingFlag false \
+	-ngramStemMatchingFlag true \
+	-useEmbeddingSimilarityFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag false \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag true \
+	-useGoldRelations false \
+	-handleEventEventEdges false \
+	-allowMerging false \
+	-useExpand false \
+	-useHyperExpand true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight 0.0 \
+	-initialTypeWeight 0.0 \
+	-initialWordWeight 0.0 \
+	-mergeEdgeWeight 2.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-contentWordPosTags "NOUN;VERB" \
+	-supervisedCorpus "data/GraphQuestions/$(LANG)/$*-graphquestions.train.deplambda.forest.json;data/GraphQuestions/$(LANG)/$*-graphquestions.dev.deplambda.forest.json" \
+	-devFile data/GraphQuestions/$(LANG)/$*-graphquestions.test.deplambda.forest.json \
+	-logFile ../working/gq/$*/test_dependency_with_hyperexpand.33.emb/all.log.txt \
+	> ../working/gq/$*/test_dependency_with_hyperexpand.33.emb/all.txt
+
 gq_dependency_with_merge_without_expand.33.emb_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
 	rm -rf ../working/gq/$*/dependency_with_merge_without_expand.33.emb
@@ -1407,6 +1550,86 @@ gq_deplambda_with_merge_with_expand.33.emb_%:
 	-logFile ../working/gq/$*/deplambda_with_merge_with_expand.33.emb/all.log.txt \
 	> ../working/gq/$*/deplambda_with_merge_with_expand.33.emb/all.txt
 
+gq_test_deplambda_with_merge_with_expand.33.emb_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/gq/$*/test_deplambda_with_merge_with_expand.33.emb
+	mkdir -p ../working/gq/$*/test_deplambda_with_merge_with_expand.33.emb
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey dependency_lambda \
+	-ccgLexiconQuestions lib_data/lexicon_specialCases_questions_vanilla.txt \
+	-schema data/freebase/schema/sempre2_schema_gp_format.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-embeddingFile data/embeddings/twelve.table4.translation_invariance.window_3+size_40.normalized.de-en-es \
+	-mostFrequentTypesFile lib_data/dummy.txt \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 5 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-addBagOfWordsGraph false \
+	-ngramGrelPartFlag false \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes true \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag false \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag false \
+	-argGrelFlag false \
+	-questionTypeGrelPartFlag false \
+	-stemMatchingFlag false \
+	-mediatorStemGrelPartMatchingFlag false \
+	-argumentStemMatchingFlag false \
+	-argumentStemGrelPartMatchingFlag false \
+	-ngramStemMatchingFlag true \
+	-useEmbeddingSimilarityFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag false \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag true \
+	-useGoldRelations false \
+	-handleEventEventEdges false \
+	-allowMerging true \
+	-useExpand true \
+	-useHyperExpand false \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight 0.0 \
+	-initialTypeWeight 0.0 \
+	-initialWordWeight 0.0 \
+	-mergeEdgeWeight 2.0 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+    -evaluateOnlyTheFirstBest true \
+	-contentWordPosTags "NOUN;VERB" \
+	-supervisedCorpus "data/GraphQuestions/$(LANG)/$*-graphquestions.train.deplambda.forest.json;data/GraphQuestions/$(LANG)/$*-graphquestions.dev.deplambda.forest.json" \
+	-devFile data/GraphQuestions/$(LANG)/$*-graphquestions.test.deplambda.forest.json \
+	-logFile ../working/gq/$*/test_deplambda_with_merge_with_expand.33.emb/all.log.txt \
+	> ../working/gq/$*/test_deplambda_with_merge_with_expand.33.emb/all.txt
+
+
 bow_supervised_without_merge_without_expand.stem_%:
 	$(eval LANG := $(shell echo $* | cut -d- -f1))
 	rm -rf ../working/gq/$*/bow_supervised_without_merge_without_expand.stem
@@ -1546,4 +1769,74 @@ bow_supervised_without_merge_without_expand.emb_%:
 	-testFile data/GraphQuestions/$(LANG)/$*-graphquestions.test.deplambda.forest.json \
 	-logFile ../working/gq/$*/bow_supervised_without_merge_without_expand.emb/all.log.txt \
 	> ../working/gq/$*/bow_supervised_without_merge_without_expand.emb/all.txt
+
+test_bow_supervised_without_merge_without_expand.emb_%:
+	$(eval LANG := $(shell echo $* | cut -d- -f1))
+	rm -rf ../working/gq/$*/test_bow_supervised_without_merge_without_expand.emb
+	mkdir -p ../working/gq/$*/test_bow_supervised_without_merge_without_expand.emb
+	java -Dfile.encoding="UTF-8" -Xms2048m -cp bin:lib/* in.sivareddy.graphparser.cli.RunGraphToQueryTrainingMain \
+	-pointWiseF1Threshold 0.2 \
+	-semanticParseKey bow_question_graph \
+	-schema data/freebase/schema/sempre2_schema_gp_format.txt \
+	-relationTypesFile lib_data/dummy.txt \
+	-embeddingFile data/embeddings/twelve.table4.translation_invariance.window_3+size_40.normalized.de-en-es \
+	-lexicon lib_data/dummy.txt \
+	-domain "http://rdf.freebase.com" \
+	-typeKey "fb:type.object.type" \
+	-nthreads 20 \
+	-trainingSampleSize 2000 \
+	-iterations 5 \
+	-nBestTrainSyntacticParses 1 \
+	-nBestTestSyntacticParses 1 \
+	-nbestGraphs 100 \
+	-forestSize 10 \
+	-ngramLength 1 \
+	-useSchema true \
+	-useKB true \
+	-ngramGrelPartFlag false \
+	-groundFreeVariables false \
+	-groundEntityVariableEdges false \
+	-groundEntityEntityEdges false \
+	-useEmptyTypes false \
+	-ignoreTypes false \
+	-urelGrelFlag false \
+	-urelPartGrelPartFlag false \
+	-utypeGtypeFlag false \
+	-gtypeGrelFlag false \
+	-wordGrelPartFlag false \
+	-wordGrelFlag false \
+	-eventTypeGrelPartFlag false \
+	-argGrelPartFlag false \
+	-argGrelFlag false \
+	-stemMatchingFlag false \
+	-mediatorStemGrelPartMatchingFlag false \
+	-argumentStemMatchingFlag false \
+	-argumentStemGrelPartMatchingFlag false \
+	-ngramStemMatchingFlag true \
+	-useEmbeddingSimilarityFlag true \
+	-graphIsConnectedFlag false \
+	-graphHasEdgeFlag true \
+	-countNodesFlag false \
+	-edgeNodeCountFlag false \
+	-duplicateEdgesFlag true \
+	-grelGrelFlag false \
+	-useLexiconWeightsRel false \
+	-useLexiconWeightsType false \
+	-validQueryFlag true \
+	-useAnswerTypeQuestionWordFlag false \
+	-useGoldRelations false \
+	-evaluateOnlyTheFirstBest true \
+	-evaluateBeforeTraining false \
+	-entityScoreFlag true \
+	-entityWordOverlapFlag false \
+	-initialEdgeWeight -0.5 \
+	-initialTypeWeight -2.0 \
+	-initialWordWeight -0.05 \
+	-stemFeaturesWeight 0.05 \
+	-endpoint localhost \
+	-contentWordPosTags "NOUN;VERB" \
+	-supervisedCorpus "data/GraphQuestions/$(LANG)/$*-graphquestions.train.deplambda.forest.json;data/GraphQuestions/$(LANG)/$*-graphquestions.dev.deplambda.forest.json" \
+	-devFile data/GraphQuestions/$(LANG)/$*-graphquestions.test.deplambda.forest.json \
+	-logFile ../working/gq/$*/test_bow_supervised_without_merge_without_expand.emb/all.log.txt \
+	> ../working/gq/$*/test_bow_supervised_without_merge_without_expand.emb/all.txt
 
