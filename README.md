@@ -41,10 +41,6 @@ For Spanish:
 
 Check [debug.txt](debug.txt) to see step by step derivation.
 
-## Web Demo
-
-> http://sivareddy.in/udeplambda.html
-
 ## Important files
 
 * [Type System](lib_data/ud.types.txt)
