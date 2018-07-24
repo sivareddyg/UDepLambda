@@ -1,12 +1,6 @@
 # UDepLambda
 
-UDepLambda is a framework to convert Universal Dependencies to Logical Forms. 
-
-For more details, please refer to our paper:
-
-[Universal Semantic Parsing](https://arxiv.org/pdf/1702.03196)  
-Siva Reddy, Oscar Täckström, Slav Petrov, Mark Steedman, Mirella Lapata  
-arXiv:1702.03196, 2017.
+UDepLambda is a framework to convert Universal Dependencies trees to Logical Forms. It maps natural language to logical forms in an almost language-independent framework. For more details, please refer to our papers below. 
 
 ## Installation
 
@@ -84,6 +78,10 @@ UDepLambda is distributed as [Apache 2.0 license](LICENSE). However, depending o
 ```
 
 ## Publications/Projects using UDepLambda
+
+[Universal Semantic Parsing](https://arxiv.org/pdf/1702.03196)  
+Siva Reddy, Oscar Täckström, Slav Petrov, Mark Steedman, Mirella Lapata  
+arXiv:1702.03196, 2017.
 
 [Universal Dependencies to Logical Forms with Negation Scope](https://arxiv.org/pdf/1702.03305.pdf)  
 Federico Fancellu, Siva Reddy, Adam Lopez, Bonnie Webber  
