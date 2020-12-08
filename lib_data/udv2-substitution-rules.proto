@@ -1,6 +1,37 @@
 ########### Substitution rules #########
 # These rules are constantly updated and may not reflect the rules in the paper
-
+rulegroup {
+  name: "obl"
+  priority: 5
+  rule {
+    name: "nmod with a case marker"
+    # "saw" with a "telescope"
+    # "cat" in a "hat"
+    priority: 5
+    tregex: "/^l-(obl)$/=relation < (/^l-case$/ < (/^w-.*$/=casemarker))"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-obl.{casemarker}:b $e $x))))))"
+    }
+  }
+  rule {
+    name: "nmod and its variants"
+    # don't confuse this relation with nn in stanford dependencies.
+    # no seprate handling for tmod or npmod.
+    # 65 "years" "old"
+    # 6 "feet" "long"
+    # "$5" a "share"
+    # TODO: handle nmod seperately when the child is a verb, e.g., "eased" a "fraction"
+    priority: 10
+    tregex: "/^l-(?:obl)$/=relation"
+    transformation {
+      target: "relation"
+      action: ASSIGN_LAMBDA
+      lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-obl:b $e $x))))))"
+    }
+  }
+}
 rulegroup {
   name: "nmod"
   priority: 5
@@ -14,18 +45,6 @@ rulegroup {
       target: "relation"
       action: ASSIGN_LAMBDA
       lambda: "(lambda $f:w (lambda $g:w (lambda $e:v (exists:ex $x:v (and:c ($f $e) ($g $x) (p_EVENT.ENTITY_l-nmod.{casemarker}:b $e $x))))))"
-    }
-  }
-  rule {
-    name: "nmod indicating counting"
-    # "number" of "people"
-    # "count" of "films"
-    priority: 5
-    tregex: "/^l-nmod:count$/=relation"
-    transformation {
-      target: "relation"
-      action: ASSIGN_LAMBDA
-      lambda: "(lambda $f:w (lambda $g:w (lambda $x:v (exists:ex $y:v (and:c ($f $x) ($g $y) (p_COUNT:b $y $x))))))"
     }
   }
   rule {
@@ -195,7 +214,7 @@ rulegroup {
     name: "conj-np, conj-vp, conj-verb"
     # "Bill" and "Dave"
     priority: 10
-    tregex: "/^l-conj-(?:np|vp|verb|sent)$/=relation"
+    tregex: "/^l-conj-(?:vp|verb|sent)$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -269,14 +288,14 @@ rulegroup {
   }
 }
 rulegroup {
-  name: "dobj"
+  name: "obj"
   priority: 5
   rule {
-    name: "dobj when posed as a question"
+    name: "obj when posed as a question"
     # "give" me the "capital" of UK?
     # This happens when subj is not seen with the verb. 
     priority: 5
-    tregex: "/^l-dobj:wh$/=relation"
+    tregex: "/^l-obj:wh$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -284,10 +303,10 @@ rulegroup {
     }
   }
   rule {
-    name: "dobj"
+    name: "obj"
     # "read" the "article".
     priority: 10
-    tregex: "/^l-dobj$/=relation"
+    tregex: "/^l-obj$/=relation"
     transformation {
       target: "relation"
       action: ASSIGN_LAMBDA
@@ -626,7 +645,7 @@ rulegroup {
     name: "adverbs that have arguments"
     # He is "in" today"
     priority: 15
-    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADV$/"
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|obj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADV$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -638,7 +657,7 @@ rulegroup {
     # John is "happy"
     # 65 years "old"
     priority: 15
-    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADJ$/"
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|obj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADJ$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA
@@ -705,9 +724,9 @@ rulegroup {
   rule {
     name: "prepositions that have arguments.. probably due to parse errors" 
     # What has MarioLopez been in?
-    # Here dep(in) = 0:root, dep(What) = in:dobj, dep(MarioLopez) = in:nsubj 
+    # Here dep(in) = 0:root, dep(What) = in:obj, dep(MarioLopez) = in:nsubj 
     priority: 1
-    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|dobj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADP$/"
+    tregex: "/^w-.*$/=word $ /^l-(?:nsubj|obj|nmod.*|ccomp|xcomp|advcl)$/ $ /^t-ADP$/"
     transformation {
       target: "word"
       action: ASSIGN_LAMBDA

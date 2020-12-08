@@ -1,0 +1,148 @@
+########### Obliqueness hierarchy #########
+# These rules are constantly updated and may not reflect the rules in the paper
+
+relation {
+  name: "l-BIND"
+  priority: 9
+}
+relation {
+  name: "l-conj-verb"
+  priority: 10
+}
+relation {
+  name: "l-amod"
+  priority: 10
+}
+relation {
+  name: "l-compound"
+  priority: 10
+}
+relation {
+  name: "l-det"
+  priority: 15
+}
+relation {
+  name: "l-cc"
+  priority: 15
+}
+relation {
+  name: "l-conj-adj"
+  priority: 16
+}
+relation {
+  name: "l-conj-np"
+  priority: 16
+}
+relation {
+  name: "l-appos"
+  priority: 16
+}
+relation {
+  name: "l-acl:relcl"
+  priority: 16
+}
+relation {
+  name: "l-acl"
+  priority: 16
+}
+relation {
+  name: "l-acl-other"
+  priority: 16
+}
+relation {
+  name: "l-cop"
+  priority: 20
+}
+relation {
+  name: "l-obj"
+  priority: 20
+}
+relation {
+  name: "l-obj:wh"
+  priority: 20
+}
+relation {
+  name: "l-obj-wh"
+  priority: 20
+}
+relation {
+  name: "l-auxpass"
+  priority: 30
+}
+relation {
+  name: "l-aux"
+  priority: 30
+}
+relation {
+  name: "l-xcomp"
+  priority: 30
+}
+relation {
+  name: "l-nmod:poss"
+  priority: 40
+}
+relation {
+  name: "l-nmod:npmod"
+  priority: 40
+}
+relation {
+  name: "l-nmod:tmod"
+  priority: 40
+}
+relation {
+  name: "l-nmod:count"
+  priority: 40
+}
+relation {
+  name: "l-nmod"
+  priority: 40
+}
+relation {
+  name: "l-obl"
+  priority: 40
+}
+relation {
+  name: "l-advmod"
+  priority: 40
+}
+relation {
+  name: "l-advmod:count"
+  priority: 40
+}
+relation {
+  name: "l-advcl"
+  priority: 40
+}
+relation {
+  name: "l-ccomp"
+  priority: 40
+}
+relation {
+  name: "l-conj-vp"
+  priority: 45
+}
+relation {
+  name: "l-nsubj"
+  priority: 60
+}
+relation {
+  name: "l-nsubjpass"
+  priority: 60
+}
+relation {
+  name: "l-nsubj-wh"
+  priority: 60
+}
+relation {
+  name: "l-case"
+  priority: 70
+}
+relation {
+  name: "l-conj-sent"
+  priority: 80
+}
+relation {
+  name: "l-punct"
+  priority: 90
+}
+

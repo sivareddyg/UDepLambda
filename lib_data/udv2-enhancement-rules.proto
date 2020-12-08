@@ -1,0 +1,260 @@
+########### Enhancement rules #########
+# These rules are constantly updated and may not reflect the rules in the paper
+rulegroup {
+  name: "Conjunctions"
+  priority: 1
+  rule {
+    name: "np conjunction"
+    # "Bill" and "Dave"
+    priority: 1
+    tregex: "/^l-conj$/=relation $ /^t-(?:NOUN|PROPN|PRON|ADJ)$/ < /^t-(?:NOUN|PROPN|PRON)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-np"
+    }
+  }
+  rule {
+    name: "adj conjunction"
+    # "red" and "blue"
+    priority: 1
+    tregex: "/^l-conj$/=relation $ /^t-(?:ADJ)$/ < /^t-(?:ADJ)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-adj"
+    }
+  }
+  rule {
+    name: "sentence conjunction"
+    # Cameron "directed" Titanic and Spielber "produced" Transformers.
+    priority: 1
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^l-obj$/ < /^l-nsubj$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-sent"
+    }
+  }
+  rule {
+    name: "vp conjunction"
+    # "directed" Titanic and "produced" Titanic.
+    priority: 5
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^l-obj$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-vp"
+    }
+  }
+  rule {
+    name: "vp conjunction"
+    # John "ate" apple and "suffered".
+    priority: 10
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ $,, /^l-obj$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-vp"
+    }
+  }
+  rule {
+    name: "verb conjunction"
+    # "directed" and "produced"
+    priority: 15
+    tregex: "/^l-conj$/=relation $ /^t-(?:VERB)$/ < /^t-(?:VERB)$/"
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-conj-verb"
+    }
+  }
+}
+rulegroup {
+  name: "reduced relative and relative clause extractions"
+  priority: 1
+  rule {
+    name: "pobj extraction"
+    priority: 1
+    # The "country" which Darwin "belongs" to, is UK.
+    # "country" Darwin was "born" in
+    # country "which" Darwin was born in
+	# TODO: Ideally this should produce the same parse as "Darwin was born in country", however, we produce "Darwin was born[in] country" where [in] is invisible.
+    # (l-root w-1-country t-NOUN (l-acl:relcl w-5-bear t-VERB (l-obj w-2-which t-DET) (l-nsubj:pass w-3-darwin t-PROPN) (l-auxpass w-4-was t-AUX) (l-nmod w-6-at t-ADP)))
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-nmod$/ < /^t-ADP$/)"
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nmod"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "obj extraction"
+    priority: 4
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-obl$/ < (/^l-case$/ < /^w-.*-by$/))"
+    # company "founded" by a actor
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-obj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "nsubj extraction"
+    priority: 5
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword !< /^l-(?:nsubj|nsubj:pass)$/"
+    # The company "bought" Youtube, owns Gmail. -- construction exists in Telugu 
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "nsubj extraction"
+    priority: 5
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-nsubj$/ < /^t-(?:DET|ADV)$/)"
+    # The "company" which "bought" Youtube owns Gmail.
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "nsubj:pass extraction"
+    priority: 5
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-nsubj:pass$/ < /^t-(?:DET|ADV)$/)"
+    # The "company" which is "based" in
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj:pass"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "obj extraction"
+    priority: 10
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword !< /^l-obj$/"
+    # The "movie" Cameron "directed"
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-obj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "obj extraction"
+    priority: 10 
+    tregex: "/^l-acl.*$/=target > /^l-.*$/=origin $ /^w-.*$/=originword < (/^l-obj$/ < /^t-(?:DET|ADV)$/)"
+    # The "movie" which Cameron "directed"
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-obj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "no extraction"
+    priority: 15
+    tregex: "/^l-acl.*$/=relation"
+	# the "issues" as he "sees" them
+    transformation {
+      target: "relation"
+      action: CHANGE_LABEL
+      label: "l-acl-other"
+    }
+  }
+}
+rulegroup {
+  name: "xcomp constructions"    
+  priority: 1
+  rule {
+    name: "object of controller as subject to the controlled verb"
+    # I want John to buy a laptop
+    priority: 1
+    tregex: "/^l-xcomp$/=target !< /^l-nsubj$/ $ (/^l-obj$/=origin < /^w-.*$/=originword)"
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
+    }
+  }
+  rule {
+    name: "subject of controller as subject to the controlled verb"
+    # I want to buy laptop
+    # Always assume there is an extraction.
+    priority: 5
+    tregex: "/^l-xcomp$/=target !< /^l-nsubj$/ $ (/^l-nsubj$/=origin < /^w-.*$/=originword)"
+    transformation {
+      target: "origin"
+      action: ADD_CHILD
+      label: "l-BIND"
+      child: "v-{originword}"
+    }
+    transformation {
+      target: "target"
+      action: ADD_CHILD
+      label: "l-nsubj"
+      child: "v-{originword}"
+    }
+  }
+  # TODO: Note clear how to handle "Elizabeth became queen"
+  # Currently this sentence is handled as "(Elizabeth became (Elizabeth is queen))"
+}
